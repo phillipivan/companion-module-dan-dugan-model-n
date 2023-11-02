@@ -1,0 +1,26 @@
+{
+	"id": "dan-dugan-model-n",
+	"name": "dan-dugan-model-n",
+	"shortname": "Model N",
+	"description": "Dan Dugan Model M & N plugin for Companion",
+	"version": "0.1.0",
+	"license": "MIT",
+	"repository": "git+https://github.com/bitfocus/companion-module-your-module-name.git",
+	"bugs": "https://github.com/bitfocus/companion-module-your-module-name/issues",
+	"maintainers": [
+		{
+			"name": "Phillip Ivan Pietruschka",
+			"email": "ivanpietruschka@gmail.com"
+		}
+	],
+	"runtime": {
+		"type": "node18",
+		"api": "nodejs-ipc",
+		"apiVersion": "0.0.0",
+		"entrypoint": "../main.js"
+	},
+	"legacyIds": [],
+	"manufacturer": "Dan Dugan Sound Design",
+	"products": ["Model N Automixer", "Model M Automixer"],
+	"keywords": ["Hardware", "Automixer", "MADI", "Dante"]
+}
