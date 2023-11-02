@@ -5,8 +5,8 @@
 	"description": "Dan Dugan Model M & N plugin for Companion",
 	"version": "0.1.0",
 	"license": "MIT",
-	"repository": "git+https://github.com/bitfocus/companion-module-your-module-name.git",
-	"bugs": "https://github.com/bitfocus/companion-module-your-module-name/issues",
+	"repository": "git+https://github.com/phillipivan/companion-module-dan-dugan-model-n.git",
+	"bugs": "https://github.com/phillipivan/companion-module-dan-dugan-model-n/issues",
 	"maintainers": [
 		{
 			"name": "Phillip Ivan Pietruschka",
