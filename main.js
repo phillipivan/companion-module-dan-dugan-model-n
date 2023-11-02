@@ -59,7 +59,7 @@ class DUGAN_MODEL_N extends InstanceBase {
 	}	
 
 	pollStatus() {
-//		this.log('debug', 'keepAlive')
+		this.log('debug', 'pollStatus')
 //		let msgTimer1 = {}
 //		let msgTimer2 = {}
 		this.sendCommand('SNC\r\n') //scene count
