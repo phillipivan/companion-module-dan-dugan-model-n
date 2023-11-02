@@ -31,7 +31,7 @@ class DUGAN_MODEL_N extends InstanceBase {
 	// When module gets deleted
 	async destroy() {
 		this.log('debug', 'destroy. ID: ' + this.id)
-		clearInterval (this.keepAliveTimer)
+		cclearTimeout(this.keepAliveTimer)
 		if (this.socket) {
 			this.sendCommand(EndSession)
 			this.socket.destroy()
@@ -59,12 +59,15 @@ class DUGAN_MODEL_N extends InstanceBase {
 	}	
 
 	pollStatus() {
-		this.log('debug', 'keepAlive')
-		let msgTimer1 = {}
-		let msgTimer2 = {}
+//		this.log('debug', 'keepAlive')
+//		let msgTimer1 = {}
+//		let msgTimer2 = {}
 		this.sendCommand('SNC\r\n') //scene count
-		msgTimer1 = setTimeout (this.sendCommand('SNA\r\n'), 10) //active scene
-		msgTimer2 = setTimeout (this.sendCommand('GP\r\n'), 20) //get all status params
+//		msgTimer1 = setTimeout (this.sendCommand('SNA\r\n'), 10) //active scene
+//		msgTimer2 = setTimeout (this.sendCommand('GP\r\n'), 20) //get all status params
+		this.keepAliveTimer = setTimeout(() => {
+			this.pollStatus()
+		}, this.config.keepAlive * 1000)
 	}
 
 	initTCP() {
@@ -85,13 +88,15 @@ class DUGAN_MODEL_N extends InstanceBase {
 
 			this.socket.on('error', (err) => {
 				this.log('error', `Network error: ${err.message}`)
-				clearInterval (this.keepAliveTimer)
+				clearTimeout(this.keepAliveTimer)
 			})
 			this.socket.on('connect', () => {
 				this.log('info', `Connected`)
 				this.sendCommand('SC\r\n')
 				if ( this.config.keepAlive > 0 ) {
-					this.keepAliveTimer = setInterval(this.pollStatus, this.config.keepAlive * 1000)
+					this.keepAliveTimer = setTimeout(() => {
+						this.pollStatus()
+					}, this.config.keepAlive * 1000)
 				}	
 			})
 			this.socket.on('data', (chunk) => {
@@ -190,9 +195,11 @@ class DUGAN_MODEL_N extends InstanceBase {
 		if ( oldConfig.keepAlive == this.config.keepAlive ) {
 			this.log('debug', 'keepalive unchanged')
 		} else {
-			clearInterval (this.keepAliveTimer)
+			clearTimeout(this.keepAliveTimer)
 			if (this.config.keepAlive > 0) {
-				this.keepAliveTimer = setInterval(this.pollStatus, this.config.keepAlive * 1000)
+				this.keepAliveTimer = setTimeout(() => {
+					this.pollStatus()
+				}, this.config.keepAlive * 1000)
 			}
 		}
 		if (( oldConfig.model == this.config.model ) && ( oldConfig.channels == this.config.channels )) {
@@ -210,12 +217,12 @@ class DUGAN_MODEL_N extends InstanceBase {
 		} else {
 			//changed connection
 			if (this.udp) {
-				clearInterval (this.keepAliveTimer)
+				clearTimeout(this.keepAliveTimer)
 				this.udp.destroy()
 				delete this.udp
 			}
 			if (this.socket) {
-				clearInterval (this.keepAliveTimer)
+				clearTimeout(this.keepAliveTimer)
 				this.sendCommand(EndSession)
 				this.socket.destroy()
 				delete this.socket
