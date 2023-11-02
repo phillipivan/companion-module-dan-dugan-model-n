@@ -31,7 +31,7 @@ class DUGAN_MODEL_N extends InstanceBase {
 	// When module gets deleted
 	async destroy() {
 		this.log('debug', 'destroy. ID: ' + this.id)
-		cclearTimeout(this.keepAliveTimer)
+		clearTimeout(this.keepAliveTimer)
 		if (this.socket) {
 			this.sendCommand(EndSession)
 			this.socket.destroy()
