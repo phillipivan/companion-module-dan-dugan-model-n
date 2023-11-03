@@ -9,7 +9,7 @@ const GroupCount = 3
 const MatrixCount = 6
 const EndSession = 'QUIT\r\n'
 let automixChannels = []
-for (i = MinChannelCount; i <= MaxChannelCount; i++) {
+for (let i = MinChannelCount; i <= MaxChannelCount; i++) {
 	automixChannels.push({ id: i, label: i + ' Automix Channels' })
 }
 class DUGAN_MODEL_N extends InstanceBase {
