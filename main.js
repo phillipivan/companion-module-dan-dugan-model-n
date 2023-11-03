@@ -55,6 +55,7 @@ class DUGAN_MODEL_N extends InstanceBase {
 			this.updateStatus(InstanceStatus.Disconnected)
 		}
 	}
+
 	sendCommand(cmd) {
 		this.log('debug', 'sendCommand')
 		if (cmd !== undefined) {
@@ -70,6 +71,7 @@ class DUGAN_MODEL_N extends InstanceBase {
 		}
 		return false
 	}
+
 	pollStatus() {
 		this.log('debug', 'pollStatus')
 		//		let msgTimer1 = {}
@@ -81,6 +83,7 @@ class DUGAN_MODEL_N extends InstanceBase {
 			this.pollStatus()
 		}, this.config.keepAlive * 1000)
 	}
+
 	initTCP() {
 		this.log('debug', 'initTCP')
 		if (this.socket !== undefined) {
@@ -91,11 +94,9 @@ class DUGAN_MODEL_N extends InstanceBase {
 		if (this.config.host) {
 			this.log('debug', 'Creating New Socket')
 			this.socket = new TCPHelper(this.config.host, this.config.port)
-
 			this.socket.on('status_change', (status, message) => {
 				this.updateStatus(status, message)
 			})
-
 			this.socket.on('error', (err) => {
 				this.log('error', `Network error: ${err.message}`)
 				clearTimeout(this.keepAliveTimer)
@@ -112,13 +113,11 @@ class DUGAN_MODEL_N extends InstanceBase {
 			this.socket.on('data', (chunk) => {
 				console.log('Data received')
 				console.log(chunk)
-
 				let i = 0
 				let line = ''
 				let offset = 0
 				let receivebuffer = ''
 				receivebuffer += chunk
-
 				while ((i = receivebuffer.indexOf('\n', offset)) !== -1) {
 					line = receivebuffer.substr(offset, i - offset)
 					offset = i + 1
@@ -248,7 +247,6 @@ class DUGAN_MODEL_N extends InstanceBase {
 			this.updateFeedbacks() // export feedbacks
 			this.updateVariableDefinitions() // export variable definitions
 		}
-
 		if (oldConfig.host == this.config.host && oldConfig.port == this.config.port && oldConfig.udp == this.config.udp) {
 			// nothings changed
 			this.log('debug', 'connection unchanged')
