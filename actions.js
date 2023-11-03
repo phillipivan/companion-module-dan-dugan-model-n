@@ -902,6 +902,38 @@ module.exports = function (self) {
 				self.sendCommand(cmd + '\r\n')
 			},
 		},
+		sc_namelist: {
+			name: 'Scene - Name List',
+			description: 'Query a list of scene names',
+			options: [
+				{
+					id: 'first',
+					type: 'number',
+					label: 'First scene name to recall',
+					default: 1,
+					min: 1,
+					max: 100,
+					step: 1,
+					range: true,
+				},
+				{
+					id: 'count',
+					type: 'number',
+					label: 'Number of scenes to recall',
+					default: 8,
+					min: 1,
+					max: 32,
+					step: 1,
+					range: true,
+				},
+			],
+			callback: ({ options }) => {
+				let cmd = 'SNL'
+				let first = Math.floor(options.first)
+				let count = Math.floor(options.count)
+				self.sendCommand(cmd + ',' + first + ',' + count + '\r\n')
+			},
+		},
 		sc_recall: {
 			name: 'Scene - Recall',
 			description: 'Recall a saved scene',
