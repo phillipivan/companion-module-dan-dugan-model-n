@@ -156,9 +156,10 @@ module.exports = function (self) {
 					default: 0,
 					min: -100,
 					max: +15,
-					required: true,
 					range: true,
 					step: 0.1,
+					required: true,
+					useVariables: true,
 					regex: Regex.NUMBER,
 	
 				},
@@ -169,14 +170,24 @@ module.exports = function (self) {
 					default: false,
 				},
 			],
-			callback: ({ options }) => {
+			callback: async ({ options }) => {
 				let cmd = 'CW'
+				let chanWeight = await self.parseVariablesInString(options.weight)
 				if (options.query) {
 					cmd += ',' + options.channel + '\r\n'
 				} else {
-					cmd += ',' + options.channel + ',' + options.weight + '\r\n'
+					if ( isNaN(chanWeight)) {
+						self.log('warn', 'Weight must be a number')
+					} else {
+						chanWeight = (chanWeight < 100) ? 100:
+							(chanWeight > 15 ) ? 15 :
+							chanWeight
+						cmd += ',' + options.channel + ',' + chanWeight + '\r\n'
+						self.sendCommand(cmd)
+					}
+					
 				}
-				self.sendCommand(cmd)
+				
 			},
 		},
 		channel_music_mode: {
@@ -299,7 +310,8 @@ module.exports = function (self) {
 					default: 'Channel 1',
 					required: true,
 					Regex: Regex.SOMETHING,
-					tooltip: 'Max Length: 15 char. "," ";" Forbidden.',
+					useVariables: true,
+					tooltip: 'Max Length: 15 char',
 				},
 				{
 					id: 'query',
@@ -309,19 +321,21 @@ module.exports = function (self) {
 					tooltip: 'Query will poll the current name',
 				},
 			],
-			callback: ({ options }) => {
+			callback: async ({ options }) => {
 				let cmd = 'CN'
 				if (options.query) {
 					cmd += ',' + options.channel + '\r\n'
 				} else {
-					let chanName = options.name
+					let chanName = await self.parseVariablesInString(options.name)
 					chanName = chanName.slice(0,15)
-					if ((chanName.includes (',')) || (chanName.includes (';'))) {
-						self.log('warn', 'Invalid channel name, remove comma or semicolon : ' + chanName)
+					if ((chanName.includes (',')) || (chanName.includes (';')) || (chanName.includes ('*'))) {
+						self.log('warn', 'Invalid channel name, special character: ' + chanName)
 					} else {
 						cmd += ',' + options.channel + ',' + chanName + '\r\n'
 						self.sendCommand(cmd)
-					}				
+					}
+
+										
 				}
 			},
 		},
@@ -919,15 +933,16 @@ module.exports = function (self) {
 					default: 'Scene 1',
 					required: true,
 					Regex: Regex.SOMETHING,
-					tooltip: 'Max Length: 15 char. "," ";" Forbidden.',
+					tooltip: 'Max Length: 15 char',
+					useVariables: true,
 				},
 			],
-			callback: ({ options }) => {
+			callback: async ({ options }) => {
 				let cmd = 'SNR'
-				let sceneName = options.name
+				let sceneName = await self.parseVariablesInString(options.name)
 				sceneName = sceneName.slice(0,15)
-				if ( sceneName.includes (',') || sceneName.includes (';')) {
-					self.log('warn', 'Invalid scene name, remove comma or semicolon: ' + sceneName)
+				if ( sceneName.includes (',') || sceneName.includes (';') || (chanName.includes ('*'))) {
+					self.log('warn', 'Invalid scene name: ' + sceneName)
 				} else {
 					cmd += ',' + sceneName + '\r\n'
 					self.sendCommand(cmd)
@@ -945,14 +960,15 @@ module.exports = function (self) {
 					default: 'Scene 1',
 					required: true,
 					Regex: Regex.SOMETHING,
-					tooltip: 'Max Length: 15 char. "," Forbidden.',
+					tooltip: 'Max Length: 15 char',
+					useVariables: true,
 				},
 			],
-			callback: ({ options }) => {
+			callback: async ({ options }) => {
 				let cmd = 'SNS'
-				let sceneName = options.name
+				let sceneName = await self.parseVariablesInString(options.name)
 				sceneName = sceneName.slice(0,15)
-				if ( sceneName.includes (',') || sceneName.includes (';')) {
+				if ( sceneName.includes (',') || sceneName.includes (';') || (chanName.includes ('*'))) {
 					self.log('warn', 'Invalid scene name, remove comma or semicolon: ' + sceneName)
 				} else {
 					cmd += ',' + sceneName + '\r\n'
@@ -971,14 +987,15 @@ module.exports = function (self) {
 					default: 'New Scene',
 					required: true,
 					Regex: Regex.SOMETHING,
-					tooltip: 'Max Length: 15 char. "," ";" Forbidden.',
+					useVariables: true,
+					tooltip: 'Max Length: 15 char',
 				},
 			],
-			callback: ({ options }) => {
+			callback: async ({ options }) => {
 				let cmd = 'SNN'
-				let sceneName = options.name
+				let sceneName = await self.parseVariablesInString(options.name)
 				sceneName = sceneName.slice(0,15)
-				if ( sceneName.includes (',') || sceneName.includes (';')) {
+				if ( sceneName.includes (',') || sceneName.includes (';') || (chanName.includes ('*'))) {
 					self.log('warn', 'Invalid scene name, remove comma or semicolon: ' + sceneName)
 				} else {
 					cmd += ',' + sceneName + '\r\n'
@@ -997,7 +1014,8 @@ module.exports = function (self) {
 					default: 'Scene 1',
 					required: true,
 					Regex: Regex.SOMETHING,
-					tooltip: 'Max Length: 15 char. "," ";" Forbidden.',
+					useVariables: true,
+					tooltip: 'Max Length: 15 char',
 				},
 				{
 					id: 'newname',
@@ -1006,16 +1024,17 @@ module.exports = function (self) {
 					default: 'New Scene Name',
 					required: true,
 					Regex: Regex.SOMETHING,
-					tooltip: 'Max Length: 15 char. "," ";" Forbidden.',
+					useVariables: true,
+					tooltip: 'Max Length: 15 char',
 				},
 			],
-			callback: ({ options }) => {
+			callback: async ({ options }) => {
 				let cmd = 'SNE'
-				let sceneNameCurrent = options.currentname
-				let sceneNameNew = options.newname
-				sceneNameCurrent = sceneNameCurrent.slice(0,15)
+				let sceneNameCurrent = self.parseVariablesInString(options.currentname)
+				let sceneNameNew = await self.parseVariablesInString(options.newname)
+				sceneNameCurrent = await sceneNameCurrent.slice(0,15)
 				sceneNameNew = sceneNameNew.slice(0,15)
-				if ( sceneNameCurrent.includes (',') || sceneNameNew.includes (',') || sceneNameCurrent.includes (';') || sceneNameNew.includes (';')) {
+				if ( sceneNameCurrent.includes (',') || sceneNameNew.includes (',') || sceneNameCurrent.includes (';') || sceneNameNew.includes (';') || sceneNameNew.includes ('*') || sceneNameCurrent.includes ('*')) {
 					self.log('warn', 'Invalid scene name, remove comma or semicolon. Current Scene Name: ' + sceneNameCurrent + '. New Scene Name: ' + sceneNameNew)
 				} else {
 					cmd += ',' + sceneNameCurrent + ',' + sceneNameNew + '\r\n'
@@ -1034,14 +1053,16 @@ module.exports = function (self) {
 					default: 'Delete ME',
 					required: true,
 					Regex: Regex.SOMETHING,
+					useVariables: true,
 					tooltip: 'Max Length: 15 char. "," ";" Forbidden.',
 				},
 
 			],
-			callback: ({ options }) => {
+			callback: async ({ options }) => {
 				let cmd = 'SND'
-				if ( options.name.includes (',') || (options.name.includes (';')) ) {
-					self.log('warn', 'Invalid scene name, remove comma or semicolon: ' + options.name)
+				let sceneDelete =  await self.parseVariablesInString(options.name)
+				if ( sceneDelete.includes (',') || (sceneDelete.includes (';')) || (sceneDelete.includes ('*'))) {
+					self.log('warn', 'Invalid scene name: ' + sceneDelete)
 				} else {
 					cmd += ',' + options.name + '\r\n'
 					self.sendCommand(cmd)
@@ -1076,14 +1097,15 @@ module.exports = function (self) {
 					choices: [
 						{ id: 0, label: 'Off' },
 						{ id: 1, label: 'On' },
-						{ id: 2, label: 'Query' },
+						{ id: 2, label: 'On with metering' },
+						{ id: 3, label: 'Query' },
 					],
 					tooltip: 'Query will poll the current subscribe state',
 				},
 			],
 			callback: ({ options }) => {
 				let cmd = 'SU'
-				if (options.subscribe == 2) {
+				if (options.subscribe == 3) {
 					cmd += '\r\n'
 				} else {
 					cmd += ',' + options.subscribe + '\r\n'
@@ -1423,7 +1445,8 @@ module.exports = function (self) {
 					default: 'Dugan Model N',
 					required: true,
 					Regex: Regex.SOMETHING,
-					tooltip: 'Max Length: 15 char. "," ";" Forbidden.',
+					useVariables: true,
+					tooltip: 'Max Length: 15 char',
 				},
 				{
 					id: 'query',
@@ -1433,14 +1456,14 @@ module.exports = function (self) {
 					tooltip: 'Query will poll current configured unit name',
 				},
 			],
-			callback: ({ options }) => {
+			callback: async ({ options }) => {
 				let cmd = 'NA'
 				if (options.query) {
 					cmd += '\r\n'
 				} else {
-					let unitName = options.name
+					let unitName = await self.parseVariablesInString(options.name)
 					unitName = sceneName.slice(0,15)
-					if ((unitName.includes (',')) || (unitName.includes (';'))) {
+					if ((unitName.includes (',')) || (unitName.includes (';')) || (unitName.includes (';'))) {
 						self.log('warn', 'Invalid unit name, remove comma or semicolon : ' + unitName)
 					} else {
 						cmd += ',' + unitName + '\r\n'

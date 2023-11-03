@@ -17,7 +17,7 @@ Enter the IP address of the control port of the Automixer. The unit will accept 
 - **Channel - Music** Query / Change Channel Music Mode
 - **Channel - NOM** Query / Change Channel NOM Mode
 - **Channel - Group Assignment** Query / Change Channel Group Assignment
-- **Channel - Name** Query / Change Channel Name - up to 15 characters
+- **Channel - Name** Query / Change Channel Name - up to 15 characters.  Accepts variables
 
 - **Group - Mute** Query / Change Group Mute
 - **Group - Preset** Query / Change Group Preset
@@ -38,11 +38,11 @@ Enter the IP address of the control port of the Automixer. The unit will accept 
 - **Scene - Count** Query Scene Count
 - **Scene - List** Query Scene Name List
 - **Scene - Active** Query Active Scene
-- **Scene - Recall** Recall Scene
-- **Scene - Save** Save Scene
-- **Scene - Save New** Save New Scene
-- **Scene - Rename** Rename Scene
-- **Scene - Delete** Delete
+- **Scene - Recall** Recall Scene. Accepts variables
+- **Scene - Save** Save Scene. Accepts variables
+- **Scene - Save New** Save New Scene. Accepts variables
+- **Scene - Rename** Rename Scene. Accepts variables
+- **Scene - Delete** Delete. Accepts variables
 - **Scene - Recall Defaults** Restore Factory Defaults. Does not change network settings
 
 - **System - Subscribe Unsolicited** Query / Change send unsolicited updates
@@ -62,7 +62,7 @@ Enter the IP address of the control port of the Automixer. The unit will accept 
 - **System - DHCP** Query / Change DHCP 
 - **System - Netmask** Query / Change Subnet Mask
 - **System - Gateway** Query / Change Gateway
-- **System - Name** Query / change unit name
+- **System - Name** Query / change unit name. Accepts variables
 
 ## Version History
 
