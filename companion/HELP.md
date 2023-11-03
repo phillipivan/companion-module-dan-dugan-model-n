@@ -45,6 +45,9 @@ Enter the IP address of the control port of the Automixer. The unit will accept 
 - **Query - Output Peaks** Query all output peaks
 - **Query - Signal Presence** Query all signal presence flags
 - **Query - Matrix Output Meters** Query all matrix output meters
+- **Query - Channel List** Query Channel Name List
+- **Query - Scene List** Query Scene Name List
+
 
 - **Scene - Count** Query Scene Count
 - **Scene - List** Query Scene Name List
