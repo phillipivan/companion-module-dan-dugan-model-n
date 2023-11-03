@@ -35,6 +35,17 @@ Enter the IP address of the control port of the Automixer. The unit will accept 
 - **Matrix - Crosspoint** Query / Change Matrix Crosspoint Gain
 - **Matrix - Reset** Reset Matrix to defaults
 
+- **Query - Config** Query all channel params
+- **Query - Signal Status** Query all channel metering params
+- **Query - Automix Gains** Query all channel automix gains
+- **Query - Signal Clip** Query all signal clip flags
+- **Query - Input Peaks** Query all input peaks
+- **Query - Music Refernce Peaks** Query all music reference peaks
+- **Query - NOM Gain Limits** Query all NOM Gain limits
+- **Query - Output Peaks** Query all output peaks
+- **Query - Signal Presence** Query all signal presence flags
+- **Query - Matrix Output Meters** Query all matrix output meters
+
 - **Scene - Count** Query Scene Count
 - **Scene - List** Query Scene Name List
 - **Scene - Active** Query Active Scene

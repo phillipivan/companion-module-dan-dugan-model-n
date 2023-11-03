@@ -1894,5 +1894,21 @@ module.exports = function (self) {
 				self.sendCommand(cmd + '\r\n')
 			},
 		},
+		query_matrixcrosspoints: {
+			name: 'Query - Matrix Crosspoints',
+			description: 'Get all matrix crosspoints',
+			options: [
+				{
+					id: 'info',
+					type: 'static-text',
+					label: '',
+					value: 'Get all matrix crosspoints',
+				},
+			],
+			callback: () => {
+				let cmd = 'GM'
+				self.sendCommand(cmd + '\r\n')
+			},
+		},
 	})
 }
