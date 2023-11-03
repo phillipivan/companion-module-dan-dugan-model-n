@@ -9,19 +9,33 @@ const GroupCount = 3
 const MatrixCount = 6
 const EndSession = 'QUIT\r\n'
 let automixChannels = []
-for ( i = MinChannelCount; i <= MaxChannelCount; i++) {
-	automixChannels.push({ id: i, label: i + "  Automix Channels"})
+for (i = MinChannelCount; i <= MaxChannelCount; i++) {
+	automixChannels.push({ id: i, label: i + ' Automix Channels' })
 }
-
 class DUGAN_MODEL_N extends InstanceBase {
 	constructor(internal) {
 		super(internal)
 	}
-
-	async init(config) {	
+	async init(config) {
 		this.config = config
 		this.updateStatus('Starting')
-		this.log('debug', 'init. ID: ' + this.id + ' Label: ' + this.label + ' IP: '+ this.config.host + ' Port: ' + this.config.port + ' Keep Alive: ' + this.config.keepAlive + ' Model: ' + this.config.model + ' Channels: ' + this.config.channels )
+		this.log(
+			'debug',
+			'init. ID: ' +
+				this.id +
+				' Label: ' +
+				this.label +
+				' IP: ' +
+				this.config.host +
+				' Port: ' +
+				this.config.port +
+				' Keep Alive: ' +
+				this.config.keepAlive +
+				' Model: ' +
+				this.config.model +
+				' Channels: ' +
+				this.config.channels
+		)
 		this.initVariables()
 		this.updateActions() // export actions
 		this.updateFeedbacks() // export feedbacks
@@ -41,12 +55,11 @@ class DUGAN_MODEL_N extends InstanceBase {
 			this.updateStatus(InstanceStatus.Disconnected)
 		}
 	}
-
 	sendCommand(cmd) {
 		this.log('debug', 'sendCommand')
 		if (cmd !== undefined) {
 			if (this.socket !== undefined && this.socket.isConnected) {
-				this.log('info', 'Sending Command: ' + cmd)	
+				this.log('info', 'Sending Command: ' + cmd)
 				this.socket.send(cmd)
 				return true
 			} else {
@@ -56,20 +69,18 @@ class DUGAN_MODEL_N extends InstanceBase {
 			this.log('warn', 'Command undefined')
 		}
 		return false
-	}	
-
+	}
 	pollStatus() {
 		this.log('debug', 'pollStatus')
-//		let msgTimer1 = {}
-//		let msgTimer2 = {}
+		//		let msgTimer1 = {}
+		//		let msgTimer2 = {}
 		this.sendCommand('SNC\r\n') //scene count
-//		msgTimer1 = setTimeout (this.sendCommand('SNA\r\n'), 10) //active scene
-//		msgTimer2 = setTimeout (this.sendCommand('GP\r\n'), 20) //get all status params
+		//		msgTimer1 = setTimeout ({this.sendCommand('SNA\r\n')}, 10) active scene
+		//		msgTimer2 = setTimeout ({this.sendCommand('GP\r\n')}, 20) get all status params
 		this.keepAliveTimer = setTimeout(() => {
 			this.pollStatus()
 		}, this.config.keepAlive * 1000)
 	}
-
 	initTCP() {
 		this.log('debug', 'initTCP')
 		if (this.socket !== undefined) {
@@ -77,7 +88,6 @@ class DUGAN_MODEL_N extends InstanceBase {
 			this.socket.destroy()
 			delete this.socket
 		}
-		
 		if (this.config.host) {
 			this.log('debug', 'Creating New Socket')
 			this.socket = new TCPHelper(this.config.host, this.config.port)
@@ -93,11 +103,11 @@ class DUGAN_MODEL_N extends InstanceBase {
 			this.socket.on('connect', () => {
 				this.log('info', `Connected`)
 				this.sendCommand('SC\r\n')
-				if ( this.config.keepAlive > 0 ) {
+				if (this.config.keepAlive > 0) {
 					this.keepAliveTimer = setTimeout(() => {
 						this.pollStatus()
 					}, this.config.keepAlive * 1000)
-				}	
+				}
 			})
 			this.socket.on('data', (chunk) => {
 				console.log('Data received')
@@ -112,10 +122,10 @@ class DUGAN_MODEL_N extends InstanceBase {
 				while ((i = receivebuffer.indexOf('\n', offset)) !== -1) {
 					line = receivebuffer.substr(offset, i - offset)
 					offset = i + 1
-					this.log('Response from device: ', line)
-//					if (line != 'OK') {
-//						this.log('info', line.toString())
-//					}
+					this.log('info', line.toString())
+					//					if (line != 'OK') {
+					//						this.log('info', line.toString())
+					//					}
 				}
 				receivebuffer = receivebuffer.substr(offset)
 			})
@@ -127,7 +137,7 @@ class DUGAN_MODEL_N extends InstanceBase {
 	initVariables() {
 		this.log('debug', 'initVariables')
 		this.groupCount = GroupCount
-		this.matrixCount = MatrixCount	
+		this.matrixCount = MatrixCount
 		this.keepAliveTimer = {}
 		this.musicInputs = []
 		this.matrixSources = []
@@ -137,7 +147,7 @@ class DUGAN_MODEL_N extends InstanceBase {
 		this.groupNames = []
 		this.clockSources = []
 		this.offsetChannelList = []
-		this.matrixDestinations.push({ id: 0, label: 'No Output'})
+		this.matrixDestinations.push({ id: 0, label: 'No Output' })
 		for (let i = 1; i <= this.config.channels; i++) {
 			this.matrixSources.push({ id: i, label: 'Automix Channel ' + i })
 			this.channelNames.push({ id: i, label: 'Automix Channel ' + i })
@@ -147,52 +157,80 @@ class DUGAN_MODEL_N extends InstanceBase {
 				this.musicInputs.push({ id: i, label: 'MADI Input ' + i })
 			}
 			for (let i = 1; i <= MaxChannelCount; i++) {
-				this.matrixSources.push({ id: ( i + MaxChannelCount ), label: 'MADI Input ' + i  })
+				this.matrixSources.push({ id: i + MaxChannelCount, label: 'MADI Input ' + i })
 				this.matrixDestinations.push({ id: i, label: 'MADI Output ' + i })
 			}
-			this.clockSources.push ({ id: 0, label: 'Madi' })
-			for (let i = 1; i <= (MaxChannelCount - this.config.channels + 1); i++) {
-				this.offsetChannelList.push({ id: i, label: 'Madi Input ' + i})
+			this.clockSources.push({ id: 0, label: 'Madi' })
+			for (let i = 1; i <= MaxChannelCount - this.config.channels + 1; i++) {
+				this.offsetChannelList.push({ id: i, label: 'Madi Input ' + i })
 			}
 		} else {
 			for (let i = 1; i <= 32; i++) {
 				this.musicInputs.push({ id: i, label: 'Dante Input ' + i })
 			}
 			for (let i = 1; i <= MaxChannelCount; i++) {
-				this.matrixSources.push({ id: ( i + MaxChannelCount ), label: 'Dante Input ' + i })
+				this.matrixSources.push({ id: i + MaxChannelCount, label: 'Dante Input ' + i })
 				this.matrixDestinations.push({ id: i, label: 'Dante Output ' + i })
 			}
-			this.clockSources.push ({ id: 0, label: 'Dante' })
-			for (let i = 1; i <= (MaxChannelCount - this.config.channels + 1); i++) {
-				this.offsetChannelList.push({ id: i, label: 'Dante Input ' + i})
+			this.clockSources.push({ id: 0, label: 'Dante' })
+			for (let i = 1; i <= MaxChannelCount - this.config.channels + 1; i++) {
+				this.offsetChannelList.push({ id: i, label: 'Dante Input ' + i })
 			}
 		}
-		this.clockSources.push ({ id: 1, label: 'Word Clock' })
-		this.clockSources.push ({ id: 2, label: 'Internal' })
-		this.clockSources.push ({ id: 3, label: 'ADAT' })
+		this.clockSources.push({ id: 1, label: 'Word Clock' })
+		this.clockSources.push({ id: 2, label: 'Internal' })
+		this.clockSources.push({ id: 3, label: 'ADAT' })
 		for (let i = 1; i <= 8; i++) {
 			this.musicInputs.push({ id: i + MaxChannelCount, label: 'ADAT Input' + i })
-			this.matrixSources.push({ id: i + ( MaxChannelCount * 2 ), label: 'ADAT Input ' + i })
-			this.matrixDestinations.push({ id: ( i + MaxChannelCount ), label: 'ADAT Output ' + i })
+			this.matrixSources.push({ id: i + MaxChannelCount * 2, label: 'ADAT Input ' + i })
+			this.matrixDestinations.push({ id: i + MaxChannelCount, label: 'ADAT Output ' + i })
 		}
 		for (let i = 81; i <= 86; i++) {
 			this.musicInputs.push({ id: i, label: 'Mix Bus ' + (i - 80) })
 		}
 		for (let i = 1; i <= this.matrixCount; i++) {
-			this.matrixNames.push({ id: i, label: 'Matrix Bus ' + i})
+			this.matrixNames.push({ id: i, label: 'Matrix Bus ' + i })
 		}
-		this.groupNames.push ({ id: 1, label: 'Group A' })
-		this.groupNames.push ({ id: 2, label: 'Group B' })
-		this.groupNames.push ({ id: 3, label: 'Group C' })
+		this.groupNames.push({ id: 1, label: 'Group A' })
+		this.groupNames.push({ id: 2, label: 'Group B' })
+		this.groupNames.push({ id: 3, label: 'Group C' })
 	}
 
 	async configUpdated(config) {
 		let oldConfig = this.config
 		let oldLabel = this.label
 		this.config = config
-		this.log('debug', 'configUpdated. Old Label: ' + oldLabel + ' Old IP: '+ oldConfig.host + ' Old Port: ' + oldConfig.port + ' Old Keep Alive: ' + oldConfig.keepAlive + ' Old Model: ' + oldConfig.model + ' Old Channels: ' + oldConfig.channels )
-		this.log('debug', 'configUpdated. New Label: ' + this.label + ' New IP: '+ this.config.host + ' New Port: ' + this.config.port + ' New Keep Alive: ' + this.config.keepAlive + ' New Model: ' + this.config.model + ' New Channels: ' + this.config.channels )
-		if ( oldConfig.keepAlive == this.config.keepAlive ) {
+		this.log(
+			'debug',
+			'configUpdated. Old Label: ' +
+				oldLabel +
+				' Old IP: ' +
+				oldConfig.host +
+				' Old Port: ' +
+				oldConfig.port +
+				' Old Keep Alive: ' +
+				oldConfig.keepAlive +
+				' Old Model: ' +
+				oldConfig.model +
+				' Old Channels: ' +
+				oldConfig.channels
+		)
+		this.log(
+			'debug',
+			'configUpdated. New Label: ' +
+				this.label +
+				' New IP: ' +
+				this.config.host +
+				' New Port: ' +
+				this.config.port +
+				' New Keep Alive: ' +
+				this.config.keepAlive +
+				' New Model: ' +
+				this.config.model +
+				' New Channels: ' +
+				this.config.channels
+		)
+		if (oldConfig.keepAlive == this.config.keepAlive) {
 			this.log('debug', 'keepalive unchanged')
 		} else {
 			clearTimeout(this.keepAliveTimer)
@@ -202,7 +240,7 @@ class DUGAN_MODEL_N extends InstanceBase {
 				}, this.config.keepAlive * 1000)
 			}
 		}
-		if (( oldConfig.model == this.config.model ) && ( oldConfig.channels == this.config.channels )) {
+		if (oldConfig.model == this.config.model && oldConfig.channels == this.config.channels) {
 			this.log('debug', 'model & channel count unchanged')
 		} else {
 			this.initVariables()
@@ -210,8 +248,8 @@ class DUGAN_MODEL_N extends InstanceBase {
 			this.updateFeedbacks() // export feedbacks
 			this.updateVariableDefinitions() // export variable definitions
 		}
-		
-		if (( oldConfig.host == this.config.host ) && ( oldConfig.port == this.config.port ) && ( oldConfig.udp == this.config.udp )) {
+
+		if (oldConfig.host == this.config.host && oldConfig.port == this.config.port && oldConfig.udp == this.config.udp) {
 			// nothings changed
 			this.log('debug', 'connection unchanged')
 		} else {
@@ -233,8 +271,6 @@ class DUGAN_MODEL_N extends InstanceBase {
 				this.initTCP()
 			}
 		}
-		
-	
 	}
 
 	// Return config fields for web config
@@ -256,15 +292,15 @@ class DUGAN_MODEL_N extends InstanceBase {
 				regex: Regex.PORT,
 				tooltip: 'Port 23 or 9776',
 			},
-//			{
-//				type: 'checkbox',
-//				id: 'udp',
-//				label: 'Use UDP',
-//				default: false,
-//				width: 4,
-//				tooltip: 'Connect via UDP instead of TCP',
-//				isVisible: false,
-//			},
+			//			{
+			//				type: 'checkbox',
+			//				id: 'udp',
+			//				label: 'Use UDP',
+			//				default: false,
+			//				width: 4,
+			//				tooltip: 'Connect via UDP instead of TCP',
+			//				isVisible: false,
+			//			},
 			{
 				type: 'number',
 				id: 'keepAlive',
@@ -281,8 +317,8 @@ class DUGAN_MODEL_N extends InstanceBase {
 				id: 'model',
 				label: 'Dugan Model',
 				choices: [
-					{ id: 1, label: 'Model M'},
-					{ id: 2, label: 'Model N'},
+					{ id: 1, label: 'Model M' },
+					{ id: 2, label: 'Model N' },
 				],
 				default: 2,
 				width: 2,

@@ -125,7 +125,7 @@ module.exports = function (self) {
 						{ id: 0, label: 'On' },
 						{ id: 1, label: 'Over ride' },
 						{ id: 3, label: 'Query' },
-					]
+					],
 				},
 			],
 			callback: ({ options }) => {
@@ -159,9 +159,7 @@ module.exports = function (self) {
 					range: true,
 					step: 0.1,
 					required: true,
-					useVariables: true,
 					regex: Regex.NUMBER,
-	
 				},
 				{
 					id: 'query',
@@ -172,22 +170,12 @@ module.exports = function (self) {
 			],
 			callback: async ({ options }) => {
 				let cmd = 'CW'
-				let chanWeight = await self.parseVariablesInString(options.weight)
 				if (options.query) {
 					cmd += ',' + options.channel + '\r\n'
 				} else {
-					if ( isNaN(chanWeight)) {
-						self.log('warn', 'Weight must be a number')
-					} else {
-						chanWeight = (chanWeight < 100) ? 100:
-							(chanWeight > 15 ) ? 15 :
-							chanWeight
-						cmd += ',' + options.channel + ',' + chanWeight + '\r\n'
-						self.sendCommand(cmd)
-					}
-					
+					cmd += ',' + options.channel + ',' + options.weight + '\r\n'
 				}
-				
+				self.sendCommand(cmd)
 			},
 		},
 		channel_music_mode: {
@@ -210,7 +198,7 @@ module.exports = function (self) {
 						{ id: 0, label: 'Off' },
 						{ id: 1, label: 'On' },
 						{ id: 3, label: 'Query' },
-					]
+					],
 				},
 			],
 			callback: ({ options }) => {
@@ -243,7 +231,7 @@ module.exports = function (self) {
 						{ id: 0, label: 'Off' },
 						{ id: 1, label: 'On' },
 						{ id: 3, label: 'Query' },
-					]
+					],
 				},
 			],
 			callback: ({ options }) => {
@@ -327,15 +315,13 @@ module.exports = function (self) {
 					cmd += ',' + options.channel + '\r\n'
 				} else {
 					let chanName = await self.parseVariablesInString(options.name)
-					chanName = chanName.slice(0,15)
-					if ((chanName.includes (',')) || (chanName.includes (';')) || (chanName.includes ('*'))) {
+					chanName = chanName.slice(0, 15)
+					if (chanName.includes(',') || chanName.includes(';') || chanName.includes('*')) {
 						self.log('warn', 'Invalid channel name, special character: ' + chanName)
 					} else {
 						cmd += ',' + options.channel + ',' + chanName + '\r\n'
 						self.sendCommand(cmd)
 					}
-
-										
 				}
 			},
 		},
@@ -368,7 +354,6 @@ module.exports = function (self) {
 					default: false,
 					tooltip: 'Query will poll the group mute state',
 				},
-
 			],
 			callback: ({ options }) => {
 				let cmd = 'SM'
@@ -413,7 +398,6 @@ module.exports = function (self) {
 					default: false,
 					tooltip: 'Query will poll the group preset state',
 				},
-
 			],
 			callback: ({ options }) => {
 				let cmd = 'SP'
@@ -458,7 +442,6 @@ module.exports = function (self) {
 					default: false,
 					tooltip: 'Query will poll the group over ride state',
 				},
-
 			],
 			callback: ({ options }) => {
 				let cmd = 'SO'
@@ -503,7 +486,6 @@ module.exports = function (self) {
 					default: false,
 					tooltip: 'Query will poll the group last hold state',
 				},
-
 			],
 			callback: ({ options }) => {
 				let cmd = 'LH'
@@ -705,7 +687,7 @@ module.exports = function (self) {
 			],
 			callback: ({ options }) => {
 				let cmd = 'MXM'
-				if ( options.mute == 3 ) {
+				if (options.mute == 3) {
 					cmd += ',' + options.matrix + '\r\n'
 				} else {
 					cmd += ',' + options.matrix + ',' + options.mute + '\r\n'
@@ -739,7 +721,7 @@ module.exports = function (self) {
 			],
 			callback: ({ options }) => {
 				let cmd = 'MXP'
-				if ( options.polarity == 3 ) {
+				if (options.polarity == 3) {
 					cmd += ',' + options.matrix + '\r\n'
 				} else {
 					cmd += ',' + options.matrix + ',' + options.polarity + '\r\n'
@@ -882,14 +864,13 @@ module.exports = function (self) {
 					label: '',
 					value: 'Resets Matrix parameters to defaults',
 				},
-			
 			],
-			callback: ({ options }) => {
+			callback: () => {
 				let cmd = 'RM'
 				self.sendCommand(cmd + '\r\n')
 			},
 		},
- 		sc_count: {
+		sc_count: {
 			name: 'Scene - Count',
 			description: 'Query number of saved scenes',
 			options: [
@@ -900,7 +881,7 @@ module.exports = function (self) {
 					value: 'Returns number of scenes saved in unit',
 				},
 			],
-			callback: ({ options }) => {
+			callback: () => {
 				let cmd = 'SNC'
 				self.sendCommand(cmd + '\r\n')
 			},
@@ -915,9 +896,8 @@ module.exports = function (self) {
 					label: '',
 					value: 'Returns name of active scene',
 				},
-			
 			],
-			callback: ({ options }) => {
+			callback: () => {
 				let cmd = 'SNA'
 				self.sendCommand(cmd + '\r\n')
 			},
@@ -940,8 +920,8 @@ module.exports = function (self) {
 			callback: async ({ options }) => {
 				let cmd = 'SNR'
 				let sceneName = await self.parseVariablesInString(options.name)
-				sceneName = sceneName.slice(0,15)
-				if ( sceneName.includes (',') || sceneName.includes (';') || (chanName.includes ('*'))) {
+				sceneName = sceneName.slice(0, 15)
+				if (sceneName.includes(',') || sceneName.includes(';') || sceneName.includes('*')) {
 					self.log('warn', 'Invalid scene name: ' + sceneName)
 				} else {
 					cmd += ',' + sceneName + '\r\n'
@@ -967,8 +947,8 @@ module.exports = function (self) {
 			callback: async ({ options }) => {
 				let cmd = 'SNS'
 				let sceneName = await self.parseVariablesInString(options.name)
-				sceneName = sceneName.slice(0,15)
-				if ( sceneName.includes (',') || sceneName.includes (';') || (chanName.includes ('*'))) {
+				sceneName = sceneName.slice(0, 15)
+				if (sceneName.includes(',') || sceneName.includes(';') || sceneName.includes('*')) {
 					self.log('warn', 'Invalid scene name, remove comma or semicolon: ' + sceneName)
 				} else {
 					cmd += ',' + sceneName + '\r\n'
@@ -994,8 +974,8 @@ module.exports = function (self) {
 			callback: async ({ options }) => {
 				let cmd = 'SNN'
 				let sceneName = await self.parseVariablesInString(options.name)
-				sceneName = sceneName.slice(0,15)
-				if ( sceneName.includes (',') || sceneName.includes (';') || (chanName.includes ('*'))) {
+				sceneName = sceneName.slice(0, 15)
+				if (sceneName.includes(',') || sceneName.includes(';') || sceneName.includes('*')) {
 					self.log('warn', 'Invalid scene name, remove comma or semicolon: ' + sceneName)
 				} else {
 					cmd += ',' + sceneName + '\r\n'
@@ -1032,10 +1012,23 @@ module.exports = function (self) {
 				let cmd = 'SNE'
 				let sceneNameCurrent = self.parseVariablesInString(options.currentname)
 				let sceneNameNew = await self.parseVariablesInString(options.newname)
-				sceneNameCurrent = await sceneNameCurrent.slice(0,15)
-				sceneNameNew = sceneNameNew.slice(0,15)
-				if ( sceneNameCurrent.includes (',') || sceneNameNew.includes (',') || sceneNameCurrent.includes (';') || sceneNameNew.includes (';') || sceneNameNew.includes ('*') || sceneNameCurrent.includes ('*')) {
-					self.log('warn', 'Invalid scene name, remove comma or semicolon. Current Scene Name: ' + sceneNameCurrent + '. New Scene Name: ' + sceneNameNew)
+				sceneNameCurrent = await sceneNameCurrent.slice(0, 15)
+				sceneNameNew = sceneNameNew.slice(0, 15)
+				if (
+					sceneNameCurrent.includes(',') ||
+					sceneNameNew.includes(',') ||
+					sceneNameCurrent.includes(';') ||
+					sceneNameNew.includes(';') ||
+					sceneNameNew.includes('*') ||
+					sceneNameCurrent.includes('*')
+				) {
+					self.log(
+						'warn',
+						'Invalid scene name, remove comma or semicolon. Current Scene Name: ' +
+							sceneNameCurrent +
+							'. New Scene Name: ' +
+							sceneNameNew
+					)
 				} else {
 					cmd += ',' + sceneNameCurrent + ',' + sceneNameNew + '\r\n'
 					self.sendCommand(cmd)
@@ -1056,12 +1049,11 @@ module.exports = function (self) {
 					useVariables: true,
 					tooltip: 'Max Length: 15 char. "," ";" Forbidden.',
 				},
-
 			],
 			callback: async ({ options }) => {
 				let cmd = 'SND'
-				let sceneDelete =  await self.parseVariablesInString(options.name)
-				if ( sceneDelete.includes (',') || (sceneDelete.includes (';')) || (sceneDelete.includes ('*'))) {
+				let sceneDelete = await self.parseVariablesInString(options.name)
+				if (sceneDelete.includes(',') || sceneDelete.includes(';') || sceneDelete.includes('*')) {
 					self.log('warn', 'Invalid scene name: ' + sceneDelete)
 				} else {
 					cmd += ',' + options.name + '\r\n'
@@ -1080,7 +1072,7 @@ module.exports = function (self) {
 					value: 'Does not change system settings',
 				},
 			],
-			callback: ({ options }) => {
+			callback: () => {
 				let cmd = 'FP'
 				self.sendCommand(cmd + '\r\n')
 			},
@@ -1313,7 +1305,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				let cmd = 'BM'
+				let cmd = 'DH'
 				if (options.dhcp == 2) {
 					cmd += '\r\n'
 				} else {
@@ -1333,7 +1325,7 @@ module.exports = function (self) {
 					value: 'Report the state of the headroom switch on the rear panel',
 				},
 			],
-			callback: ({ options }) => {
+			callback: () => {
 				let cmd = 'HR'
 				self.sendCommand(cmd + '\r\n')
 			},
@@ -1349,7 +1341,7 @@ module.exports = function (self) {
 					value: 'Report the system Sample Rate',
 				},
 			],
-			callback: ({ options }) => {
+			callback: () => {
 				let cmd = 'SF'
 				self.sendCommand(cmd + '\r\n')
 			},
@@ -1365,7 +1357,7 @@ module.exports = function (self) {
 					value: 'Report the system master status',
 				},
 			],
-			callback: ({ options }) => {
+			callback: () => {
 				let cmd = 'MM'
 				self.sendCommand(cmd + '\r\n')
 			},
@@ -1381,7 +1373,7 @@ module.exports = function (self) {
 					value: 'Report the state of system resources',
 				},
 			],
-			callback: ({ options }) => {
+			callback: () => {
 				let cmd = 'HW'
 				self.sendCommand(cmd + '\r\n')
 			},
@@ -1397,7 +1389,7 @@ module.exports = function (self) {
 					value: 'Query the system configuration',
 				},
 			],
-			callback: ({ options }) => {
+			callback: () => {
 				let cmd = 'SC'
 				self.sendCommand(cmd + '\r\n')
 			},
@@ -1413,7 +1405,7 @@ module.exports = function (self) {
 					value: 'Query the firmware version',
 				},
 			],
-			callback: ({ options }) => {
+			callback: () => {
 				let cmd = 'VE'
 				self.sendCommand(cmd + '\r\n')
 			},
@@ -1429,7 +1421,7 @@ module.exports = function (self) {
 					value: 'Query the number of client connections',
 				},
 			],
-			callback: ({ options }) => {
+			callback: () => {
 				let cmd = 'CC'
 				self.sendCommand(cmd + '\r\n')
 			},
@@ -1462,13 +1454,13 @@ module.exports = function (self) {
 					cmd += '\r\n'
 				} else {
 					let unitName = await self.parseVariablesInString(options.name)
-					unitName = sceneName.slice(0,15)
-					if ((unitName.includes (',')) || (unitName.includes (';')) || (unitName.includes (';'))) {
+					unitName = unitName.slice(0, 15)
+					if (unitName.includes(',') || unitName.includes(';') || unitName.includes(';')) {
 						self.log('warn', 'Invalid unit name, remove comma or semicolon : ' + unitName)
 					} else {
 						cmd += ',' + unitName + '\r\n'
 						self.sendCommand(cmd)
-					}		
+					}
 				}
 				self.sendCommand(cmd)
 			},
@@ -1538,7 +1530,16 @@ module.exports = function (self) {
 				if (options.query) {
 					cmd += '\r\n'
 				} else {
-					cmd += ',' + Math.floor(options.byte1) + ',' + Math.floor(options.byte2) + ',' + Math.floor(options.byte3) + ',' + Math.floor(options.byte4) + '\r\n'
+					cmd +=
+						',' +
+						Math.floor(options.byte1) +
+						',' +
+						Math.floor(options.byte2) +
+						',' +
+						Math.floor(options.byte3) +
+						',' +
+						Math.floor(options.byte4) +
+						'\r\n'
 				}
 				self.sendCommand(cmd)
 			},
@@ -1608,7 +1609,16 @@ module.exports = function (self) {
 				if (options.query) {
 					cmd += '\r\n'
 				} else {
-					cmd += ',' + Math.floor(options.byte1) + ',' + Math.floor(options.byte2) + ',' + Math.floor(options.byte3) + ',' + Math.floor(options.byte4) + '\r\n'
+					cmd +=
+						',' +
+						Math.floor(options.byte1) +
+						',' +
+						Math.floor(options.byte2) +
+						',' +
+						Math.floor(options.byte3) +
+						',' +
+						Math.floor(options.byte4) +
+						'\r\n'
 				}
 				self.sendCommand(cmd)
 			},
@@ -1678,7 +1688,16 @@ module.exports = function (self) {
 				if (options.query) {
 					cmd += '\r\n'
 				} else {
-					cmd += ',' + Math.floor(options.byte1) + ',' + Math.floor(options.byte2) + ',' + Math.floor(options.byte3) + ',' + Math.floor(options.byte4) + '\r\n'
+					cmd +=
+						',' +
+						Math.floor(options.byte1) +
+						',' +
+						Math.floor(options.byte2) +
+						',' +
+						Math.floor(options.byte3) +
+						',' +
+						Math.floor(options.byte4) +
+						'\r\n'
 				}
 				self.sendCommand(cmd)
 			},
@@ -1694,7 +1713,7 @@ module.exports = function (self) {
 					value: 'Get all status parameters',
 				},
 			],
-			callback: ({ options }) => {
+			callback: () => {
 				let cmd = 'GP'
 				self.sendCommand(cmd + '\r\n')
 			},
@@ -1710,7 +1729,7 @@ module.exports = function (self) {
 					value: 'Get all signal status parameters',
 				},
 			],
-			callback: ({ options }) => {
+			callback: () => {
 				let cmd = 'GS'
 				self.sendCommand(cmd + '\r\n')
 			},
@@ -1726,7 +1745,7 @@ module.exports = function (self) {
 					value: 'Get all signal channels automix gains',
 				},
 			],
-			callback: ({ options }) => {
+			callback: () => {
 				let cmd = 'GSA'
 				self.sendCommand(cmd + '\r\n')
 			},
@@ -1742,7 +1761,7 @@ module.exports = function (self) {
 					value: 'Get all signal clip flags',
 				},
 			],
-			callback: ({ options }) => {
+			callback: () => {
 				let cmd = 'GSC'
 				self.sendCommand(cmd + '\r\n')
 			},
@@ -1758,23 +1777,7 @@ module.exports = function (self) {
 					value: 'Get all input peaks',
 				},
 			],
-			callback: ({ options }) => {
-				let cmd = 'GSI'
-				self.sendCommand(cmd + '\r\n')
-			},
-		},
-		query_inputpeak: {
-			name: 'Query - Input Peaks',
-			description: 'Get all input peak meters',
-			options: [
-				{
-					id: 'info',
-					type: 'static-text',
-					label: '',
-					value: 'Get all input peaks',
-				},
-			],
-			callback: ({ options }) => {
+			callback: () => {
 				let cmd = 'GSI'
 				self.sendCommand(cmd + '\r\n')
 			},
@@ -1790,7 +1793,7 @@ module.exports = function (self) {
 					value: 'Get all music reference peaks',
 				},
 			],
-			callback: ({ options }) => {
+			callback: () => {
 				let cmd = 'GSM'
 				self.sendCommand(cmd + '\r\n')
 			},
@@ -1806,7 +1809,7 @@ module.exports = function (self) {
 					value: 'Get all NOM Gain Limits',
 				},
 			],
-			callback: ({ options }) => {
+			callback: () => {
 				let cmd = 'GSN'
 				self.sendCommand(cmd + '\r\n')
 			},
@@ -1822,7 +1825,7 @@ module.exports = function (self) {
 					value: 'Get all output peak meters',
 				},
 			],
-			callback: ({ options }) => {
+			callback: () => {
 				let cmd = 'GSO'
 				self.sendCommand(cmd + '\r\n')
 			},
@@ -1838,7 +1841,7 @@ module.exports = function (self) {
 					value: 'Get all signal presence flags',
 				},
 			],
-			callback: ({ options }) => {
+			callback: () => {
 				let cmd = 'GSS'
 				self.sendCommand(cmd + '\r\n')
 			},
@@ -1854,7 +1857,7 @@ module.exports = function (self) {
 					value: 'Get all matrix output meterss',
 				},
 			],
-			callback: ({ options }) => {
+			callback: () => {
 				let cmd = 'GSX'
 				self.sendCommand(cmd + '\r\n')
 			},
