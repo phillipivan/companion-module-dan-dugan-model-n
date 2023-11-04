@@ -121,10 +121,12 @@ class DUGAN_MODEL_N extends InstanceBase {
 				while ((i = receivebuffer.indexOf('\n', offset)) !== -1) {
 					line = receivebuffer.substr(offset, i - offset)
 					offset = i + 1
-					this.log('info', line.toString())
-					//					if (line != 'OK') {
-					//						this.log('info', line.toString())
-					//					}
+					let strRep = line.toString()
+					if (strRep.startsWith('*, ')){
+						this.log('warn', line.toString())
+					} else {
+						this.log('info', line.toString())
+					}
 				}
 				receivebuffer = receivebuffer.substr(offset)
 			})
