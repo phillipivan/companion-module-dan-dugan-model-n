@@ -21,14 +21,18 @@ module.exports = function (self) {
 						{ id: 0, label: 'Manual' },
 						{ id: 1, label: 'Auto' },
 						{ id: 2, label: 'Mute' },
-						{ id: 3, label: 'Query' },
 					],
-					tooltip: 'Query will poll the channels current mode',
+				},
+				{
+					id: 'query',
+					type: 'checkbox',
+					label: 'Query',
+					default: false,
 				},
 			],
 			callback: ({ options }) => {
 				let cmd = 'CM'
-				if (options.mode == 3) {
+				if (options.query) {
 					cmd += ',' + options.channel + '\r\n'
 				} else {
 					cmd += ',' + options.channel + ',' + options.mode + '\r\n'
@@ -56,14 +60,18 @@ module.exports = function (self) {
 						{ id: 0, label: 'Manual' },
 						{ id: 1, label: 'Auto' },
 						{ id: 2, label: 'Mute' },
-						{ id: 3, label: 'Query' },
 					],
-					tooltip: 'Query will poll the channels current preset',
+				},
+				{
+					id: 'query',
+					type: 'checkbox',
+					label: 'Query',
+					default: false,
 				},
 			],
 			callback: ({ options }) => {
 				let cmd = 'CP'
-				if (options.preset == 3) {
+				if (options.query) {
 					cmd += ',' + options.channel + '\r\n'
 				} else {
 					cmd += ',' + options.channel + ',' + options.preset + '\r\n'
@@ -79,7 +87,7 @@ module.exports = function (self) {
 					id: 'channel',
 					type: 'dropdown',
 					label: 'Channel',
-					default: 1,
+					default: 0,
 					choices: self.channelNames,
 				},
 				{
@@ -90,14 +98,18 @@ module.exports = function (self) {
 					choices: [
 						{ id: 0, label: 'On' },
 						{ id: 1, label: 'Bypass' },
-						{ id: 3, label: 'Query' },
 					],
-					tooltip: 'Query will poll the channels current bypass state',
+				},
+				{
+					id: 'query',
+					type: 'checkbox',
+					label: 'Query',
+					default: false,
 				},
 			],
 			callback: ({ options }) => {
 				let cmd = 'BP'
-				if (options.bypass == 3) {
+				if (options.query) {
 					cmd += ',' + options.channel + '\r\n'
 				} else {
 					cmd += ',' + options.channel + ',' + options.bypass + '\r\n'
@@ -120,17 +132,22 @@ module.exports = function (self) {
 					id: 'override',
 					type: 'dropdown',
 					label: 'Over ride',
-					default: 1,
+					default: 0,
 					choices: [
 						{ id: 0, label: 'Normal' },
 						{ id: 1, label: 'Override' },
-						{ id: 3, label: 'Query' },
 					],
+				},
+				{
+					id: 'query',
+					type: 'checkbox',
+					label: 'Query',
+					default: false,
 				},
 			],
 			callback: ({ options }) => {
 				let cmd = 'CO'
-				if (options.override == 3) {
+				if (options.query) {
 					cmd += ',' + options.channel + '\r\n'
 				} else {
 					cmd += ',' + options.channel + ',' + options.override + '\r\n'
@@ -186,7 +203,7 @@ module.exports = function (self) {
 					id: 'channel',
 					type: 'dropdown',
 					label: 'Channel',
-					default: 1,
+					default: 0,
 					choices: self.channelNames,
 				},
 				{
@@ -197,13 +214,18 @@ module.exports = function (self) {
 					choices: [
 						{ id: 0, label: 'Off' },
 						{ id: 1, label: 'On' },
-						{ id: 3, label: 'Query' },
 					],
+				},
+				{
+					id: 'query',
+					type: 'checkbox',
+					label: 'Query',
+					default: false,
 				},
 			],
 			callback: ({ options }) => {
 				let cmd = 'MR'
-				if (options.music == 3) {
+				if (options.query) {
 					cmd += ',' + options.channel + '\r\n'
 				} else {
 					cmd += ',' + options.channel + ',' + options.music + '\r\n'
@@ -219,7 +241,7 @@ module.exports = function (self) {
 					id: 'channel',
 					type: 'dropdown',
 					label: 'Channel',
-					default: 1,
+					default: 0,
 					choices: self.channelNames,
 				},
 				{
@@ -230,13 +252,18 @@ module.exports = function (self) {
 					choices: [
 						{ id: 0, label: 'Off' },
 						{ id: 1, label: 'On' },
-						{ id: 3, label: 'Query' },
 					],
+				},
+				{
+					id: 'query',
+					type: 'checkbox',
+					label: 'Query',
+					default: false,
 				},
 			],
 			callback: ({ options }) => {
 				let cmd = 'NE'
-				if (options.nom == 3) {
+				if (options.query) {
 					cmd += ',' + options.channel + '\r\n'
 				} else {
 					cmd += ',' + options.channel + ',' + options.nom + '\r\n'
@@ -259,7 +286,7 @@ module.exports = function (self) {
 					id: 'group',
 					type: 'dropdown',
 					label: 'Group Assignment',
-					default: '1',
+					default: 1,
 					choices: self.groupNames,
 				},
 				{
@@ -680,14 +707,18 @@ module.exports = function (self) {
 					choices: [
 						{ id: 0, label: 'On' },
 						{ id: 1, label: 'Mute' },
-						{ id: 3, label: 'Query' },
 					],
-					tooltip: 'Query will poll the matrix mute state',
+				},
+				{
+					id: 'query',
+					type: 'checkbox',
+					label: 'Query',
+					default: false,
 				},
 			],
 			callback: ({ options }) => {
 				let cmd = 'MXM'
-				if (options.mute == 3) {
+				if (options.query) {
 					cmd += ',' + options.matrix + '\r\n'
 				} else {
 					cmd += ',' + options.matrix + ',' + options.mute + '\r\n'
@@ -714,14 +745,18 @@ module.exports = function (self) {
 					choices: [
 						{ id: 0, label: 'Normal' },
 						{ id: 1, label: 'Reversed' },
-						{ id: 3, label: 'Query' },
 					],
-					tooltip: 'Query will poll the matrix polarity state',
+				},
+				{
+					id: 'query',
+					type: 'checkbox',
+					label: 'Query',
+					default: false,
 				},
 			],
 			callback: ({ options }) => {
 				let cmd = 'MXP'
-				if (options.polarity == 3) {
+				if (options.query) {
 					cmd += ',' + options.matrix + '\r\n'
 				} else {
 					cmd += ',' + options.matrix + ',' + options.polarity + '\r\n'
@@ -1077,14 +1112,18 @@ module.exports = function (self) {
 						{ id: 0, label: 'Off' },
 						{ id: 1, label: 'On' },
 						{ id: 2, label: 'On with metering' },
-						{ id: 3, label: 'Query' },
 					],
-					tooltip: 'Query will poll the current subscribe state',
+				},
+				{
+					id: 'query',
+					type: 'checkbox',
+					label: 'Query',
+					default: false,
 				},
 			],
 			callback: ({ options }) => {
 				let cmd = 'SU'
-				if (options.subscribe == 3) {
+				if (options.query) {
 					cmd += '\r\n'
 				} else {
 					cmd += ',' + options.subscribe + '\r\n'
@@ -1168,14 +1207,18 @@ module.exports = function (self) {
 					choices: [
 						{ id: 1, label: '8 Channels' },
 						{ id: 2, label: '16 Channels' },
-						{ id: 3, label: 'Query' },
 					],
-					tooltip: 'Query will poll the ADAT Mirror mode. When in ADAT mode return the number of Dugan channels',
+				},
+				{
+					id: 'query',
+					type: 'checkbox',
+					label: 'Query',
+					default: false,
 				},
 			],
 			callback: ({ options }) => {
 				let cmd = 'AM'
-				if (options.mirror == 3) {
+				if (options.query) {
 					cmd += '\r\n'
 				} else {
 					cmd += ',' + options.mirror + '\r\n'
@@ -1259,14 +1302,18 @@ module.exports = function (self) {
 					choices: [
 						{ id: 0, label: 'Off' },
 						{ id: 1, label: 'On' },
-						{ id: 2, label: 'Query' },
 					],
-					tooltip: 'Query will poll the channels current mode',
+				},
+				{
+					id: 'query',
+					type: 'checkbox',
+					label: 'Query',
+					default: false,
 				},
 			],
 			callback: ({ options }) => {
 				let cmd = 'BM'
-				if (options.blink == 2) {
+				if (options.query) {
 					cmd += '\r\n'
 				} else {
 					cmd += ',' + options.blink + '\r\n'
@@ -1286,14 +1333,18 @@ module.exports = function (self) {
 					choices: [
 						{ id: 0, label: 'Off' },
 						{ id: 1, label: 'On' },
-						{ id: 2, label: 'Query' },
 					],
-					tooltip: 'Query will poll the DHCP state',
+				},
+				{
+					id: 'query',
+					type: 'checkbox',
+					label: 'Query',
+					default: false,
 				},
 			],
 			callback: ({ options }) => {
 				let cmd = 'DH'
-				if (options.dhcp == 2) {
+				if (options.query) {
 					cmd += '\r\n'
 				} else {
 					cmd += ',' + options.dhcp + '\r\n'
