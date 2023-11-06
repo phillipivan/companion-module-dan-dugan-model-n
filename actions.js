@@ -1,4 +1,6 @@
 const { Regex } = require('@companion-module/base')
+const regexpSafeString = new RegExp(/^[^,*;]{1,15}/g)
+
 module.exports = function (self) {
 	self.setActionDefinitions({
 		channel_mode: {
@@ -341,15 +343,19 @@ module.exports = function (self) {
 				if (options.query) {
 					cmd += ',' + options.channel + '\r\n'
 				} else {
-					let chanName = await self.parseVariablesInString(options.name)
-					chanName = chanName.slice(0, 15)
-					if (chanName.includes(',') || chanName.includes(';') || chanName.includes('*')) {
-						self.log('warn', 'Invalid channel name, special character: ' + chanName)
+					let chanName
+					let safeChanName
+					while ((chanName = regexpSafeString.exec(await self.parseVariablesInString(options.name))) !== null) {
+						safeChanName = chanName[0]
+					}
+					if (safeChanName != undefined && safeChanName.length >= 1) {
+						cmd += ',' + options.channel + ',' + safeChanName + '\r\n'
 					} else {
-						cmd += ',' + options.channel + ',' + chanName + '\r\n'
-						self.sendCommand(cmd)
+						self.log('warn', 'Not a valid channel name')
+						return false
 					}
 				}
+				self.sendCommand(cmd)
 			},
 		},
 		group_mute: {
@@ -938,13 +944,16 @@ module.exports = function (self) {
 			],
 			callback: async ({ options }) => {
 				let cmd = 'SNR'
-				let sceneName = await self.parseVariablesInString(options.name)
-				sceneName = sceneName.slice(0, 15)
-				if (sceneName.includes(',') || sceneName.includes(';') || sceneName.includes('*')) {
-					self.log('warn', 'Invalid scene name: ' + sceneName)
-				} else {
-					cmd += ',' + sceneName + '\r\n'
+				let sceneName
+				let safeSceneName
+				while ((sceneName = regexpSafeString.exec(await self.parseVariablesInString(options.name))) !== null) {
+					safeSceneName = sceneName[0]
+				}
+				if (safeSceneName != undefined && safeSceneName.length >= 1) {
+					cmd += ',' + safeSceneName + '\r\n'
 					self.sendCommand(cmd)
+				} else {
+					self.log('warn', 'Not a valid scene name')
 				}
 			},
 		},
@@ -965,13 +974,16 @@ module.exports = function (self) {
 			],
 			callback: async ({ options }) => {
 				let cmd = 'SNS'
-				let sceneName = await self.parseVariablesInString(options.name)
-				sceneName = sceneName.slice(0, 15)
-				if (sceneName.includes(',') || sceneName.includes(';') || sceneName.includes('*')) {
-					self.log('warn', 'Invalid scene name, remove comma or semicolon: ' + sceneName)
-				} else {
-					cmd += ',' + sceneName + '\r\n'
+				let sceneName
+				let safeSceneName
+				while ((sceneName = regexpSafeString.exec(await self.parseVariablesInString(options.name))) !== null) {
+					safeSceneName = sceneName[0]
+				}
+				if (safeSceneName != undefined && safeSceneName.length >= 1) {
+					cmd += ',' + safeSceneName + '\r\n'
 					self.sendCommand(cmd)
+				} else {
+					self.log('warn', 'Not a valid scene name')
 				}
 			},
 		},
@@ -992,13 +1004,16 @@ module.exports = function (self) {
 			],
 			callback: async ({ options }) => {
 				let cmd = 'SNN'
-				let sceneName = await self.parseVariablesInString(options.name)
-				sceneName = sceneName.slice(0, 15)
-				if (sceneName.includes(',') || sceneName.includes(';') || sceneName.includes('*')) {
-					self.log('warn', 'Invalid scene name, remove comma or semicolon: ' + sceneName)
-				} else {
-					cmd += ',' + sceneName + '\r\n'
+				let sceneName
+				let safeSceneName
+				while ((sceneName = regexpSafeString.exec(await self.parseVariablesInString(options.name))) !== null) {
+					safeSceneName = sceneName[0]
+				}
+				if (safeSceneName != undefined && safeSceneName.length >= 1) {
+					cmd += ',' + safeSceneName + '\r\n'
 					self.sendCommand(cmd)
+				} else {
+					self.log('warn', 'Not a valid scene name')
 				}
 			},
 		},
@@ -1029,28 +1044,26 @@ module.exports = function (self) {
 			],
 			callback: async ({ options }) => {
 				let cmd = 'SNE'
-				let sceneNameCurrent = self.parseVariablesInString(options.currentname)
-				let sceneNameNew = await self.parseVariablesInString(options.newname)
-				sceneNameCurrent = await sceneNameCurrent.slice(0, 15)
-				sceneNameNew = sceneNameNew.slice(0, 15)
+				let sceneNameCurrent
+				let sceneNameNew
+				let safeSceneNameCurrent
+				let safeSceneNameNew
+				while ((sceneNameCurrent = regexpSafeString.exec(await self.parseVariablesInString(options.name))) !== null) {
+					safeSceneNameCurrent = sceneNameCurrent[0]
+				}
+				while ((sceneNameNew = regexpSafeString.exec(await self.parseVariablesInString(options.name))) !== null) {
+					safeSceneNameNew = sceneNameNew[0]
+				}
 				if (
-					sceneNameCurrent.includes(',') ||
-					sceneNameNew.includes(',') ||
-					sceneNameCurrent.includes(';') ||
-					sceneNameNew.includes(';') ||
-					sceneNameNew.includes('*') ||
-					sceneNameCurrent.includes('*')
+					safeSceneNameCurrent != undefined &&
+					safeSceneNameCurrent.length >= 1 &&
+					safeSceneNameNew != undefined &&
+					safeSceneNameNew.length >= 1
 				) {
-					self.log(
-						'warn',
-						'Invalid scene name, remove comma or semicolon. Current Scene Name: ' +
-							sceneNameCurrent +
-							'. New Scene Name: ' +
-							sceneNameNew
-					)
-				} else {
-					cmd += ',' + sceneNameCurrent + ',' + sceneNameNew + '\r\n'
+					cmd += ',' + safeSceneNameCurrent + ',' + safeSceneNameNew + '\r\n'
 					self.sendCommand(cmd)
+				} else {
+					self.log('warn', 'Not a valid scene name')
 				}
 			},
 		},
@@ -1071,12 +1084,16 @@ module.exports = function (self) {
 			],
 			callback: async ({ options }) => {
 				let cmd = 'SND'
-				let sceneDelete = await self.parseVariablesInString(options.name)
-				if (sceneDelete.includes(',') || sceneDelete.includes(';') || sceneDelete.includes('*')) {
-					self.log('warn', 'Invalid scene name: ' + sceneDelete)
-				} else {
-					cmd += ',' + options.name + '\r\n'
+				let sceneName
+				let safeSceneName
+				while ((sceneName = regexpSafeString.exec(await self.parseVariablesInString(options.name))) !== null) {
+					safeSceneName = sceneName[0]
+				}
+				if (safeSceneName != undefined && safeSceneName.length >= 1) {
+					cmd += ',' + safeSceneName + '\r\n'
 					self.sendCommand(cmd)
+				} else {
+					self.log('warn', 'Not a valid scene name')
 				}
 			},
 		},
@@ -1403,13 +1420,17 @@ module.exports = function (self) {
 				if (options.query) {
 					cmd += '\r\n'
 				} else {
-					let unitName = await self.parseVariablesInString(options.name)
-					unitName = unitName.slice(0, 15)
-					if (unitName.includes(',') || unitName.includes(';') || unitName.includes(';')) {
-						self.log('warn', 'Invalid unit name, remove comma or semicolon : ' + unitName)
+					let Name
+					let safeName
+					while ((Name = regexpSafeString.exec(await self.parseVariablesInString(options.name))) !== null) {
+						safeName = Name[0]
+					}
+					if (safeName != undefined && safeName.length >= 1) {
+						cmd += ',' + safeName + '\r\n'
+
 					} else {
-						cmd += ',' + unitName + '\r\n'
-						self.sendCommand(cmd)
+						self.log('warn', 'Not a valid scene name')
+						return false
 					}
 				}
 				self.sendCommand(cmd)
@@ -1417,7 +1438,7 @@ module.exports = function (self) {
 		},
 		system_network: {
 			name: 'System - Network',
-			description: 'Set unit IP, Netmask or Gateway. Note: Requires reboot to take effect',
+			description: 'Set unit IP, Netmask or Gateway. Requires reboot to take effect',
 			options: [
 				{
 					id: 'mode',

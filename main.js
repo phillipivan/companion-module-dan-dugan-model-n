@@ -8,6 +8,8 @@ const MinChannelCount = 8
 const GroupCount = 3
 const MatrixCount = 6
 const EndSession = 'QUIT\r\n'
+// eslint-disable-next-line no-unused-vars
+let regexp_SafeString = new RegExp(/^[^,*;]{1,15}/g)
 let automixChannels = []
 for (let i = MinChannelCount; i <= MaxChannelCount; i++) {
 	automixChannels.push({ id: i, label: i + ' Automix Channels' })
@@ -74,11 +76,7 @@ class DUGAN_MODEL_N extends InstanceBase {
 
 	pollStatus() {
 		this.log('debug', 'pollStatus')
-		//		let msgTimer1 = {}
-		//		let msgTimer2 = {}
 		this.sendCommand('SNC\r\n') //scene count
-		//		msgTimer1 = setTimeout ({this.sendCommand('SNA\r\n')}, 10) active scene
-		//		msgTimer2 = setTimeout ({this.sendCommand('GP\r\n')}, 20) get all status params
 		this.keepAliveTimer = setTimeout(() => {
 			this.pollStatus()
 		}, this.config.keepAlive * 1000)
