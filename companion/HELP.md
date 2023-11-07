@@ -1,4 +1,4 @@
-## Dan Dugan Sound Design Model M & N Automixer
+## Dan Dugan Sound Design Model Automixer
 
 This module will control the Model M or N automixer. There are 64 Madi or Dante inputs & outputs, and 16 adat inputs and outputs.
 Most functions will work with the Dugan-MY16 .
