@@ -63,6 +63,11 @@ Enter the IP address of the control port of the Automixer. The unit will accept 
 - **System - Name** Query / change unit name. Accepts variables
 - **System - Subscribe Unsoliccited** Query / change unsolicited messages
 
+## Support for other models
+At present only the Model M & N are explicitly supported. With that said, the dugan units share a common api.
+The Model M & N represent thr complete set of API commands. All other units (MY-16, Model-E3A, etc) support a subset of of these commands. The core channel controls are supported by all units.
+Until such time as the other models are directly supported, set the the channel count to the appropriate value, and dont use the functions not supported by your unit. Bulk state reporting varies between units, so stateful commands rather than explit commands may be problematic.
+
 ## Version History
 
 ### Version 0.1.0
