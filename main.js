@@ -3,7 +3,23 @@ const UpgradeScripts = require('./upgrades.js')
 const UpdateActions = require('./actions.js')
 const UpdateFeedbacks = require('./feedbacks.js')
 const UpdateVariableDefinitions = require('./variables.js')
+//const variableDefaults = require('./variable-defaults.js')
 const regexpCmd = new RegExp(/(^[*])([a-zA-Z]{0,3})([,])/g)
+const duganModels = [
+	'0',
+	'1',
+	'2',
+	'3',
+	'Model-E1',
+	'Dugan-MY16',
+	'Model-E1A',
+	'Model-E2',
+	'Model-E3',
+	'Model-VN',
+	'10',
+	'Model-M',
+	'Model-N',
+]
 const MaxChannelCount = 64
 const MinChannelCount = 8
 const GroupCount = 3
@@ -42,6 +58,7 @@ class DUGAN_MODEL_N extends InstanceBase {
 		this.updateActions() // export actions
 		this.updateFeedbacks() // export feedbacks
 		this.updateVariableDefinitions() // export variable definitions
+		//		this.setVariableValues(variableDefaults)
 		this.initTCP()
 	}
 	// When module gets deleted
@@ -75,7 +92,7 @@ class DUGAN_MODEL_N extends InstanceBase {
 	}
 
 	regexCmd(cmd) {
-		this.log('debug','regexCmd')
+		this.log('debug', 'regexCmd')
 		let command
 		let safeCommand
 		while ((command = regexpCmd.exec(cmd)) !== null) {
@@ -83,7 +100,7 @@ class DUGAN_MODEL_N extends InstanceBase {
 		}
 		if (safeCommand != undefined) {
 			this.log('debug', 'Command Found: ' + safeCommand)
-			this.log('debug','Safe Command: ' + safeCommand)
+			this.log('debug', 'Safe Command: ' + safeCommand)
 			return safeCommand
 		} else {
 			return 'cmdNotFound'
@@ -140,10 +157,46 @@ class DUGAN_MODEL_N extends InstanceBase {
 					let params = strRep.split(',')
 					if (cmd == '*,') {
 						this.log('warn', strRep)
-					} else if (cmd == '*SC,'){
+					} else if (cmd == '*SC,') {
 						this.log('info', 'System Configuration: ')
-						for (let i = 0; i < params.length; i++) {
+						for (let i = 1; i < params.length; i++) {
 							this.log('info', 'Param: ' + i + ' Value: ' + params[i])
+						}
+						this.setVariableValues({ deviceType: duganModels[params[1]] })
+						this.setVariableValues({ hostName: params[2] })
+						this.setVariableValues({ serialNumber: params[3] })
+						this.setVariableValues({ firmwareVersion: params[4] })
+						this.setVariableValues({ fpgaVersion: params[5] })
+						this.setVariableValues({ hardwareRevsion: params[6] })
+						this.setVariableValues({ macAddress: params[7] })
+						this.setVariableValues({ ipAddress: params[8] })
+						this.setVariableValues({ netMask: params[9] })
+						this.setVariableValues({ gateway: params[10] })
+						this.setVariableValues({ dhcp: params[11] })
+						this.setVariableValues({ channelCount: params[12] })
+						if (this.config.channelCount != params[12]) {
+							this.log(
+								'warn',
+								'Configured channels: ' +
+									this.config.channels +
+									' does not match reported channels: ' +
+									params[12] +
+									' changing config'
+							)
+							this.config.channels = params[12]
+							this.initVariables()
+							this.updateActions() // export actions
+							this.updateFeedbacks() // export feedbacks
+							this.updateVariableDefinitions() // export variable definitions
+						}
+						if (this.config.model != params[1]) {
+							this.log(
+								'warn',
+								'Configured Model: ' +
+									duganModels[this.config.model] +
+									' does not match reported model: ' +
+									duganModels[params[1]]
+							)
 						}
 					}
 				}
@@ -238,6 +291,7 @@ class DUGAN_MODEL_N extends InstanceBase {
 			this.updateActions() // export actions
 			this.updateFeedbacks() // export feedbacks
 			this.updateVariableDefinitions() // export variable definitions
+			//this.setVariableValues(variableDefaults)
 		}
 		if (oldConfig.host != this.config.host || oldConfig.port != this.config.port || oldConfig.udp != this.config.udp) {
 			//changed connection
@@ -261,6 +315,7 @@ class DUGAN_MODEL_N extends InstanceBase {
 				this.updateActions() // export actions
 				this.updateFeedbacks() // export feedbacks
 				this.updateVariableDefinitions() // export variable definitions
+				//this.setVariableValues(variableDefaults)
 			}
 		}
 	}
@@ -309,8 +364,8 @@ class DUGAN_MODEL_N extends InstanceBase {
 				id: 'model',
 				label: 'Dugan Model',
 				choices: [
-					{ id: 1, label: 'Model M' },
-					{ id: 2, label: 'Model N' },
+					{ id: 11, label: duganModels[11] },
+					{ id: 12, label: duganModels[12] },
 				],
 				default: 2,
 				width: 2,
