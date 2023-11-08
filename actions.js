@@ -1427,7 +1427,6 @@ module.exports = function (self) {
 					}
 					if (safeName != undefined && safeName.length >= 1) {
 						cmd += ',' + safeName + '\r\n'
-
 					} else {
 						self.log('warn', 'Not a valid scene name')
 						return false
@@ -1452,59 +1451,12 @@ module.exports = function (self) {
 					],
 				},
 				{
-					id: 'byte1',
-					type: 'number',
-					label: 'Byte 1',
-					default: 192,
-					min: 1,
-					max: 255,
+					id: 'IP',
+					type: 'textinput',
+					label: 'IP Address',
+					default: '192.168.1.1',
 					required: true,
-					range: true,
-					step: 1,
-					regex: Regex.NUMBER,
-				},
-				{
-					id: 'byte2',
-					type: 'number',
-					label: 'Byte 2',
-					default: 168,
-					min: 0,
-					max: 255,
-					required: true,
-					range: true,
-					step: 1,
-					regex: Regex.NUMBER,
-				},
-				{
-					id: 'byte3',
-					type: 'number',
-					label: 'Byte 3',
-					default: 1,
-					min: 0,
-					max: 255,
-					required: true,
-					range: true,
-					step: 1,
-					regex: Regex.NUMBER,
-				},
-				{
-					id: 'byte4',
-					type: 'number',
-					label: 'Byte 4',
-					default: 1,
-					min: 0,
-					max: 255,
-					required: true,
-					range: true,
-					step: 1,
-					regex: Regex.NUMBER,
-				},
-				{
-					id: 'query',
-					type: 'checkbox',
-					label: 'Query',
-					default: false,
-					tooltip: 'Query will poll current configured address',
+					regex: Regex.IP,
 				},
 			],
 			callback: ({ options }) => {
@@ -1512,16 +1464,20 @@ module.exports = function (self) {
 				if (options.query) {
 					cmd += '\r\n'
 				} else {
-					cmd +=
-						',' +
-						Math.floor(options.byte1) +
-						',' +
-						Math.floor(options.byte2) +
-						',' +
-						Math.floor(options.byte3) +
-						',' +
-						Math.floor(options.byte4) +
-						'\r\n'
+					let ip = options.IP.split('.')
+					let cleanIP = []
+					for (let i = 0; i <= ip.length - 1; i++) {
+						cleanIP[i] = parseInt(ip[i])
+						if (isNaN(cleanIP[i]) || cleanIP[i] < 0 || cleanIP[i] > 255) {
+							self.log('warn', 'Not a valid IP Address, byte: ' + (i + 1) + ' Value:' + cleanIP[i])
+							return false
+						}
+					}
+					if (cleanIP.length != 4) {
+						self.log('warn', 'Not a valid IP Address, unexpected length')
+						return false
+					}
+					cmd += ',' + cleanIP[0] + ',' + cleanIP[1] + ',' + cleanIP[2] + ',' + cleanIP[3] + '\r\n'
 				}
 				self.sendCommand(cmd)
 			},

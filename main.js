@@ -9,6 +9,7 @@ const GroupCount = 3
 const MatrixCount = 6
 const EndSession = 'QUIT\r\n'
 let automixChannels = []
+automixChannels.push({ id: 0, label: 'Unit Default' })
 for (let i = MinChannelCount; i <= MaxChannelCount; i++) {
 	automixChannels.push({ id: i, label: i + ' Automix Channels' })
 }
@@ -145,6 +146,9 @@ class DUGAN_MODEL_N extends InstanceBase {
 		this.clockSources = []
 		this.offsetChannelList = []
 		this.matrixDestinations.push({ id: 0, label: 'No Output' })
+		if (this.config.channels == 0) {
+			this.config.channels = MaxChannelCount
+		}
 		for (let i = 1; i <= this.config.channels; i++) {
 			this.matrixSources.push({ id: i, label: 'Automix Channel ' + i })
 			this.channelNames.push({ id: i, label: 'Automix Channel ' + i })
@@ -195,41 +199,11 @@ class DUGAN_MODEL_N extends InstanceBase {
 
 	async configUpdated(config) {
 		let oldConfig = this.config
-		let oldLabel = this.label
 		this.config = config
-		this.log(
-			'debug',
-			'configUpdated. Old Label: ' +
-				oldLabel +
-				' Old IP: ' +
-				oldConfig.host +
-				' Old Port: ' +
-				oldConfig.port +
-				' Old Keep Alive: ' +
-				oldConfig.keepAlive +
-				' Old Model: ' +
-				oldConfig.model +
-				' Old Channels: ' +
-				oldConfig.channels
-		)
-		this.log(
-			'debug',
-			'configUpdated. New Label: ' +
-				this.label +
-				' New IP: ' +
-				this.config.host +
-				' New Port: ' +
-				this.config.port +
-				' New Keep Alive: ' +
-				this.config.keepAlive +
-				' New Model: ' +
-				this.config.model +
-				' New Channels: ' +
-				this.config.channels
-		)
-		if (oldConfig.keepAlive == this.config.keepAlive) {
-			this.log('debug', 'keepalive unchanged')
-		} else {
+		if (this.config.channels == 0) {
+			this.config.channels = MaxChannelCount
+		}
+		if (oldConfig.keepAlive != this.config.keepAlive) {
 			clearTimeout(this.keepAliveTimer)
 			if (this.config.keepAlive > 0) {
 				this.keepAliveTimer = setTimeout(() => {
@@ -237,18 +211,13 @@ class DUGAN_MODEL_N extends InstanceBase {
 				}, this.config.keepAlive * 1000)
 			}
 		}
-		if (oldConfig.model == this.config.model && oldConfig.channels == this.config.channels) {
-			this.log('debug', 'model & channel count unchanged')
-		} else {
+		if (oldConfig.model != this.config.model || oldConfig.channels != this.config.channels) {
 			this.initVariables()
 			this.updateActions() // export actions
 			this.updateFeedbacks() // export feedbacks
 			this.updateVariableDefinitions() // export variable definitions
 		}
-		if (oldConfig.host == this.config.host && oldConfig.port == this.config.port && oldConfig.udp == this.config.udp) {
-			// nothings changed
-			this.log('debug', 'connection unchanged')
-		} else {
+		if (oldConfig.host != this.config.host || oldConfig.port != this.config.port || oldConfig.udp != this.config.udp) {
 			//changed connection
 			if (this.udp) {
 				clearTimeout(this.keepAliveTimer)
@@ -256,6 +225,7 @@ class DUGAN_MODEL_N extends InstanceBase {
 				delete this.udp
 			}
 			if (this.socket) {
+				this.log('debug', 'deleting socket')
 				clearTimeout(this.keepAliveTimer)
 				this.sendCommand(EndSession)
 				this.socket.destroy()
@@ -265,6 +235,10 @@ class DUGAN_MODEL_N extends InstanceBase {
 				// init UDP connection
 			} else {
 				this.initTCP()
+				this.initVariables()
+				this.updateActions() // export actions
+				this.updateFeedbacks() // export feedbacks
+				this.updateVariableDefinitions() // export variable definitions
 			}
 		}
 	}
@@ -275,9 +249,9 @@ class DUGAN_MODEL_N extends InstanceBase {
 			{
 				type: 'textinput',
 				id: 'host',
-				label: 'Target IP',
+				label: 'Target Host',
 				width: 8,
-				regex: Regex.IP,
+				regex: Regex.HOSTNAME,
 			},
 			{
 				type: 'textinput',
@@ -324,7 +298,7 @@ class DUGAN_MODEL_N extends InstanceBase {
 				id: 'channels',
 				label: 'Automix Channels',
 				choices: automixChannels,
-				default: MaxChannelCount,
+				default: 0,
 				width: 6,
 			},
 		]
