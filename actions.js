@@ -1466,7 +1466,7 @@ module.exports = function (self) {
 				} else {
 					let ip = options.IP.split('.')
 					let cleanIP = []
-					for (let i = 0; i <= ip.length - 1; i++) {
+					for (let i = 0; i < ip.length; i++) {
 						cleanIP[i] = parseInt(ip[i])
 						if (isNaN(cleanIP[i]) || cleanIP[i] < 0 || cleanIP[i] > 255) {
 							self.log('warn', 'Not a valid IP Address, byte: ' + (i + 1) + ' Value:' + cleanIP[i])
