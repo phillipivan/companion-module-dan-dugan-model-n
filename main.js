@@ -3,7 +3,7 @@ const UpgradeScripts = require('./upgrades.js')
 const UpdateActions = require('./actions.js')
 const UpdateFeedbacks = require('./feedbacks.js')
 const UpdateVariableDefinitions = require('./variables.js')
-const regexpCmd = new RegExp(/(^[*])([a-zA-Z,]{2,3})([,])/g)
+const regexpCmd = new RegExp(/(^[*])([a-zA-Z]{0,3})([,])/g)
 const MaxChannelCount = 64
 const MinChannelCount = 8
 const GroupCount = 3
@@ -75,18 +75,20 @@ class DUGAN_MODEL_N extends InstanceBase {
 	}
 
 	regexCmd(cmd) {
+		this.log('debug','regexCmd')
 		let command
 		let safeCommand
 		while ((command = regexpCmd.exec(cmd)) !== null) {
 			safeCommand = command[0]
 		}
 		if (safeCommand != undefined) {
+			this.log('debug', 'Command Found: ' + safeCommand)
+			this.log('debug','Safe Command: ' + safeCommand)
 			return safeCommand
 		} else {
 			return 'cmdNotFound'
 		}
 	}
-	
 
 	pollStatus() {
 		this.log('debug', 'pollStatus')
@@ -134,10 +136,15 @@ class DUGAN_MODEL_N extends InstanceBase {
 					line = receivebuffer.substr(offset, i - offset)
 					offset = i + 1
 					let strRep = line.toString()
-					if (strRep.startsWith('*, ')) {
-						this.log('warn', line.toString())
-					} else {
-						this.log('info', line.toString())
+					let cmd = this.regexCmd(strRep)
+					let params = strRep.split(',')
+					if (cmd == '*,') {
+						this.log('warn', strRep)
+					} else if (cmd == '*SC,'){
+						this.log('info', 'System Configuration: ')
+						for (let i = 0; i < params.length; i++) {
+							this.log('info', 'Param: ' + i + ' Value: ' + params[i])
+						}
 					}
 				}
 				receivebuffer = receivebuffer.substr(offset)
