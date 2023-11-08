@@ -8,10 +8,10 @@ const variableDefaults = {
     hardwareRevsion: '-',
     macAddress: '-',
     ipAddress: this.config.host,
-    netMask: "(none)",
-    gateway: "",
-    dhcp: "(none)",
-    channelCount: this.config.channelCount,
+    netMask: '(none)',
+    gateway: '',
+    dhcp: 'unknown',
+    channelCount: this.config.channels,
 };
 
 module.exports = variableDefaults;
