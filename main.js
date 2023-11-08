@@ -3,13 +3,14 @@ const UpgradeScripts = require('./upgrades.js')
 const UpdateActions = require('./actions.js')
 const UpdateFeedbacks = require('./feedbacks.js')
 const UpdateVariableDefinitions = require('./variables.js')
+const regexpCmd = new RegExp(/(^[*])([a-zA-Z,]{2,3})([,])/g)
 const MaxChannelCount = 64
 const MinChannelCount = 8
 const GroupCount = 3
 const MatrixCount = 6
 const EndSession = 'QUIT\r\n'
 let automixChannels = []
-automixChannels.push({ id: 0, label: 'Unit Default' })
+automixChannels.push({ id: 1, label: 'Unit Default' })
 for (let i = MinChannelCount; i <= MaxChannelCount; i++) {
 	automixChannels.push({ id: i, label: i + ' Automix Channels' })
 }
@@ -73,6 +74,20 @@ class DUGAN_MODEL_N extends InstanceBase {
 		return false
 	}
 
+	regexCmd(cmd) {
+		let command
+		let safeCommand
+		while ((command = regexpCmd.exec(cmd)) !== null) {
+			safeCommand = command[0]
+		}
+		if (safeCommand != undefined) {
+			return safeCommand
+		} else {
+			return 'cmdNotFound'
+		}
+	}
+	
+
 	pollStatus() {
 		this.log('debug', 'pollStatus')
 		this.sendCommand('SNC\r\n') //scene count
@@ -119,7 +134,7 @@ class DUGAN_MODEL_N extends InstanceBase {
 					line = receivebuffer.substr(offset, i - offset)
 					offset = i + 1
 					let strRep = line.toString()
-					if (strRep.startsWith('*, ')){
+					if (strRep.startsWith('*, ')) {
 						this.log('warn', line.toString())
 					} else {
 						this.log('info', line.toString())
@@ -298,7 +313,7 @@ class DUGAN_MODEL_N extends InstanceBase {
 				id: 'channels',
 				label: 'Automix Channels',
 				choices: automixChannels,
-				default: 0,
+				default: 1,
 				width: 6,
 			},
 		]
