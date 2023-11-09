@@ -103,54 +103,6 @@ class DUGAN_MODEL_N extends InstanceBase {
 		this.groupNames.push({ id: 3, label: 'Group C' })
 	}
 
-	async configUpdated(config) {
-		let oldConfig = this.config
-		this.config = config
-		if (this.config.channels == 0) {
-			this.config.channels = MaxChannelCount
-		}
-		if (oldConfig.keepAlive != this.config.keepAlive) {
-			clearTimeout(this.keepAliveTimer)
-			if (this.config.keepAlive > 0) {
-				this.keepAliveTimer = setTimeout(() => {
-					this.pollStatus()
-				}, this.config.keepAlive * 1000)
-			}
-		}
-		if (oldConfig.model != this.config.model || oldConfig.channels != this.config.channels) {
-			this.initVariables()
-			this.updateActions() // export actions
-			this.updateFeedbacks() // export feedbacks
-			this.updateVariableDefinitions() // export variable definitions
-			//this.setVariableValues(variableDefaults)
-		}
-		if (oldConfig.host != this.config.host || oldConfig.port != this.config.port || oldConfig.udp != this.config.udp) {
-			//changed connection
-			if (this.udp) {
-				clearTimeout(this.keepAliveTimer)
-				this.udp.destroy()
-				delete this.udp
-			}
-			if (this.socket) {
-				this.log('debug', 'deleting socket')
-				clearTimeout(this.keepAliveTimer)
-				this.sendCommand(EndSession)
-				this.socket.destroy()
-				delete this.socket
-			}
-			if (this.config.udp) {
-				// init UDP connection
-			} else {
-				this.initTCP()
-				this.initVariables()
-				this.updateActions() // export actions
-				this.updateFeedbacks() // export feedbacks
-				this.updateVariableDefinitions() // export variable definitions
-				//this.setVariableValues(variableDefaults)
-			}
-		}
-	}
-
 	updateActions() {
 		UpdateActions(this)
 	}
