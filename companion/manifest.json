@@ -1,7 +1,7 @@
 {
 	"id": "dan-dugan-automixer",
 	"name": "dan-dugan-automixer",
-	"shortname": "Model N",
+	"shortname": "Dugan Automixer",
 	"description": "Dan Dugan Automixer Model M & N plugin for Companion",
 	"version": "0.1.0",
 	"license": "MIT",
@@ -21,6 +21,6 @@
 	},
 	"legacyIds": [],
 	"manufacturer": "Dan Dugan Sound Design",
-	"products": ["Model N Automixer", "Model M Automixer"],
+	"products": ["Model M", "Model N"],
 	"keywords": ["Hardware", "Automixer", "MADI", "Dante"]
 }

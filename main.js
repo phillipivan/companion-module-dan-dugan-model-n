@@ -1,64 +1,26 @@
-const { InstanceBase, Regex, runEntrypoint, InstanceStatus, TCPHelper } = require('@companion-module/base')
+const { InstanceBase, runEntrypoint, InstanceStatus, TCPHelper } = require('@companion-module/base')
 const UpgradeScripts = require('./upgrades.js')
 const UpdateActions = require('./actions.js')
 const UpdateFeedbacks = require('./feedbacks.js')
 const UpdateVariableDefinitions = require('./variables.js')
-//const variableDefaults = require('./variable-defaults.js')
-const regexpCmd = new RegExp(/(^[*])([a-zA-Z]{0,3})([,])/g)
-const duganModels = [
-	'0',
-	'1',
-	'2',
-	'3',
-	'Model-E1',
-	'Dugan-MY16',
-	'Model-E1A',
-	'Model-E2',
-	'Model-E3',
-	'Model-VN',
-	'10',
-	'Model-M',
-	'Model-N',
-]
-const MaxChannelCount = 64
-const MinChannelCount = 8
-const GroupCount = 3
-const MatrixCount = 6
-const EndSession = 'QUIT\r\n'
-let automixChannels = []
-automixChannels.push({ id: 1, label: 'Unit Default' })
-for (let i = MinChannelCount; i <= MaxChannelCount; i++) {
-	automixChannels.push({ id: i, label: i + ' Automix Channels' })
-}
+const config = require('./config')
+const variableDefaults = require('./variable-defaults.js')
+const util = require('./util')
+const { duganModels, MaxChannelCount, GroupCount, MatrixCount, EndSession, duganChannels } = require('./consts.js')
+
 class DUGAN_MODEL_N extends InstanceBase {
 	constructor(internal) {
 		super(internal)
+		Object.assign(this, { ...config, ...util })
 	}
 	async init(config) {
 		this.config = config
 		this.updateStatus('Starting')
-		this.log(
-			'debug',
-			'init. ID: ' +
-				this.id +
-				' Label: ' +
-				this.label +
-				' IP: ' +
-				this.config.host +
-				' Port: ' +
-				this.config.port +
-				' Keep Alive: ' +
-				this.config.keepAlive +
-				' Model: ' +
-				this.config.model +
-				' Channels: ' +
-				this.config.channels
-		)
 		this.initVariables()
 		this.updateActions() // export actions
 		this.updateFeedbacks() // export feedbacks
 		this.updateVariableDefinitions() // export variable definitions
-		//		this.setVariableValues(variableDefaults)
+		this.setVariableValues(variableDefaults)
 		this.initTCP()
 	}
 	// When module gets deleted
@@ -89,22 +51,6 @@ class DUGAN_MODEL_N extends InstanceBase {
 			this.log('warn', 'Command undefined')
 		}
 		return false
-	}
-
-	regexCmd(cmd) {
-		this.log('debug', 'regexCmd')
-		let command
-		let safeCommand
-		while ((command = regexpCmd.exec(cmd)) !== null) {
-			safeCommand = command[0]
-		}
-		if (safeCommand != undefined) {
-			this.log('debug', 'Command Found: ' + safeCommand)
-			this.log('debug', 'Safe Command: ' + safeCommand)
-			return safeCommand
-		} else {
-			return 'cmdNotFound'
-		}
 	}
 
 	pollStatus() {
@@ -174,7 +120,7 @@ class DUGAN_MODEL_N extends InstanceBase {
 						this.setVariableValues({ gateway: params[10] })
 						this.setVariableValues({ dhcp: params[11] })
 						this.setVariableValues({ channelCount: params[12] })
-						if (this.config.channelCount != params[12]) {
+						if (this.config.channels != params[12]) {
 							this.log(
 								'warn',
 								'Configured channels: ' +
@@ -222,7 +168,7 @@ class DUGAN_MODEL_N extends InstanceBase {
 		this.offsetChannelList = []
 		this.matrixDestinations.push({ id: 0, label: 'No Output' })
 		if (this.config.channels == 0) {
-			this.config.channels = MaxChannelCount
+			this.config.channels = duganChannels[this.config.model]
 		}
 		for (let i = 1; i <= this.config.channels; i++) {
 			this.matrixSources.push({ id: i, label: 'Automix Channel ' + i })
@@ -318,67 +264,6 @@ class DUGAN_MODEL_N extends InstanceBase {
 				//this.setVariableValues(variableDefaults)
 			}
 		}
-	}
-
-	// Return config fields for web config
-	getConfigFields() {
-		return [
-			{
-				type: 'textinput',
-				id: 'host',
-				label: 'Target Host',
-				width: 8,
-				regex: Regex.HOSTNAME,
-			},
-			{
-				type: 'textinput',
-				id: 'port',
-				label: 'Target Port',
-				default: 23,
-				width: 4,
-				regex: Regex.PORT,
-				tooltip: 'Port 23 or 9776',
-			},
-			//			{
-			//				type: 'checkbox',
-			//				id: 'udp',
-			//				label: 'Use UDP',
-			//				default: false,
-			//				width: 4,
-			//				tooltip: 'Connect via UDP instead of TCP',
-			//				isVisible: false,
-			//			},
-			{
-				type: 'number',
-				id: 'keepAlive',
-				label: 'Keep Alive Interval',
-				default: 60,
-				width: 2,
-				mix: 0,
-				max: 3600,
-				regex: Regex.NUMBER,
-				tooltip: 'Seconds, set to 0 to turn off',
-			},
-			{
-				type: 'dropdown',
-				id: 'model',
-				label: 'Dugan Model',
-				choices: [
-					{ id: 11, label: duganModels[11] },
-					{ id: 12, label: duganModels[12] },
-				],
-				default: 2,
-				width: 2,
-			},
-			{
-				type: 'dropdown',
-				id: 'channels',
-				label: 'Automix Channels',
-				choices: automixChannels,
-				default: 1,
-				width: 6,
-			},
-		]
 	}
 
 	updateActions() {

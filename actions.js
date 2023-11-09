@@ -1,5 +1,6 @@
 const { Regex } = require('@companion-module/base')
-const regexpSafeString = new RegExp(/^[^,*;]{1,15}/g)
+const { regexpSafeString } = require('./consts.js')
+//const regexSafeString = require('./util.js')
 
 module.exports = function (self) {
 	self.setActionDefinitions({
@@ -343,11 +344,7 @@ module.exports = function (self) {
 				if (options.query) {
 					cmd += ',' + options.channel + '\r\n'
 				} else {
-					let chanName
-					let safeChanName
-					while ((chanName = regexpSafeString.exec(await self.parseVariablesInString(options.name))) !== null) {
-						safeChanName = chanName[0]
-					}
+					let safeChanName = self.regexSafeString(await self.parseVariablesInString(options.name))
 					if (safeChanName != undefined && safeChanName.length >= 1) {
 						cmd += ',' + options.channel + ',' + safeChanName + '\r\n'
 					} else {
@@ -944,11 +941,7 @@ module.exports = function (self) {
 			],
 			callback: async ({ options }) => {
 				let cmd = 'SNR'
-				let sceneName
-				let safeSceneName
-				while ((sceneName = regexpSafeString.exec(await self.parseVariablesInString(options.name))) !== null) {
-					safeSceneName = sceneName[0]
-				}
+				let safeSceneName = self.regexSafeString(await self.parseVariablesInString(options.name))
 				if (safeSceneName != undefined && safeSceneName.length >= 1) {
 					cmd += ',' + safeSceneName + '\r\n'
 					self.sendCommand(cmd)
@@ -974,11 +967,7 @@ module.exports = function (self) {
 			],
 			callback: async ({ options }) => {
 				let cmd = 'SNS'
-				let sceneName
-				let safeSceneName
-				while ((sceneName = regexpSafeString.exec(await self.parseVariablesInString(options.name))) !== null) {
-					safeSceneName = sceneName[0]
-				}
+				let safeSceneName = self.regexSafeString(await self.parseVariablesInString(options.name))
 				if (safeSceneName != undefined && safeSceneName.length >= 1) {
 					cmd += ',' + safeSceneName + '\r\n'
 					self.sendCommand(cmd)
@@ -1004,11 +993,7 @@ module.exports = function (self) {
 			],
 			callback: async ({ options }) => {
 				let cmd = 'SNN'
-				let sceneName
-				let safeSceneName
-				while ((sceneName = regexpSafeString.exec(await self.parseVariablesInString(options.name))) !== null) {
-					safeSceneName = sceneName[0]
-				}
+				let safeSceneName = self.regexSafeString(await self.parseVariablesInString(options.name))
 				if (safeSceneName != undefined && safeSceneName.length >= 1) {
 					cmd += ',' + safeSceneName + '\r\n'
 					self.sendCommand(cmd)
@@ -1044,16 +1029,9 @@ module.exports = function (self) {
 			],
 			callback: async ({ options }) => {
 				let cmd = 'SNE'
-				let sceneNameCurrent
-				let sceneNameNew
-				let safeSceneNameCurrent
-				let safeSceneNameNew
-				while ((sceneNameCurrent = regexpSafeString.exec(await self.parseVariablesInString(options.name))) !== null) {
-					safeSceneNameCurrent = sceneNameCurrent[0]
-				}
-				while ((sceneNameNew = regexpSafeString.exec(await self.parseVariablesInString(options.name))) !== null) {
-					safeSceneNameNew = sceneNameNew[0]
-				}
+				let safeSceneNameCurrent = self.regexSafeString(await self.parseVariablesInString(options.currentname))
+				let safeSceneNameNew = self.regexSafeString(await self.parseVariablesInString(options.newname))
+
 				if (
 					safeSceneNameCurrent != undefined &&
 					safeSceneNameCurrent.length >= 1 &&
@@ -1084,11 +1062,7 @@ module.exports = function (self) {
 			],
 			callback: async ({ options }) => {
 				let cmd = 'SND'
-				let sceneName
-				let safeSceneName
-				while ((sceneName = regexpSafeString.exec(await self.parseVariablesInString(options.name))) !== null) {
-					safeSceneName = sceneName[0]
-				}
+				let safeSceneName = self.regexSafeString(await self.parseVariablesInString(options.name))
 				if (safeSceneName != undefined && safeSceneName.length >= 1) {
 					cmd += ',' + safeSceneName + '\r\n'
 					self.sendCommand(cmd)

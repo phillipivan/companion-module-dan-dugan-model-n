@@ -3,15 +3,15 @@ const variableDefaults = {
     deviceType: 'unknown',
     hostName: 'unknown',
     serialNumber: 'unknown',
-    firmwareVersion: '-',
-    fpgaVersion: '-',
-    hardwareRevsion: '-',
-    macAddress: '-',
-    ipAddress: this.config.host,
-    netMask: '(none)',
-    gateway: '',
+    firmwareVersion: 'unknown',
+    fpgaVersion: 'unknown',
+    hardwareRevsion: 'unknown',
+    macAddress: 'unknown',
+    ipAddress: 'unknown',
+    netMask: 'unknown',
+    gateway: 'unknown',
     dhcp: 'unknown',
-    channelCount: this.config.channels,
+    channelCount: 'unknown',
 };
 
 module.exports = variableDefaults;
