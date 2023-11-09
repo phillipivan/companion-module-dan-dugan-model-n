@@ -6,7 +6,7 @@ Most functions will work with the Dugan-MY16 .
 - [Dugan Auto Mixer Product Page](https://www.dandugan.com/products/)
 
 ## Configuration
-Enter the IP address of the control port of the Automixer. The unit will accept connections on TCP:23 or TCP:9776 (and UDP:9776, not supported here). This model defaults to TCP:23 for easiest integration with firewalls and complex networks. Keep alive will poll system parameters at the set interval. Enter the number of automix channels the unit is configured as for correcct initialisation.
+Enter the IP address of the control port of the Automixer. The unit will accept connections on TCP:23 or TCP:9776 (and UDP:9776, not supported here). This model defaults to TCP:23 for easiest integration with firewalls and complex networks. Poll interval determines how frequenctly channel parameters are checked, set to zero to turn off. Enter the number of automix channels the unit is configured as for correct initialisation, once the module connects if the unit reports a different number of configured channels the module will log the discrepancy and adapt.
 
 ## Actions
 - **Channel - Bypass** Query / Change Channel Bypass
