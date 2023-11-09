@@ -1,4 +1,4 @@
-const { InstanceBase, runEntrypoint, InstanceStatus, TCPHelper } = require('@companion-module/base')
+const { InstanceBase, runEntrypoint, InstanceStatus } = require('@companion-module/base')
 const UpgradeScripts = require('./upgrades.js')
 const UpdateActions = require('./actions.js')
 const UpdateFeedbacks = require('./feedbacks.js')
@@ -6,12 +6,13 @@ const UpdateVariableDefinitions = require('./variables.js')
 const config = require('./config')
 const variableDefaults = require('./variable-defaults.js')
 const util = require('./util')
-const { duganModels, MaxChannelCount, GroupCount, MatrixCount, EndSession, duganChannels } = require('./consts.js')
+const tcp = require('./tcp.js')
+const { MaxChannelCount, GroupCount, MatrixCount, EndSession, duganChannels } = require('./consts.js')
 
 class DUGAN_MODEL_N extends InstanceBase {
 	constructor(internal) {
 		super(internal)
-		Object.assign(this, { ...config, ...util })
+		Object.assign(this, { ...config, ...util, ...tcp })
 	}
 	async init(config) {
 		this.config = config
@@ -34,122 +35,6 @@ class DUGAN_MODEL_N extends InstanceBase {
 			this.udp.destroy()
 		} else {
 			this.updateStatus(InstanceStatus.Disconnected)
-		}
-	}
-
-	sendCommand(cmd) {
-		this.log('debug', 'sendCommand')
-		if (cmd !== undefined) {
-			if (this.socket !== undefined && this.socket.isConnected) {
-				this.log('info', 'Sending Command: ' + cmd)
-				this.socket.send(cmd)
-				return true
-			} else {
-				this.log('warn', 'Socket not connected, tried to send: ' + cmd)
-			}
-		} else {
-			this.log('warn', 'Command undefined')
-		}
-		return false
-	}
-
-	pollStatus() {
-		this.log('debug', 'pollStatus')
-		this.sendCommand('SNC\r\n') //scene count
-		this.keepAliveTimer = setTimeout(() => {
-			this.pollStatus()
-		}, this.config.keepAlive * 1000)
-	}
-
-	initTCP() {
-		this.log('debug', 'initTCP')
-		if (this.socket !== undefined) {
-			this.sendCommand(EndSession)
-			this.socket.destroy()
-			delete this.socket
-		}
-		if (this.config.host) {
-			this.log('debug', 'Creating New Socket')
-			this.socket = new TCPHelper(this.config.host, this.config.port)
-			this.socket.on('status_change', (status, message) => {
-				this.updateStatus(status, message)
-			})
-			this.socket.on('error', (err) => {
-				this.log('error', `Network error: ${err.message}`)
-				clearTimeout(this.keepAliveTimer)
-			})
-			this.socket.on('connect', () => {
-				this.log('info', `Connected`)
-				this.sendCommand('SC\r\n')
-				if (this.config.keepAlive > 0) {
-					this.keepAliveTimer = setTimeout(() => {
-						this.pollStatus()
-					}, this.config.keepAlive * 1000)
-				}
-			})
-			this.socket.on('data', (chunk) => {
-				console.log('Data received')
-				console.log(chunk)
-				let i = 0
-				let line = ''
-				let offset = 0
-				let receivebuffer = ''
-				receivebuffer += chunk
-				while ((i = receivebuffer.indexOf('\n', offset)) !== -1) {
-					line = receivebuffer.substr(offset, i - offset)
-					offset = i + 1
-					let strRep = line.toString()
-					let cmd = this.regexCmd(strRep)
-					let params = strRep.split(',')
-					if (cmd == '*,') {
-						this.log('warn', strRep)
-					} else if (cmd == '*SC,') {
-						this.log('info', 'System Configuration: ')
-						for (let i = 1; i < params.length; i++) {
-							this.log('info', 'Param: ' + i + ' Value: ' + params[i])
-						}
-						this.setVariableValues({ deviceType: duganModels[params[1]] })
-						this.setVariableValues({ hostName: params[2] })
-						this.setVariableValues({ serialNumber: params[3] })
-						this.setVariableValues({ firmwareVersion: params[4] })
-						this.setVariableValues({ fpgaVersion: params[5] })
-						this.setVariableValues({ hardwareRevsion: params[6] })
-						this.setVariableValues({ macAddress: params[7] })
-						this.setVariableValues({ ipAddress: params[8] })
-						this.setVariableValues({ netMask: params[9] })
-						this.setVariableValues({ gateway: params[10] })
-						this.setVariableValues({ dhcp: params[11] })
-						this.setVariableValues({ channelCount: params[12] })
-						if (this.config.channels != params[12]) {
-							this.log(
-								'warn',
-								'Configured channels: ' +
-									this.config.channels +
-									' does not match reported channels: ' +
-									params[12] +
-									' changing config'
-							)
-							this.config.channels = params[12]
-							this.initVariables()
-							this.updateActions() // export actions
-							this.updateFeedbacks() // export feedbacks
-							this.updateVariableDefinitions() // export variable definitions
-						}
-						if (this.config.model != params[1]) {
-							this.log(
-								'warn',
-								'Configured Model: ' +
-									duganModels[this.config.model] +
-									' does not match reported model: ' +
-									duganModels[params[1]]
-							)
-						}
-					}
-				}
-				receivebuffer = receivebuffer.substr(offset)
-			})
-		} else {
-			this.updateStatus(InstanceStatus.BadConfig)
 		}
 	}
 
