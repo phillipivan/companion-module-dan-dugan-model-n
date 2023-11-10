@@ -4,7 +4,7 @@ module.exports = {
 	async configUpdated(config) {
 		let oldConfig = this.config
 		this.config = config
-		if (this.config.channels == 0) {
+		if (this.config.channels == 1) {
 			this.config.channels = duganChannels[this.config.model]
 		}
 		if (oldConfig.keepAlive != this.config.keepAlive) {

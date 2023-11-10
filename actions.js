@@ -1,6 +1,4 @@
 const { Regex } = require('@companion-module/base')
-const { regexpSafeString } = require('./consts.js')
-//const regexSafeString = require('./util.js')
 
 module.exports = function (self) {
 	self.setActionDefinitions({
@@ -36,11 +34,11 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'CM'
 				if (options.query) {
-					cmd += ',' + options.channel + '\r\n'
+					cmd += ',' + options.channel
 				} else {
-					cmd += ',' + options.channel + ',' + options.mode + '\r\n'
+					cmd += ',' + options.channel + ',' + options.mode
 				}
-				self.sendCommand(cmd)
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		channel_preset: {
@@ -75,11 +73,11 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'CP'
 				if (options.query) {
-					cmd += ',' + options.channel + '\r\n'
+					cmd += ',' + options.channel
 				} else {
-					cmd += ',' + options.channel + ',' + options.preset + '\r\n'
+					cmd += ',' + options.channel + ',' + options.preset
 				}
-				self.sendCommand(cmd)
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		channel_bypass: {
@@ -90,7 +88,7 @@ module.exports = function (self) {
 					id: 'channel',
 					type: 'dropdown',
 					label: 'Channel',
-					default: 0,
+					default: 1,
 					choices: self.channelNames,
 				},
 				{
@@ -113,11 +111,11 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'BP'
 				if (options.query) {
-					cmd += ',' + options.channel + '\r\n'
+					cmd += ',' + options.channel
 				} else {
-					cmd += ',' + options.channel + ',' + options.bypass + '\r\n'
+					cmd += ',' + options.channel + ',' + options.bypass
 				}
-				self.sendCommand(cmd)
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		channel_override: {
@@ -151,11 +149,11 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'CO'
 				if (options.query) {
-					cmd += ',' + options.channel + '\r\n'
+					cmd += ',' + options.channel
 				} else {
-					cmd += ',' + options.channel + ',' + options.override + '\r\n'
+					cmd += ',' + options.channel + ',' + options.override
 				}
-				self.sendCommand(cmd)
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		channel_weight: {
@@ -191,11 +189,11 @@ module.exports = function (self) {
 			callback: async ({ options }) => {
 				let cmd = 'CW'
 				if (options.query) {
-					cmd += ',' + options.channel + '\r\n'
+					cmd += ',' + options.channel
 				} else {
-					cmd += ',' + options.channel + ',' + options.weight + '\r\n'
+					cmd += ',' + options.channel + ',' + options.weight
 				}
-				self.sendCommand(cmd)
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		channel_music_mode: {
@@ -229,11 +227,11 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'MR'
 				if (options.query) {
-					cmd += ',' + options.channel + '\r\n'
+					cmd += ',' + options.channel
 				} else {
-					cmd += ',' + options.channel + ',' + options.music + '\r\n'
+					cmd += ',' + options.channel + ',' + options.music
 				}
-				self.sendCommand(cmd)
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		channel_NOM_mode: {
@@ -267,11 +265,11 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'NE'
 				if (options.query) {
-					cmd += ',' + options.channel + '\r\n'
+					cmd += ',' + options.channel
 				} else {
-					cmd += ',' + options.channel + ',' + options.nom + '\r\n'
+					cmd += ',' + options.channel + ',' + options.nom
 				}
-				self.sendCommand(cmd)
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		channel_group_assign: {
@@ -303,11 +301,11 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'GA'
 				if (options.query) {
-					cmd += ',' + options.channel + '\r\n'
+					cmd += ',' + options.channel
 				} else {
-					cmd += ',' + options.channel + ',' + options.group + '\r\n'
+					cmd += ',' + options.channel + ',' + options.group
 				}
-				self.sendCommand(cmd)
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		channel_name: {
@@ -342,17 +340,17 @@ module.exports = function (self) {
 			callback: async ({ options }) => {
 				let cmd = 'CN'
 				if (options.query) {
-					cmd += ',' + options.channel + '\r\n'
+					cmd += ',' + options.channel
 				} else {
 					let safeChanName = self.regexSafeString(await self.parseVariablesInString(options.name))
 					if (safeChanName != undefined && safeChanName.length >= 1) {
-						cmd += ',' + options.channel + ',' + safeChanName + '\r\n'
+						cmd += ',' + options.channel + ',' + safeChanName
 					} else {
 						self.log('warn', 'Not a valid channel name')
 						return false
 					}
 				}
-				self.sendCommand(cmd)
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		group_mute: {
@@ -387,16 +385,14 @@ module.exports = function (self) {
 			],
 			callback: ({ options }) => {
 				let cmd = 'SM'
-				if (options.query) {
-					cmd += '\r\n'
-				} else {
+				if (!options.query) {
 					let groupMute = 0
 					if (options.groupA) groupMute += 1
 					if (options.groupB) groupMute += 2
 					if (options.groupC) groupMute += 4
-					cmd += ',' + groupMute + '\r\n'
+					cmd += ',' + groupMute
 				}
-				self.sendCommand(cmd)
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		group_preset: {
@@ -431,16 +427,14 @@ module.exports = function (self) {
 			],
 			callback: ({ options }) => {
 				let cmd = 'SP'
-				if (options.query) {
-					cmd += '\r\n'
-				} else {
+				if (!options.query) {
 					let groupPreset = 0
 					if (options.groupA) groupPreset += 1
 					if (options.groupB) groupPreset += 2
 					if (options.groupC) groupPreset += 4
-					cmd += ',' + groupPreset + '\r\n'
+					cmd += ',' + groupPreset
 				}
-				self.sendCommand(cmd)
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		group_override: {
@@ -475,16 +469,14 @@ module.exports = function (self) {
 			],
 			callback: ({ options }) => {
 				let cmd = 'SO'
-				if (options.query) {
-					cmd += '\r\n'
-				} else {
+				if (!options.query) {
 					let groupOverride = 0
 					if (options.groupA) groupOverride += 1
 					if (options.groupB) groupOverride += 2
 					if (options.groupC) groupOverride += 4
-					cmd += ',' + groupOverride + '\r\n'
+					cmd += ',' + groupOverride
 				}
-				self.sendCommand(cmd)
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		group_lasthold: {
@@ -519,16 +511,14 @@ module.exports = function (self) {
 			],
 			callback: ({ options }) => {
 				let cmd = 'LH'
-				if (options.query) {
-					cmd += '\r\n'
-				} else {
+				if (!options.query) {
 					let groupLasthold = 0
 					if (options.groupA) groupLasthold += 1
 					if (options.groupB) groupLasthold += 2
 					if (options.groupC) groupLasthold += 4
-					cmd += ',' + groupLasthold + '\r\n'
+					cmd += ',' + groupLasthold
 				}
-				self.sendCommand(cmd)
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		group_automixdepth: {
@@ -565,11 +555,11 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'ME' //AD commands also works
 				if (options.query) {
-					cmd += ',' + options.group + '\r\n'
+					cmd += ',' + options.group
 				} else {
-					cmd += ',' + options.group + ',' + options.weight + '\r\n'
+					cmd += ',' + options.group + ',' + options.weight
 				}
-				self.sendCommand(cmd)
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		group_NOMgainlimit: {
@@ -606,11 +596,11 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'NL'
 				if (options.query) {
-					cmd += ',' + options.group + '\r\n'
+					cmd += ',' + options.group
 				} else {
-					cmd += ',' + options.group + ',' + options.nomgain + '\r\n'
+					cmd += ',' + options.group + ',' + options.nomgain
 				}
-				self.sendCommand(cmd)
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		group_musicthreshold: {
@@ -647,11 +637,11 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'MT'
 				if (options.query) {
-					cmd += ',' + options.group + '\r\n'
+					cmd += ',' + options.group
 				} else {
-					cmd += ',' + options.group + ',' + options.threshold + '\r\n'
+					cmd += ',' + options.group + ',' + options.threshold
 				}
-				self.sendCommand(cmd)
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		group_musicinput: {
@@ -684,11 +674,11 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'MC'
 				if (options.query) {
-					cmd += ',' + options.group + '\r\n'
+					cmd += ',' + options.group
 				} else {
-					cmd += ',' + options.group + ',' + options.input + '\r\n'
+					cmd += ',' + options.group + ',' + options.input
 				}
-				self.sendCommand(cmd)
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		matrix_mute: {
@@ -722,11 +712,11 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'MXM'
 				if (options.query) {
-					cmd += ',' + options.matrix + '\r\n'
+					cmd += ',' + options.matrix
 				} else {
-					cmd += ',' + options.matrix + ',' + options.mute + '\r\n'
+					cmd += ',' + options.matrix + ',' + options.mute
 				}
-				self.sendCommand(cmd)
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		matrix_polarity: {
@@ -760,11 +750,11 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'MXP'
 				if (options.query) {
-					cmd += ',' + options.matrix + '\r\n'
+					cmd += ',' + options.matrix
 				} else {
-					cmd += ',' + options.matrix + ',' + options.polarity + '\r\n'
+					cmd += ',' + options.matrix + ',' + options.polarity
 				}
-				self.sendCommand(cmd)
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		matrix_gain: {
@@ -801,11 +791,11 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'MXV'
 				if (options.query) {
-					cmd += ',' + options.matrix + '\r\n'
+					cmd += ',' + options.matrix
 				} else {
-					cmd += ',' + options.matrix + ',' + options.gain + '\r\n'
+					cmd += ',' + options.matrix + ',' + options.gain
 				}
-				self.sendCommand(cmd)
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		matrix_output: {
@@ -837,11 +827,11 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'MXO'
 				if (options.query) {
-					cmd += ',' + options.matrix + '\r\n'
+					cmd += ',' + options.matrix
 				} else {
-					cmd += ',' + options.matrix + ',' + options.output + '\r\n'
+					cmd += ',' + options.matrix + ',' + options.output
 				}
-				self.sendCommand(cmd)
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		matrix_crosspoint: {
@@ -885,11 +875,11 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'OM'
 				if (options.query) {
-					cmd += ',' + options.matrix + ',' + options.channel + '\r\n'
+					cmd += ',' + options.matrix + ',' + options.channel
 				} else {
-					cmd += ',' + options.matrix + ',' + options.channel + ',' + options.gain + '\r\n'
+					cmd += ',' + options.matrix + ',' + options.channel + ',' + options.gain
 				}
-				self.sendCommand(cmd)
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		sc_count: {
@@ -905,7 +895,7 @@ module.exports = function (self) {
 			],
 			callback: () => {
 				let cmd = 'SNC'
-				self.sendCommand(cmd + '\r\n')
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		sc_active: {
@@ -921,7 +911,7 @@ module.exports = function (self) {
 			],
 			callback: () => {
 				let cmd = 'SNA'
-				self.sendCommand(cmd + '\r\n')
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		sc_recall: {
@@ -943,8 +933,8 @@ module.exports = function (self) {
 				let cmd = 'SNR'
 				let safeSceneName = self.regexSafeString(await self.parseVariablesInString(options.name))
 				if (safeSceneName != undefined && safeSceneName.length >= 1) {
-					cmd += ',' + safeSceneName + '\r\n'
-					self.sendCommand(cmd)
+					cmd += ',' + safeSceneName
+					self.addCmdtoQueue(cmd)
 				} else {
 					self.log('warn', 'Not a valid scene name')
 				}
@@ -969,8 +959,8 @@ module.exports = function (self) {
 				let cmd = 'SNS'
 				let safeSceneName = self.regexSafeString(await self.parseVariablesInString(options.name))
 				if (safeSceneName != undefined && safeSceneName.length >= 1) {
-					cmd += ',' + safeSceneName + '\r\n'
-					self.sendCommand(cmd)
+					cmd += ',' + safeSceneName
+					self.addCmdtoQueue(cmd)
 				} else {
 					self.log('warn', 'Not a valid scene name')
 				}
@@ -995,8 +985,8 @@ module.exports = function (self) {
 				let cmd = 'SNN'
 				let safeSceneName = self.regexSafeString(await self.parseVariablesInString(options.name))
 				if (safeSceneName != undefined && safeSceneName.length >= 1) {
-					cmd += ',' + safeSceneName + '\r\n'
-					self.sendCommand(cmd)
+					cmd += ',' + safeSceneName
+					self.addCmdtoQueue(cmd)
 				} else {
 					self.log('warn', 'Not a valid scene name')
 				}
@@ -1038,8 +1028,8 @@ module.exports = function (self) {
 					safeSceneNameNew != undefined &&
 					safeSceneNameNew.length >= 1
 				) {
-					cmd += ',' + safeSceneNameCurrent + ',' + safeSceneNameNew + '\r\n'
-					self.sendCommand(cmd)
+					cmd += ',' + safeSceneNameCurrent + ',' + safeSceneNameNew
+					self.addCmdtoQueue(cmd)
 				} else {
 					self.log('warn', 'Not a valid scene name')
 				}
@@ -1064,8 +1054,8 @@ module.exports = function (self) {
 				let cmd = 'SND'
 				let safeSceneName = self.regexSafeString(await self.parseVariablesInString(options.name))
 				if (safeSceneName != undefined && safeSceneName.length >= 1) {
-					cmd += ',' + safeSceneName + '\r\n'
-					self.sendCommand(cmd)
+					cmd += ',' + safeSceneName
+					self.addCmdtoQueue(cmd)
 				} else {
 					self.log('warn', 'Not a valid scene name')
 				}
@@ -1087,7 +1077,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				self.sendCommand(options.mode + '\r\n')
+				self.addCmdtoQueue(options.mode)
 			},
 		},
 		system_subscribe: {
@@ -1114,12 +1104,10 @@ module.exports = function (self) {
 			],
 			callback: ({ options }) => {
 				let cmd = 'SU'
-				if (options.query) {
-					cmd += '\r\n'
-				} else {
-					cmd += ',' + options.subscribe + '\r\n'
+				if (!options.query) {
+					cmd += ',' + options.subscribe
 				}
-				self.sendCommand(cmd)
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		system_linkgroup: {
@@ -1149,12 +1137,10 @@ module.exports = function (self) {
 			],
 			callback: ({ options }) => {
 				let cmd = 'LG'
-				if (options.query) {
-					cmd += '\r\n'
-				} else {
-					cmd += ',' + options.linkgroup + '\r\n'
+				if (!options.query) {
+					cmd += ',' + options.linkgroup
 				}
-				self.sendCommand(cmd)
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		system_clocksource: {
@@ -1178,12 +1164,10 @@ module.exports = function (self) {
 			],
 			callback: ({ options }) => {
 				let cmd = 'CS'
-				if (options.query) {
-					cmd += '\r\n'
-				} else {
-					cmd += ',' + options.clock + '\r\n'
+				if (!options.query) {
+					cmd += ',' + options.clock
 				}
-				self.sendCommand(cmd)
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		system_ADATmirror: {
@@ -1209,12 +1193,10 @@ module.exports = function (self) {
 			],
 			callback: ({ options }) => {
 				let cmd = 'AM'
-				if (options.query) {
-					cmd += '\r\n'
-				} else {
-					cmd += ',' + options.mirror + '\r\n'
+				if (!options.query) {
+					cmd += ',' + options.mirror
 				}
-				self.sendCommand(cmd)
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		system_automixchannels: {
@@ -1244,12 +1226,10 @@ module.exports = function (self) {
 			],
 			callback: ({ options }) => {
 				let cmd = 'CFN'
-				if (options.query) {
-					cmd += '\r\n'
-				} else {
-					cmd += ',' + options.channels + '\r\n'
+				if (!options.query) {
+					cmd += ',' + options.channels
 				}
-				self.sendCommand(cmd)
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		system_channeloffset: {
@@ -1273,12 +1253,10 @@ module.exports = function (self) {
 			],
 			callback: ({ options }) => {
 				let cmd = 'CFS'
-				if (options.query) {
-					cmd += '\r\n'
-				} else {
-					cmd += ',' + options.offset + '\r\n'
+				if (!options.query) {
+					cmd += ',' + options.offset
 				}
-				self.sendCommand(cmd)
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		system_blinkmode: {
@@ -1304,12 +1282,10 @@ module.exports = function (self) {
 			],
 			callback: ({ options }) => {
 				let cmd = 'BM'
-				if (options.query) {
-					cmd += '\r\n'
-				} else {
-					cmd += ',' + options.blink + '\r\n'
+				if (!options.query) {
+					cmd += ',' + options.blink
 				}
-				self.sendCommand(cmd)
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		system_DHCP: {
@@ -1319,7 +1295,7 @@ module.exports = function (self) {
 				{
 					id: 'dhcp',
 					type: 'dropdown',
-					label: 'DHCP\r\nRequires reboot to take effect',
+					label: 'DHCP. Requires reboot to take effect',
 					default: 1,
 					choices: [
 						{ id: 0, label: 'Off' },
@@ -1335,12 +1311,10 @@ module.exports = function (self) {
 			],
 			callback: ({ options }) => {
 				let cmd = 'DH'
-				if (options.query) {
-					cmd += '\r\n'
-				} else {
-					cmd += ',' + options.dhcp + '\r\n'
+				if (!options.query) {
+					cmd += ',' + options.dhcp
 				}
-				self.sendCommand(cmd)
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		query_system: {
@@ -1364,7 +1338,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				self.sendCommand(options.mode + '\r\n')
+				self.addCmdtoQueue(options.mode)
 			},
 		},
 		system_name: {
@@ -1391,22 +1365,16 @@ module.exports = function (self) {
 			],
 			callback: async ({ options }) => {
 				let cmd = 'NA'
-				if (options.query) {
-					cmd += '\r\n'
-				} else {
-					let Name
-					let safeName
-					while ((Name = regexpSafeString.exec(await self.parseVariablesInString(options.name))) !== null) {
-						safeName = Name[0]
-					}
+				if (!options.query) {
+					let safeName = self.regexSafeString(await self.parseVariablesInString(options.name))
 					if (safeName != undefined && safeName.length >= 1) {
-						cmd += ',' + safeName + '\r\n'
+						cmd += ',' + safeName
 					} else {
 						self.log('warn', 'Not a valid scene name')
 						return false
 					}
 				}
-				self.sendCommand(cmd)
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		system_network: {
@@ -1435,9 +1403,7 @@ module.exports = function (self) {
 			],
 			callback: ({ options }) => {
 				let cmd = options.mode
-				if (options.query) {
-					cmd += '\r\n'
-				} else {
+				if (!options.query) {
 					let ip = options.IP.split('.')
 					let cleanIP = []
 					for (let i = 0; i < ip.length; i++) {
@@ -1451,9 +1417,9 @@ module.exports = function (self) {
 						self.log('warn', 'Not a valid IP Address, unexpected length')
 						return false
 					}
-					cmd += ',' + cleanIP[0] + ',' + cleanIP[1] + ',' + cleanIP[2] + ',' + cleanIP[3] + '\r\n'
+					cmd += ',' + cleanIP[0] + ',' + cleanIP[1] + ',' + cleanIP[2] + ',' + cleanIP[3]
 				}
-				self.sendCommand(cmd)
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		query_meters: {
@@ -1479,7 +1445,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				self.sendCommand(options.mode + '\r\n')
+				self.addCmdtoQueue(options.mode)
 			},
 		},
 		query_bulk_config: {
@@ -1498,7 +1464,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				self.sendCommand(options.mode + '\r\n')
+				self.addCmdtoQueue(options.mode)
 			},
 		},
 		query_namelist: {
@@ -1539,7 +1505,7 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let first = Math.floor(options.first)
 				let count = Math.floor(options.count)
-				self.sendCommand(options.mode + ',' + first + ',' + count + '\r\n')
+				self.addCmdtoQueue(options.mode + ',' + first + ',' + count)
 			},
 		},
 	})

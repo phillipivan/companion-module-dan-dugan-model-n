@@ -1,13 +1,34 @@
 const { InstanceStatus, TCPHelper } = require('@companion-module/base')
-const { duganModels, EndSession } = require('./consts.js')
+const { duganModels, EndSession, msgDelay } = require('./consts.js')
 
 module.exports = {
-	sendCommand(cmd) {
+	async addCmdtoQueue(cmd) {
+		//this.log('debug', 'addCmdtoQueue: ' + cmd)
+		if (cmd != undefined && cmd.length >= 2) {
+			await this.cmdQueue.push(cmd)
+			return true
+		}
+		this.log('warn', 'Invalid command: ' + cmd)
+		return false
+	},
+
+	async processCmdQueue() {
+		//this.log('debug', 'processCmdQueue. Queue length: ' + this.cmdQueue.length)
+		if (this.cmdQueue.length > 0) {
+			let txCmd = await this.cmdQueue.splice(0, 1)
+			this.sendCommand(txCmd)
+		}
+		this.cmdTimer = setTimeout(() => {
+			this.processCmdQueue()
+		}, msgDelay)
+	},
+
+	async sendCommand(cmd) {
 		this.log('debug', 'sendCommand')
 		if (cmd !== undefined) {
 			if (this.socket !== undefined && this.socket.isConnected) {
 				this.log('info', 'Sending Command: ' + cmd)
-				this.socket.send(cmd)
+				this.socket.send(cmd + '\r\n')
 				return true
 			} else {
 				this.log('warn', 'Socket not connected, tried to send: ' + cmd)
@@ -20,7 +41,7 @@ module.exports = {
 
 	pollStatus() {
 		this.log('debug', 'pollStatus')
-		this.sendCommand('SNC\r\n') //scene count
+		this.addCmdtoQueue('SNC') //scene count
 		this.keepAliveTimer = setTimeout(() => {
 			this.pollStatus()
 		}, this.config.keepAlive * 1000)
@@ -29,7 +50,7 @@ module.exports = {
 	initTCP() {
 		this.log('debug', 'initTCP')
 		if (this.socket !== undefined) {
-			this.sendCommand(EndSession)
+			this.addCmdtoQueue(EndSession)
 			this.socket.destroy()
 			delete this.socket
 		}
@@ -45,7 +66,7 @@ module.exports = {
 			})
 			this.socket.on('connect', () => {
 				this.log('info', `Connected`)
-				this.sendCommand('SC\r\n')
+				this.addCmdtoQueue('SC')
 				if (this.config.keepAlive > 0) {
 					this.keepAliveTimer = setTimeout(() => {
 						this.pollStatus()

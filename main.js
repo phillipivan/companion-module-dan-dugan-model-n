@@ -6,8 +6,8 @@ const UpdateVariableDefinitions = require('./variables.js')
 const config = require('./config')
 const variableDefaults = require('./variable-defaults.js')
 const util = require('./util')
-const tcp = require('./tcp.js')
-const { MaxChannelCount, GroupCount, MatrixCount, EndSession, duganChannels } = require('./consts.js')
+const tcp = require('./tcp')
+const { MaxChannelCount, GroupCount, MatrixCount, EndSession, duganChannels, msgDelay } = require('./consts.js')
 
 class DUGAN_MODEL_N extends InstanceBase {
 	constructor(internal) {
@@ -17,19 +17,23 @@ class DUGAN_MODEL_N extends InstanceBase {
 	async init(config) {
 		this.config = config
 		this.updateStatus('Starting')
-		this.initVariables()
+		await this.initVariables()
 		this.updateActions() // export actions
 		this.updateFeedbacks() // export feedbacks
 		this.updateVariableDefinitions() // export variable definitions
 		this.setVariableValues(variableDefaults)
 		this.initTCP()
+		this.cmdTimer = setTimeout(() => {
+			this.processCmdQueue()
+		}, msgDelay)
 	}
 	// When module gets deleted
 	async destroy() {
 		this.log('debug', 'destroy. ID: ' + this.id)
 		clearTimeout(this.keepAliveTimer)
+		clearTimeout(this.cmdTimer)
 		if (this.socket) {
-			this.sendCommand(EndSession)
+			this.addCmdtoQueue(EndSession)
 			this.socket.destroy()
 		} else if (this.udp) {
 			this.udp.destroy()
@@ -38,11 +42,13 @@ class DUGAN_MODEL_N extends InstanceBase {
 		}
 	}
 
-	initVariables() {
+	async initVariables() {
 		this.log('debug', 'initVariables')
 		this.groupCount = GroupCount
 		this.matrixCount = MatrixCount
 		this.keepAliveTimer = {}
+		this.cmdTimer = {}
+		this.cmdQueue = []
 		this.musicInputs = []
 		this.matrixSources = []
 		this.matrixDestinations = []
@@ -52,7 +58,7 @@ class DUGAN_MODEL_N extends InstanceBase {
 		this.clockSources = []
 		this.offsetChannelList = []
 		this.matrixDestinations.push({ id: 0, label: 'No Output' })
-		if (this.config.channels == 0) {
+		if (this.config.channels == 1) {
 			this.config.channels = duganChannels[this.config.model]
 		}
 		for (let i = 1; i <= this.config.channels; i++) {

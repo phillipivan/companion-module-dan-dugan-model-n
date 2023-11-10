@@ -7,12 +7,8 @@ module.exports = {
 		while ((command = regexpCmd.exec(cmd)) !== null) {
 			safeCommand = command[0]
 		}
-		if (safeCommand != undefined) {
-			this.log('debug', 'Command Found: ' + safeCommand)
-			return safeCommand
-		} else {
-			return 'cmdNotFound'
-		}
+		safeCommand = safeCommand != undefined ? safeCommand : false
+		return safeCommand
 	},
 	regexSafeString(dirtyString) {
 		this.log('debug', 'regexSafeString')
@@ -21,10 +17,7 @@ module.exports = {
 		while ((str = regexpSafeString.exec(dirtyString)) !== null) {
 			safeString = str[0]
 		}
-		if (safeString != undefined) {
-			return safeString
-		} else {
-			return false
-		}
+		safeString = safeString != undefined ? safeString : false
+		return safeString
 	},
 }
