@@ -4,7 +4,7 @@ const { duganModels, EndSession, msgDelay } = require('./consts.js')
 module.exports = {
 	async addCmdtoQueue(cmd) {
 		//this.log('debug', 'addCmdtoQueue: ' + cmd)
-		if (cmd != undefined && cmd.length >= 2) {
+		if (cmd !== undefined && cmd.length >= 1) {
 			await this.cmdQueue.push(cmd)
 			return true
 		}
