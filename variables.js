@@ -25,6 +25,7 @@ module.exports = async function (self) {
 		{ variableId: 'master', name: 'Master' },
 		{ variableId: 'heartBeat', name: 'HeartBeat' },
 		{ variableId: 'lwip', name: 'LWIP' },
+		{ variableId: 'dsp', name: 'DSP' },
 		{ variableId: 'tcpip', name: 'TCPIP' },
 		{ variableId: 'macRX', name: 'Mac RX' },
 		{ variableId: 'macTX', name: 'Mac TX' },

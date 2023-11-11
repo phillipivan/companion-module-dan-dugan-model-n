@@ -25,6 +25,7 @@ const variableDefaults = {
     master: 'unknown',
     heartBeat: 'unknown',
     lwip: 'unknown',
+    dsp: 'unknown',
     tcpip: 'unknown',
     macRX: 'unknown',
     macTX: 'unknown',
