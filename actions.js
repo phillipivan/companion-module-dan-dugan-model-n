@@ -1371,7 +1371,7 @@ module.exports = function (self) {
 					if (safeName != undefined && safeName.length >= 1) {
 						cmd += paramSep + safeName
 					} else {
-						self.log('warn', 'Not a valid scene name')
+						self.log('warn', 'Not a valid name')
 						return false
 					}
 				}
