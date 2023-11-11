@@ -1,4 +1,5 @@
 const { Regex } = require('@companion-module/base')
+const { paramSep } = require('./consts.js')
 
 module.exports = function (self) {
 	self.setActionDefinitions({
@@ -34,9 +35,9 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'CM'
 				if (options.query) {
-					cmd += ',' + options.channel
+					cmd += paramSep + options.channel
 				} else {
-					cmd += ',' + options.channel + ',' + options.mode
+					cmd += paramSep + options.channel + paramSep + options.mode
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -73,9 +74,9 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'CP'
 				if (options.query) {
-					cmd += ',' + options.channel
+					cmd += paramSep + options.channel
 				} else {
-					cmd += ',' + options.channel + ',' + options.preset
+					cmd += paramSep + options.channel + paramSep + options.preset
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -111,9 +112,9 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'BP'
 				if (options.query) {
-					cmd += ',' + options.channel
+					cmd += paramSep + options.channel
 				} else {
-					cmd += ',' + options.channel + ',' + options.bypass
+					cmd += paramSep + options.channel + paramSep + options.bypass
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -149,9 +150,9 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'CO'
 				if (options.query) {
-					cmd += ',' + options.channel
+					cmd += paramSep + options.channel
 				} else {
-					cmd += ',' + options.channel + ',' + options.override
+					cmd += paramSep + options.channel + paramSep + options.override
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -189,9 +190,9 @@ module.exports = function (self) {
 			callback: async ({ options }) => {
 				let cmd = 'CW'
 				if (options.query) {
-					cmd += ',' + options.channel
+					cmd += paramSep + options.channel
 				} else {
-					cmd += ',' + options.channel + ',' + options.weight
+					cmd += paramSep + options.channel + paramSep + options.weight
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -227,9 +228,9 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'MR'
 				if (options.query) {
-					cmd += ',' + options.channel
+					cmd += paramSep + options.channel
 				} else {
-					cmd += ',' + options.channel + ',' + options.music
+					cmd += paramSep + options.channel + paramSep + options.music
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -265,9 +266,9 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'NE'
 				if (options.query) {
-					cmd += ',' + options.channel
+					cmd += paramSep + options.channel
 				} else {
-					cmd += ',' + options.channel + ',' + options.nom
+					cmd += paramSep + options.channel + paramSep + options.nom
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -301,9 +302,9 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'GA'
 				if (options.query) {
-					cmd += ',' + options.channel
+					cmd += paramSep + options.channel
 				} else {
-					cmd += ',' + options.channel + ',' + options.group
+					cmd += paramSep + options.channel + paramSep + options.group
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -340,11 +341,11 @@ module.exports = function (self) {
 			callback: async ({ options }) => {
 				let cmd = 'CN'
 				if (options.query) {
-					cmd += ',' + options.channel
+					cmd += paramSep + options.channel
 				} else {
 					let safeChanName = self.regexSafeString(await self.parseVariablesInString(options.name))
 					if (safeChanName != undefined && safeChanName.length >= 1) {
-						cmd += ',' + options.channel + ',' + safeChanName
+						cmd += paramSep + options.channel + paramSep + safeChanName
 					} else {
 						self.log('warn', 'Not a valid channel name')
 						return false
@@ -390,7 +391,7 @@ module.exports = function (self) {
 					if (options.groupA) groupMute += 1
 					if (options.groupB) groupMute += 2
 					if (options.groupC) groupMute += 4
-					cmd += ',' + groupMute
+					cmd += paramSep + groupMute
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -432,7 +433,7 @@ module.exports = function (self) {
 					if (options.groupA) groupPreset += 1
 					if (options.groupB) groupPreset += 2
 					if (options.groupC) groupPreset += 4
-					cmd += ',' + groupPreset
+					cmd += paramSep + groupPreset
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -474,7 +475,7 @@ module.exports = function (self) {
 					if (options.groupA) groupOverride += 1
 					if (options.groupB) groupOverride += 2
 					if (options.groupC) groupOverride += 4
-					cmd += ',' + groupOverride
+					cmd += paramSep + groupOverride
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -516,7 +517,7 @@ module.exports = function (self) {
 					if (options.groupA) groupLasthold += 1
 					if (options.groupB) groupLasthold += 2
 					if (options.groupC) groupLasthold += 4
-					cmd += ',' + groupLasthold
+					cmd += paramSep + groupLasthold
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -555,9 +556,9 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'ME' //AD commands also works
 				if (options.query) {
-					cmd += ',' + options.group
+					cmd += paramSep + options.group
 				} else {
-					cmd += ',' + options.group + ',' + options.weight
+					cmd += paramSep + options.group + paramSep + options.weight
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -596,9 +597,9 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'NL'
 				if (options.query) {
-					cmd += ',' + options.group
+					cmd += paramSep + options.group
 				} else {
-					cmd += ',' + options.group + ',' + options.nomgain
+					cmd += paramSep + options.group + paramSep + options.nomgain
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -637,9 +638,9 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'MT'
 				if (options.query) {
-					cmd += ',' + options.group
+					cmd += paramSep + options.group
 				} else {
-					cmd += ',' + options.group + ',' + options.threshold
+					cmd += paramSep + options.group + paramSep + options.threshold
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -674,9 +675,9 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'MC'
 				if (options.query) {
-					cmd += ',' + options.group
+					cmd += paramSep + options.group
 				} else {
-					cmd += ',' + options.group + ',' + options.input
+					cmd += paramSep + options.group + paramSep + options.input
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -712,9 +713,9 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'MXM'
 				if (options.query) {
-					cmd += ',' + options.matrix
+					cmd += paramSep + options.matrix
 				} else {
-					cmd += ',' + options.matrix + ',' + options.mute
+					cmd += paramSep + options.matrix + paramSep + options.mute
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -750,9 +751,9 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'MXP'
 				if (options.query) {
-					cmd += ',' + options.matrix
+					cmd += paramSep + options.matrix
 				} else {
-					cmd += ',' + options.matrix + ',' + options.polarity
+					cmd += paramSep + options.matrix + paramSep + options.polarity
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -791,9 +792,9 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'MXV'
 				if (options.query) {
-					cmd += ',' + options.matrix
+					cmd += paramSep + options.matrix
 				} else {
-					cmd += ',' + options.matrix + ',' + options.gain
+					cmd += paramSep + options.matrix + paramSep + options.gain
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -827,9 +828,9 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'MXO'
 				if (options.query) {
-					cmd += ',' + options.matrix
+					cmd += paramSep + options.matrix
 				} else {
-					cmd += ',' + options.matrix + ',' + options.output
+					cmd += paramSep + options.matrix + paramSep + options.output
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -875,9 +876,9 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'OM'
 				if (options.query) {
-					cmd += ',' + options.matrix + ',' + options.channel
+					cmd += paramSep + options.matrix + paramSep + options.channel
 				} else {
-					cmd += ',' + options.matrix + ',' + options.channel + ',' + options.gain
+					cmd += paramSep + options.matrix + paramSep + options.channel + paramSep + options.gain
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -933,7 +934,7 @@ module.exports = function (self) {
 				let cmd = 'SNR'
 				let safeSceneName = self.regexSafeString(await self.parseVariablesInString(options.name))
 				if (safeSceneName != undefined && safeSceneName.length >= 1) {
-					cmd += ',' + safeSceneName
+					cmd += paramSep + safeSceneName
 					self.addCmdtoQueue(cmd)
 				} else {
 					self.log('warn', 'Not a valid scene name')
@@ -959,7 +960,7 @@ module.exports = function (self) {
 				let cmd = 'SNS'
 				let safeSceneName = self.regexSafeString(await self.parseVariablesInString(options.name))
 				if (safeSceneName != undefined && safeSceneName.length >= 1) {
-					cmd += ',' + safeSceneName
+					cmd += paramSep + safeSceneName
 					self.addCmdtoQueue(cmd)
 				} else {
 					self.log('warn', 'Not a valid scene name')
@@ -985,7 +986,7 @@ module.exports = function (self) {
 				let cmd = 'SNN'
 				let safeSceneName = self.regexSafeString(await self.parseVariablesInString(options.name))
 				if (safeSceneName != undefined && safeSceneName.length >= 1) {
-					cmd += ',' + safeSceneName
+					cmd += paramSep + safeSceneName
 					self.addCmdtoQueue(cmd)
 				} else {
 					self.log('warn', 'Not a valid scene name')
@@ -1028,7 +1029,7 @@ module.exports = function (self) {
 					safeSceneNameNew != undefined &&
 					safeSceneNameNew.length >= 1
 				) {
-					cmd += ',' + safeSceneNameCurrent + ',' + safeSceneNameNew
+					cmd += paramSep + safeSceneNameCurrent + paramSep + safeSceneNameNew
 					self.addCmdtoQueue(cmd)
 				} else {
 					self.log('warn', 'Not a valid scene name')
@@ -1054,7 +1055,7 @@ module.exports = function (self) {
 				let cmd = 'SND'
 				let safeSceneName = self.regexSafeString(await self.parseVariablesInString(options.name))
 				if (safeSceneName != undefined && safeSceneName.length >= 1) {
-					cmd += ',' + safeSceneName
+					cmd += paramSep + safeSceneName
 					self.addCmdtoQueue(cmd)
 				} else {
 					self.log('warn', 'Not a valid scene name')
@@ -1105,7 +1106,7 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'SU'
 				if (!options.query) {
-					cmd += ',' + options.subscribe
+					cmd += paramSep + options.subscribe
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -1138,7 +1139,7 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'LG'
 				if (!options.query) {
-					cmd += ',' + options.linkgroup
+					cmd += paramSep + options.linkgroup
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -1165,7 +1166,7 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'CS'
 				if (!options.query) {
-					cmd += ',' + options.clock
+					cmd += paramSep + options.clock
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -1194,7 +1195,7 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'AM'
 				if (!options.query) {
-					cmd += ',' + options.mirror
+					cmd += paramSep + options.mirror
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -1227,7 +1228,7 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'CFN'
 				if (!options.query) {
-					cmd += ',' + options.channels
+					cmd += paramSep + options.channels
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -1254,7 +1255,7 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'CFS'
 				if (!options.query) {
-					cmd += ',' + options.offset
+					cmd += paramSep + options.offset
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -1283,7 +1284,7 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'BM'
 				if (!options.query) {
-					cmd += ',' + options.blink
+					cmd += paramSep + options.blink
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -1312,7 +1313,7 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let cmd = 'DH'
 				if (!options.query) {
-					cmd += ',' + options.dhcp
+					cmd += paramSep + options.dhcp
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -1368,7 +1369,7 @@ module.exports = function (self) {
 				if (!options.query) {
 					let safeName = self.regexSafeString(await self.parseVariablesInString(options.name))
 					if (safeName != undefined && safeName.length >= 1) {
-						cmd += ',' + safeName
+						cmd += paramSep + safeName
 					} else {
 						self.log('warn', 'Not a valid scene name')
 						return false
@@ -1417,7 +1418,7 @@ module.exports = function (self) {
 						self.log('warn', 'Not a valid IP Address, unexpected length')
 						return false
 					}
-					cmd += ',' + cleanIP[0] + ',' + cleanIP[1] + ',' + cleanIP[2] + ',' + cleanIP[3]
+					cmd += paramSep + cleanIP[0] + paramSep + cleanIP[1] + paramSep + cleanIP[2] + paramSep + cleanIP[3]
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -1505,7 +1506,7 @@ module.exports = function (self) {
 			callback: ({ options }) => {
 				let first = Math.floor(options.first)
 				let count = Math.floor(options.count)
-				self.addCmdtoQueue(options.mode + ',' + first + ',' + count)
+				self.addCmdtoQueue(options.mode + paramSep + first + paramSep + count)
 			},
 		},
 	})
