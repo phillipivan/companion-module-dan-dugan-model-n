@@ -33,7 +33,7 @@ class DUGAN_MODEL_N extends InstanceBase {
 		clearTimeout(this.keepAliveTimer)
 		clearTimeout(this.cmdTimer)
 		if (this.socket) {
-			this.addCmdtoQueue(EndSession)
+			await this.sendCommand(EndSession)
 			this.socket.destroy()
 		} else if (this.udp) {
 			this.udp.destroy()
