@@ -1,5 +1,5 @@
 const { InstanceStatus, TCPHelper } = require('@companion-module/base')
-const { duganModels, EndSession, msgDelay } = require('./consts.js')
+const { duganModels, EndSession, msgDelay, EOM } = require('./consts.js')
 
 module.exports = {
 	async addCmdtoQueue(cmd) {
@@ -28,7 +28,7 @@ module.exports = {
 		if (cmd !== undefined) {
 			if (this.socket !== undefined && this.socket.isConnected) {
 				this.log('info', 'Sending Command: ' + cmd)
-				this.socket.send(cmd + '\r\n')
+				this.socket.send(cmd + EOM)
 				return true
 			} else {
 				this.log('warn', 'Socket not connected, tried to send: ' + cmd)
