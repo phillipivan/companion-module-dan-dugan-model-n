@@ -24,6 +24,7 @@ export const MatrixCount = 6
 export const EndSession = 'QUIT'
 export const EOM = '\r\n'
 export const paramSep = ','
+export const cmdSep = ';'
 export let automixChannels = []
 automixChannels.push({ id: 1, label: 'Unit Default' })
 for (let i = MinChannelCount; i <= MaxChannelCount; i++) {
