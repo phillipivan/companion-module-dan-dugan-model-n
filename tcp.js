@@ -1,5 +1,5 @@
 const { InstanceStatus, TCPHelper } = require('@companion-module/base')
-const { duganModels, EndSession, msgDelay, EOM } = require('./consts.js')
+const { duganModels, EndSession, msgDelay, EOM, cmdOnConnect, cmdOnPollInterval } = require('./consts.js')
 
 module.exports = {
 	async addCmdtoQueue(cmd) {
@@ -39,9 +39,15 @@ module.exports = {
 		return false
 	},
 
+	//queries made on initial connection.
+	queryOnConnect() {
+		cmdOnConnect.forEach(element => {this.addCmdtoQueue(element)})
+		return true
+	},
+
 	pollStatus() {
 		this.log('debug', 'pollStatus')
-		this.addCmdtoQueue('SNC') //scene count
+		cmdOnPollInterval.forEach(element => {this.addCmdtoQueue(element)})
 		this.keepAliveTimer = setTimeout(() => {
 			this.pollStatus()
 		}, this.config.keepAlive * 1000)
@@ -66,7 +72,7 @@ module.exports = {
 			})
 			this.socket.on('connect', () => {
 				this.log('info', `Connected`)
-				this.addCmdtoQueue('SC')
+				queryOnConnect()
 				if (this.config.keepAlive > 0) {
 					this.keepAliveTimer = setTimeout(() => {
 						this.pollStatus()
