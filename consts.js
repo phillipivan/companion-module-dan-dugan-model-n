@@ -25,7 +25,7 @@ export const EndSession = 'QUIT' //'EXIT' also works
 export const EOM = '\r\n'
 export const paramSep = ',' //seperator between parameters
 export const cmdSep = ';' //seperator between responses when multiple sent in 1 message
-export const cmdOnConnect = ['SC','VE','BM','HW', 'HR', 'SNC','SNA','GP', 'LG','CS', 'MM', 'CC', 'SU,1'] //queries to be made on initial connection
+export const cmdOnConnect = ['SC', 'VE', 'BM', 'HW', 'HR', 'SNC', 'SNA', 'GP', 'LG', 'CS', 'MM', 'CC', 'SU,1'] //queries to be made on initial connection
 export const cmdOnPollInterval = ['HW', 'SNC', 'SNA', 'CC'] //queries to be made each poll interval
 export let automixChannels = []
 automixChannels.push({ id: 1, label: 'Unit Default' })

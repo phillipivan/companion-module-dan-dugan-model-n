@@ -41,13 +41,17 @@ module.exports = {
 
 	//queries made on initial connection.
 	queryOnConnect() {
-		cmdOnConnect.forEach(element => {this.addCmdtoQueue(element)})
+		cmdOnConnect.forEach((element) => {
+			this.addCmdtoQueue(element)
+		})
 		return true
 	},
 
 	pollStatus() {
 		this.log('debug', 'pollStatus')
-		cmdOnPollInterval.forEach(element => {this.addCmdtoQueue(element)})
+		cmdOnPollInterval.forEach((element) => {
+			this.addCmdtoQueue(element)
+		})
 		this.keepAliveTimer = setTimeout(() => {
 			this.pollStatus()
 		}, this.config.keepAlive * 1000)
@@ -72,7 +76,7 @@ module.exports = {
 			})
 			this.socket.on('connect', () => {
 				this.log('info', `Connected`)
-				queryOnConnect()
+				this.queryOnConnect()
 				if (this.config.keepAlive > 0) {
 					this.keepAliveTimer = setTimeout(() => {
 						this.pollStatus()
