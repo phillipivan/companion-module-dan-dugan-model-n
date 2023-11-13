@@ -1,5 +1,14 @@
-/* eslint-disable prettier/prettier */
-const { duganModels, paramSep, cmdSep, errSyntax1, errSyntax2, errRange, sampleRate, adatMirror, clockSources } = require('./consts.js')
+const {
+	duganModels,
+	paramSep,
+	cmdSep,
+	errSyntax1,
+	errSyntax2,
+	errRange,
+	sampleRate,
+	adatMirror,
+	clockSources,
+} = require('./consts.js')
 
 module.exports = {
 	async processBuffer(buffer) {
@@ -132,190 +141,195 @@ module.exports = {
 				break
 			case '*SNC':
 				//scene count
-                if (params.length == 2){
-                    this.setVariableValues({
-                        sceneCount: Number(params[1])
-                    })
-                    this.addCmdtoQueue('SNL,1,' + Number(params[1]))
-                } else {
+				if (params.length == 2) {
+					this.setVariableValues({
+						sceneCount: Number(params[1]),
+					})
+					this.addCmdtoQueue('SNL,1,' + Number(params[1]))
+				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
 				break
 			case '*SNA':
 				//active scene
-                if (params.length == 4){
-                    this.setVariableValues({
-                        sceneActive: params[1].toString(),
-                        sceneActiveIndex: Number(params[2]),
-                        sceneActiveChanged: Number(params[3]),
-                    })
-                } else {
+				if (params.length == 4) {
+					this.setVariableValues({
+						sceneActive: params[1].toString(),
+						sceneActiveIndex: Number(params[2]),
+						sceneActiveChanged: Number(params[3]),
+					})
+				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
 				break
 			case '*SNR':
 				//recall scene
-                if (params.length == 2){
-                    let err = params[1].search('Error: scene')
-                    if (err == -1 ) {
-                        this.log('info','Scene Recalled: ' + params[1])
-                        this.addCmdtoQueue('SNA')
-                    } else {
-                        this.log('warn', str)
-                    }
-                } else {
+				if (params.length == 2) {
+					let err = params[1].search('Error: scene')
+					if (err == -1) {
+						this.log('info', 'Scene Recalled: ' + params[1])
+						this.addCmdtoQueue('SNA')
+					} else {
+						this.log('warn', str)
+					}
+				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
 				break
 			case '*SNS':
-            case '*SNN':
+			case '*SNN':
 				//save scene
-                //save new scene
-                if (params.length == 2){
-                    let err = params[1].search('Error: scene')
-                    if (err == -1 ) {
-                        this.log('info','New scene saved: ' + params[1])
-                        this.addCmdtoQueue('SNC')
+				//save new scene
+				if (params.length == 2) {
+					let err = params[1].search('Error: scene')
+					if (err == -1) {
+						this.log('info', 'New scene saved: ' + params[1])
+						this.addCmdtoQueue('SNC')
 						this.addCmdtoQueue('SNA')
-                    } else {
-                        this.log('warn', str)
-                    }
-                } else {
+					} else {
+						this.log('warn', str)
+					}
+				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
 				break
 			case '*SNE':
-                //rename scene
-                if (params.length == 3){
-                    this.log('info', 'Scene: ' + params[1] + '. Renamed to: ' + params[2])
-                    this.addCmdtoQueue('SNC')
+				//rename scene
+				if (params.length == 3) {
+					this.log('info', 'Scene: ' + params[1] + '. Renamed to: ' + params[2])
+					this.addCmdtoQueue('SNC')
 					this.addCmdtoQueue('SNA')
-                } else {
+				} else {
 					this.log('warn', 'Error response: ' + str)
 				}
 				break
 			case '*SND':
 				//delete scene
-                if (params.length == 2){
-                    let err = params[1].search('Error: scene')
-                    if (err == -1 ) {
-                        this.log('info','Scene Deleted: ' + params[1])
-                        this.addCmdtoQueue('SNC')
+				if (params.length == 2) {
+					let err = params[1].search('Error: scene')
+					if (err == -1) {
+						this.log('info', 'Scene Deleted: ' + params[1])
+						this.addCmdtoQueue('SNC')
 						this.addCmdtoQueue('SNA')
-                    } else {
-                        this.log('warn', params[1])
-                    }
-                } else {
+					} else {
+						this.log('warn', params[1])
+					}
+				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
 				break
 			case '*FP':
 				//channel defaults
-                this.log('info', 'Channels reset to defaults')
-                this.addCmdtoQueue('SNA')
+				this.log('info', 'Channels reset to defaults. ' + str)
+				this.addCmdtoQueue('SNA')
 				break
 			case '*RM':
 				//matrix defauls
-                this.log('info', 'Matrix reset to defaults')
+				this.log('info', 'Matrix reset to defaults. ' + str)
 				break
 			case '*SU':
 				//subscribe unsolicited
-                this.log('info', 'Subscribe unsolicited level changed. Level: ' + params[1])
+				this.log('info', 'Subscribe unsolicited level changed. Level: ' + params[1])
 				break
 			case '*LG':
 				//link group
-                if (params.length == 2){
-                    this.setVariableValues({
-                        linkGroup: Number(params[1])
-                    })
-                } else {
+				if (params.length == 2) {
+					this.setVariableValues({
+						linkGroup: Number(params[1]),
+					})
+				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
 				break
 			case '*CS':
 				//clock sourse
-                if (params.length == 2){
-                    if (params[1] > 0) {
-                        this.setVariableValues({
-                            clockSource: clockSources[params[1]]
-                        })
-                    } else if (params[1] == 0 && this.config.model == 11) {
-                        this.setVariableValues({
-                            clockSource: 'Madi'
-                        })
-                    } else if (params[1] == 0 && this.config.model == 12) {
-                        this.setVariableValues({
-                            clockSource: 'Dante'
-                        })
-                    } else {
-                        this.setVariableValues({
-                            clockSource: 'Unknown'
-                        })
-                    }
-                    
-                } else {
+				if (params.length == 2) {
+					if (params[1] > 0) {
+						this.setVariableValues({
+							clockSource: clockSources[params[1]],
+						})
+					} else if (params[1] == 0 && this.config.model == 11) {
+						this.setVariableValues({
+							clockSource: 'Madi',
+						})
+					} else if (params[1] == 0 && this.config.model == 12) {
+						this.setVariableValues({
+							clockSource: 'Dante',
+						})
+					} else {
+						this.setVariableValues({
+							clockSource: 'Unknown',
+						})
+					}
+				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
 				break
 			case '*AM':
 				//adat mirror
-                if (params.length == 2){
-                    this.setVariableValues({
-                        adatMirror: adatMirror[params[1]]
-                    })
-                } else {
+				if (params.length == 2) {
+					this.setVariableValues({
+						adatMirror: adatMirror[params[1]],
+					})
+				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
 				break
 			case '*CFN':
 				//automix channels
-                if (params.length == 2){
-                    this.setVariableValues({
-                        channelCount: Number(params[1])
-                    })
-                    if (Number(params[1]) != this.config.channels) {
-                        this.log ('warn', 'Mismatch between configured channels: ' + this.config.channels + ' and connected device: ' + Number(params[1]) + '. Changing configuration.')
-                        this.config.channels = Number(params[1])
-                        this.initVariables()
-		                this.updateActions() // export actions
-		                //this.updateFeedbacks() // export feedbacks
-		                this.updateVariableDefinitions() // export variable definitions
-                        //this.setVariableValues(variableDefaults)
-                    }
-                } else {
+				if (params.length == 2) {
+					this.setVariableValues({
+						channelCount: Number(params[1]),
+					})
+					if (Number(params[1]) != this.config.channels) {
+						this.log(
+							'warn',
+							'Mismatch between configured channels: ' +
+								this.config.channels +
+								' and connected device: ' +
+								Number(params[1]) +
+								'. Changing configuration.'
+						)
+						this.config.channels = Number(params[1])
+						this.initVariables()
+						this.updateActions() // export actions
+						//this.updateFeedbacks() // export feedbacks
+						this.updateVariableDefinitions() // export variable definitions
+						//this.setVariableValues(variableDefaults)
+					}
+				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
 				break
 			case '*CFS':
 				//input channel offset
-                if (params.length == 2){
-                    this.setVariableValues({
-                        inputOffset: Number(params[1])
-                    })
-
-                } else {
+				if (params.length == 2) {
+					this.setVariableValues({
+						inputOffset: Number(params[1]),
+					})
+				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
 				break
 			case '*BM':
 				//blink mode
-                if (params.length == 2){
-                    let blink = params[1] == '1' ? 'On' : 'Off'
-                    this.setVariableValues({
-                        blinkMode: blink
-                    })
-                } else {
+				if (params.length == 2) {
+					let blink = params[1] == '1' ? 'On' : 'Off'
+					this.setVariableValues({
+						blinkMode: blink,
+					})
+				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
 				break
 			case '*DH':
 				//dhcp
-                if (params.length == 2){
-                    let dhcp = params[1] == '1' ? 'On' : 'Off'
-                    this.setVariableValues({
-                        master: dhcp
-                    })
-                } else {
+				if (params.length == 2) {
+					let dhcp = params[1] == '1' ? 'On' : 'Off'
+					this.setVariableValues({
+						master: dhcp,
+					})
+				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
 				break
@@ -338,19 +352,32 @@ module.exports = {
 						dhcp: dhcp,
 						channelCount: Number(params[12]),
 					})
-                    //checks for expected model and channel count
-                    if (params[1] != this.config.model) {
-                        this.log('warn', 'Mismatch between configured model: ' + duganModels[this.config.model] + ' and connected device: ' + duganModels[params[1]])
-                    }
-                    if (Number(params[12]) != this.config.channels) {
-                        this.log ('warn', 'Mismatch between configured channels: ' + this.config.channels + ' and connected device: ' + Number(params[12]) + '. Changing configuration.')
-                        this.config.channels = Number(params[12])
-                        this.initVariables()
-		                this.updateActions() // export actions
-		                //this.updateFeedbacks() // export feedbacks
-		                this.updateVariableDefinitions() // export variable definitions
-                        //this.setVariableValues(variableDefaults)
-                    }
+					//checks for expected model and channel count
+					if (params[1] != this.config.model) {
+						this.log(
+							'warn',
+							'Mismatch between configured model: ' +
+								duganModels[this.config.model] +
+								' and connected device: ' +
+								duganModels[params[1]]
+						)
+					}
+					if (Number(params[12]) != this.config.channels) {
+						this.log(
+							'warn',
+							'Mismatch between configured channels: ' +
+								this.config.channels +
+								' and connected device: ' +
+								Number(params[12]) +
+								'. Changing configuration.'
+						)
+						this.config.channels = Number(params[12])
+						this.initVariables()
+						this.updateActions() // export actions
+						//this.updateFeedbacks() // export feedbacks
+						this.updateVariableDefinitions() // export variable definitions
+						//this.setVariableValues(variableDefaults)
+					}
 				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
@@ -383,126 +410,126 @@ module.exports = {
 				break
 			case '*HW':
 				//resource useage
-                if (params.length == 9) {
-                    let heatBeat = params[1].split(':')
-                    let lwip = params[2].split(':')
-                    let dsp = params[3].split(':')
-                    let tcpip = params[4].split(':')
-                    let macrx = params[5].split(':')
-                    let mactx = params[6].split(':')
-                    let rtos = params[7].split(':')
-                    let malloc = params[8].split(':')
-                    this.setVariableValues({
-                        heartBeat: Number(heatBeat[1]),
-                        lwip: Number(lwip[1]),
-                        dsp: Number(dsp[1]),
-                        tcpip: Number(tcpip[1]),
-                        macRX: Number(macrx[1]),
-                        macTX: Number(mactx[1]),
-                        rtosHeapFree: Number(rtos[1]),
-                        mallocHeadFree: Number(malloc[1])
-                    })
-                } else {
+				if (params.length == 9) {
+					let heatBeat = params[1].split(':')
+					let lwip = params[2].split(':')
+					let dsp = params[3].split(':')
+					let tcpip = params[4].split(':')
+					let macrx = params[5].split(':')
+					let mactx = params[6].split(':')
+					let rtos = params[7].split(':')
+					let malloc = params[8].split(':')
+					this.setVariableValues({
+						heartBeat: Number(heatBeat[1]),
+						lwip: Number(lwip[1]),
+						dsp: Number(dsp[1]),
+						tcpip: Number(tcpip[1]),
+						macRX: Number(macrx[1]),
+						macTX: Number(mactx[1]),
+						rtosHeapFree: Number(rtos[1]),
+						mallocHeadFree: Number(malloc[1]),
+					})
+				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
 				break
 			case '*HR':
 				//switch headroom
-                this.setVariableValues({
-                    switchHeadroom: params[1]
-                })
+				this.setVariableValues({
+					switchHeadroom: params[1],
+				})
 				break
 			case '*SF':
 				//sample rate
-                if (params.length == 2){
-                    if (params[1] == '0' || params[1] == '1') {
-                        this.setVariableValues({
-                            sampleRate: sampleRate[params[1]]
-                        })
-                    } else { 
-                        this.setVariableValues({
-                            sampleRate: params[1]
-                        })
-                    }
-                } else {
+				if (params.length == 2) {
+					if (params[1] == '0' || params[1] == '1') {
+						this.setVariableValues({
+							sampleRate: sampleRate[params[1]],
+						})
+					} else {
+						this.setVariableValues({
+							sampleRate: params[1],
+						})
+					}
+				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
 				break
 			case '*MM':
 				//master mode
-                if (params.length == 2){
-                    this.setVariableValues({
-                        master: params[1]
-                    })
-                } else {
+				if (params.length == 2) {
+					this.setVariableValues({
+						master: params[1],
+					})
+				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
 				break
 			case '*NA':
 				//system name
-                if (params.length == 2){
-                    this.setVariableValues({
-                        hostName: params[1]
-                    })
-                } else {
+				if (params.length == 2) {
+					this.setVariableValues({
+						hostName: params[1],
+					})
+				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
 				break
 			case '*IP':
 				//ip
-                if (params.length == 5) {
-                        this.setVariableValues({
-                            ipAddress: params[2] + '.' + params[3] + '.' + params[4] + '.' + params[5]
-                        }) 
-                } else {
+				if (params.length == 5) {
+					this.setVariableValues({
+						ipAddress: params[2] + '.' + params[3] + '.' + params[4] + '.' + params[5],
+					})
+				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
 				break
 			case '*NM':
 				//netmask
-                if (params.length == 5) {
-                    this.setVariableValues({
-                        netMask: params[2] + '.' + params[3] + '.' + params[4] + '.' + params[5]
-                    })
-            } else {
-                this.log('warn', 'Unexpected response: ' + str)
-            }
+				if (params.length == 5) {
+					this.setVariableValues({
+						netMask: params[2] + '.' + params[3] + '.' + params[4] + '.' + params[5],
+					})
+				} else {
+					this.log('warn', 'Unexpected response: ' + str)
+				}
 				break
 			case '*GW':
 				//gateway
-                if (params.length == 5) {
-                    this.setVariableValues({
-                        gateway: params[2] + '.' + params[3] + '.' + params[4] + '.' + params[5]
-                    })
-            } else {
-                this.log('warn', 'Unexpected response: ' + str)
-            }
+				if (params.length == 5) {
+					this.setVariableValues({
+						gateway: params[2] + '.' + params[3] + '.' + params[4] + '.' + params[5],
+					})
+				} else {
+					this.log('warn', 'Unexpected response: ' + str)
+				}
 				break
 			case '*CNS':
 				//channel name list
 				break
 			case '*SNL':
 				//scene name list
-                if (params.length > 4) {
-                    this.sceneList = []
-                    for (let i = 4; i < params.length; i++) {
-                        this.sceneList.push({ id: params[i], label: params[i].toString() })
-                    }
-                    this.updateActions()
-                } else if (params.length == 4) {
-                    this.log('warn', 'No custom scenes saved. ' + str)
-                    this.sceneList = []
-                    this.updateActions()
-                } else {
-                    this.log('warn', 'Unexpected response: ' + str)
-                }
+				if (params.length > 4) {
+					this.sceneList = []
+					for (let i = 4; i < params.length; i++) {
+						this.sceneList.push({ id: params[i], label: params[i].toString() })
+					}
+					this.updateActions()
+				} else if (params.length == 4) {
+					this.log('warn', 'No custom scenes saved. ' + str)
+					this.sceneList = []
+					this.updateActions()
+				} else {
+					this.log('warn', 'Unexpected response: ' + str)
+				}
 				break
 			default:
-                if (cmd != 'Welcome to Dugan Model N Server.') {
-                    this.log('warn', 'Unexpected response from unit: ' + cmd)
-                } else {
-                    this.log('info', cmd)
-                }
+				if (cmd != 'Welcome to Dugan Model N Server.') {
+					this.log('warn', 'Unexpected response from unit: ' + cmd)
+				} else {
+					this.log('info', cmd)
+				}
 		}
 	},
 }
