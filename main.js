@@ -7,17 +7,21 @@ const config = require('./config')
 const variableDefaults = require('./variable-defaults.js')
 const util = require('./util')
 const tcp = require('./tcp')
+const processCmd = require('./processcmd')
 const { MaxChannelCount, GroupCount, MatrixCount, EndSession, duganChannels, msgDelay } = require('./consts.js')
 
 class DUGAN_MODEL_N extends InstanceBase {
 	constructor(internal) {
 		super(internal)
-		Object.assign(this, { ...config, ...util, ...tcp })
+		Object.assign(this, { ...config, ...util, ...tcp, ...processCmd })
+		this.keepAliveTimer = {}
+		this.cmdTimer = {}
+		this.cmdQueue = []
 	}
 	async init(config) {
-		this.config = config
 		this.updateStatus('Starting')
-		await this.initVariables()
+		this.config = config
+		this.initVariables()
 		this.updateActions() // export actions
 		this.updateFeedbacks() // export feedbacks
 		this.updateVariableDefinitions() // export variable definitions
@@ -42,13 +46,10 @@ class DUGAN_MODEL_N extends InstanceBase {
 		}
 	}
 
-	async initVariables() {
+	initVariables() {
 		this.log('debug', 'initVariables')
 		this.groupCount = GroupCount
 		this.matrixCount = MatrixCount
-		this.keepAliveTimer = {}
-		this.cmdTimer = {}
-		this.cmdQueue = []
 		this.musicInputs = []
 		this.matrixSources = []
 		this.matrixDestinations = []

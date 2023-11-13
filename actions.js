@@ -343,7 +343,7 @@ module.exports = function (self) {
 				if (options.query) {
 					cmd += paramSep + options.channel
 				} else {
-					let safeChanName = self.regexSafeString(await self.parseVariablesInString(options.name))
+					let safeChanName = await self.regexSafeString(await self.parseVariablesInString(options.name))
 					if (safeChanName != undefined && safeChanName.length >= 1) {
 						cmd += paramSep + options.channel + paramSep + safeChanName
 					} else {
@@ -932,7 +932,7 @@ module.exports = function (self) {
 			],
 			callback: async ({ options }) => {
 				let cmd = 'SNR'
-				let safeSceneName = self.regexSafeString(await self.parseVariablesInString(options.name))
+				let safeSceneName = await self.regexSafeString(await self.parseVariablesInString(options.name))
 				if (safeSceneName != undefined && safeSceneName.length >= 1) {
 					cmd += paramSep + safeSceneName
 					self.addCmdtoQueue(cmd)
@@ -958,7 +958,7 @@ module.exports = function (self) {
 			],
 			callback: async ({ options }) => {
 				let cmd = 'SNS'
-				let safeSceneName = self.regexSafeString(await self.parseVariablesInString(options.name))
+				let safeSceneName = await self.regexSafeString(await self.parseVariablesInString(options.name))
 				if (safeSceneName != undefined && safeSceneName.length >= 1) {
 					cmd += paramSep + safeSceneName
 					self.addCmdtoQueue(cmd)
@@ -984,7 +984,7 @@ module.exports = function (self) {
 			],
 			callback: async ({ options }) => {
 				let cmd = 'SNN'
-				let safeSceneName = self.regexSafeString(await self.parseVariablesInString(options.name))
+				let safeSceneName = await self.regexSafeString(await self.parseVariablesInString(options.name))
 				if (safeSceneName != undefined && safeSceneName.length >= 1) {
 					cmd += paramSep + safeSceneName
 					self.addCmdtoQueue(cmd)
@@ -1020,8 +1020,8 @@ module.exports = function (self) {
 			],
 			callback: async ({ options }) => {
 				let cmd = 'SNE'
-				let safeSceneNameCurrent = self.regexSafeString(await self.parseVariablesInString(options.currentname))
-				let safeSceneNameNew = self.regexSafeString(await self.parseVariablesInString(options.newname))
+				let safeSceneNameCurrent = await self.regexSafeString(await self.parseVariablesInString(options.currentname))
+				let safeSceneNameNew = await self.regexSafeString(await self.parseVariablesInString(options.newname))
 
 				if (
 					safeSceneNameCurrent != undefined &&
@@ -1053,7 +1053,7 @@ module.exports = function (self) {
 			],
 			callback: async ({ options }) => {
 				let cmd = 'SND'
-				let safeSceneName = self.regexSafeString(await self.parseVariablesInString(options.name))
+				let safeSceneName = await self.regexSafeString(await self.parseVariablesInString(options.name))
 				if (safeSceneName != undefined && safeSceneName.length >= 1) {
 					cmd += paramSep + safeSceneName
 					self.addCmdtoQueue(cmd)
@@ -1367,7 +1367,7 @@ module.exports = function (self) {
 			callback: async ({ options }) => {
 				let cmd = 'NA'
 				if (!options.query) {
-					let safeName = self.regexSafeString(await self.parseVariablesInString(options.name))
+					let safeName = await self.regexSafeString(await self.parseVariablesInString(options.name))
 					if (safeName != undefined && safeName.length >= 1) {
 						cmd += paramSep + safeName
 					} else {

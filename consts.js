@@ -1,6 +1,6 @@
 export const regexpCmd = new RegExp(/(^[*])([a-zA-Z]{0,3})([,])/g)
 export const regexpSafeString = new RegExp(/^[^,*;]{1,15}/g)
-export const msgDelay = 50 //Dugan advice is 50ms
+export const msgDelay = 75 //Dugan advice is 50ms
 export const duganModels = [
 	'0',
 	'1',
@@ -25,8 +25,15 @@ export const EndSession = 'QUIT' //'EXIT' also works
 export const EOM = '\r\n'
 export const paramSep = ',' //seperator between parameters
 export const cmdSep = ';' //seperator between responses when multiple sent in 1 message
-export const cmdOnConnect = ['SC', 'VE', 'BM', 'HW', 'HR', 'SNC', 'SNA', 'GP', 'LG', 'CS', 'MM', 'CC', 'SU,1'] //queries to be made on initial connection
+// eslint-disable-next-line prettier/prettier
+export const cmdOnConnect = ['SC', 'VE', 'BM', 'HW', 'HR', 'SNC', 'SNA', 'GP', 'LG', 'CS', 'AM', 'CC', 'SU,1', 'SF', 'MM', 'CFS', 'BM'] //queries to be made on initial connection
 export const cmdOnPollInterval = ['HW', 'SNC', 'SNA', 'CC'] //queries to be made each poll interval
+export const errSyntax1 = 'Error: syntax'
+export const errSyntax2 = 'ERROR: syntax'
+export const errRange = 'Error: Channel number out of range'
+export const sampleRate = ['48kHz', '96kHz']
+export const adatMirror = ['0 Channels', '8 Channels', '16 Channels']
+export const clockSources = ['Dante/Madi', 'Word Clock', 'Internal', 'ADAT']
 export let automixChannels = []
 automixChannels.push({ id: 1, label: 'Unit Default' })
 for (let i = MinChannelCount; i <= MaxChannelCount; i++) {
