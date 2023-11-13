@@ -921,13 +921,15 @@ module.exports = function (self) {
 			options: [
 				{
 					id: 'name',
-					type: 'textinput',
+					type: 'dropdown',
 					label: 'Scene Name',
-					default: 'Scene 1',
+					choices: self.sceneList,
+					default: 'Factory Defaults',
 					required: true,
 					Regex: Regex.SOMETHING,
 					tooltip: 'Max Length: 15 char',
 					useVariables: true,
+					allowCustom: true,
 				},
 			],
 			callback: async ({ options }) => {
@@ -947,13 +949,15 @@ module.exports = function (self) {
 			options: [
 				{
 					id: 'name',
-					type: 'textinput',
+					type: 'dropdown',
 					label: 'Scene Name',
-					default: 'Scene 1',
+					choices: self.sceneList,
+					default: 'New Scene',
 					required: true,
 					Regex: Regex.SOMETHING,
 					tooltip: 'Max Length: 15 char',
 					useVariables: true,
+					allowCustom: true,
 				},
 			],
 			callback: async ({ options }) => {
@@ -973,24 +977,14 @@ module.exports = function (self) {
 			options: [
 				{
 					id: 'name',
-					type: 'textinput',
+					type: 'static-text',
 					label: 'Scene Name',
-					default: 'New Scene',
-					required: true,
-					Regex: Regex.SOMETHING,
-					useVariables: true,
-					tooltip: 'Max Length: 15 char',
+					value: 'A default scene name will be written',
 				},
 			],
-			callback: async ({ options }) => {
+			callback: async () => {
 				let cmd = 'SNN'
-				let safeSceneName = await self.regexSafeString(await self.parseVariablesInString(options.name))
-				if (safeSceneName != undefined && safeSceneName.length >= 1) {
-					cmd += paramSep + safeSceneName
-					self.addCmdtoQueue(cmd)
-				} else {
-					self.log('warn', 'Not a valid scene name')
-				}
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		sc_rename: {
@@ -999,13 +993,15 @@ module.exports = function (self) {
 			options: [
 				{
 					id: 'currentname',
-					type: 'textinput',
+					type: 'dropdown',
 					label: 'Current Name',
-					default: 'Scene 1',
+					default: '',
 					required: true,
 					Regex: Regex.SOMETHING,
 					useVariables: true,
 					tooltip: 'Max Length: 15 char',
+					choices: self.sceneList,
+					allowCustom: true,
 				},
 				{
 					id: 'newname',
@@ -1042,12 +1038,14 @@ module.exports = function (self) {
 			options: [
 				{
 					id: 'name',
-					type: 'textinput',
+					type: 'dropdown',
 					label: 'Scene Name',
-					default: 'Delete ME',
+					choices: self.sceneList,
+					default: '',
 					required: true,
 					Regex: Regex.SOMETHING,
 					useVariables: true,
+					allowCustom: true,
 					tooltip: 'Max Length: 15 char. "," ";" Forbidden.',
 				},
 			],

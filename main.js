@@ -58,6 +58,7 @@ class DUGAN_MODEL_N extends InstanceBase {
 		this.groupNames = []
 		this.clockSources = []
 		this.offsetChannelList = []
+		this.sceneList = []
 		this.matrixDestinations.push({ id: 0, label: 'No Output' })
 		if (this.config.channels == 1) {
 			this.config.channels = duganChannels[this.config.model]
@@ -66,7 +67,7 @@ class DUGAN_MODEL_N extends InstanceBase {
 			this.matrixSources.push({ id: i, label: 'Automix Channel ' + i })
 			this.channelNames.push({ id: i, label: 'Automix Channel ' + i })
 		}
-		if (this.config.model == 1) {
+		if (this.config.model == 11) {
 			for (let i = 1; i <= 32; i++) {
 				this.musicInputs.push({ id: i, label: 'MADI Input ' + i })
 			}

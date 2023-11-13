@@ -33,5 +33,7 @@ module.exports = async function (self) {
 		{ variableId: 'mallocHeadFree', name: 'Malloc Heap Free' },
 		{ variableId: 'sceneCount', name: 'Scene Count' },
 		{ variableId: 'sceneActive', name: 'Active Scene' },
+		{ variableId: 'sceneActiveIndex', name: 'Active Scene Index' },
+		{ variableId: 'sceneActiveChanged', name: 'Active Scene Changed' },
 	])
 }

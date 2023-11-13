@@ -33,6 +33,8 @@ const variableDefaults = {
     mallocHeapFree: 'unknown',
     sceneCount: 'unknown',
     sceneActive: 'unknown',
+    sceneActiveIndex: 'unknown',
+    sceneActiveChanged: 'unknown',
 };
 
 module.exports = variableDefaults;
