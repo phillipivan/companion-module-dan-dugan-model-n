@@ -48,7 +48,7 @@ Enter the IP address of the control port of the Automixer. The unit will accept 
 - **Scene - Recall** Recall Scene. Accepts variables
 - **Scene - Rename** Rename Scene. Accepts variables
 - **Scene - Save** Save Scene. Accepts variables
-- **Scene - Save New** Save New Scene. Accepts variables
+- **Scene - Save New** Save New Scene. Applies default name "Scene #"
 
 - **System - Adat Mirror** Query / Change channel count echod to Adat
 - **System - Automix Channel Offset** Query / change input channel mapped to Automix Channel 1
