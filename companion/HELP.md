@@ -61,7 +61,7 @@ Enter the IP address of the control port of the Automixer. The unit will accept 
 - **System - Network** Query / Change IP, Subnet or Gateway address
 - **System - Network DHCP** Query / Change DHCP 
 - **System - Name** Query / change unit name. Accepts variables
-- **System - Subscribe Unsoliccited** Query / change unsolicited messages
+- **System - Subscribe Unsolicited** Query / change unsolicited messages
 
 ## Support for other models
 At present only the Model M & N are explicitly supported. With that said, the dugan units share a common api.
