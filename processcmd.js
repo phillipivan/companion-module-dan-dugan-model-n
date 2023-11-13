@@ -176,6 +176,7 @@ module.exports = {
                     if (err == -1 ) {
                         this.log('info','New scene saved: ' + params[1])
                         this.addCmdtoQueue('SNC')
+						this.addCmdtoQueue('SNA')
                     } else {
                         this.log('warn', str)
                     }
@@ -188,6 +189,7 @@ module.exports = {
                 if (params.length == 3){
                     this.log('info', 'Scene: ' + params[1] + '. Renamed to: ' + params[2])
                     this.addCmdtoQueue('SNC')
+					this.addCmdtoQueue('SNA')
                 } else {
 					this.log('warn', 'Error response: ' + str)
 				}
@@ -199,6 +201,7 @@ module.exports = {
                     if (err == -1 ) {
                         this.log('info','Scene Deleted: ' + params[1])
                         this.addCmdtoQueue('SNC')
+						this.addCmdtoQueue('SNA')
                     } else {
                         this.log('warn', params[1])
                     }
