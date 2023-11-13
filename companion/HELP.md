@@ -25,7 +25,7 @@ Enter the IP address of the control port of the Automixer. The unit will accept 
 - **Group - Music System Threshold Input** Query / Change Group Music System Threshold Input
 - **Group - Mute** Query / Change Group Mute
 - **Group - NOM Gain Limit** Query / Change Group Gain Limit
-- **Group - Over ride** Query / Change Group Over ride
+- **Group - Override** Query / Change Group Override
 - **Group - Preset** Query / Change Group Preset
 
 - **Matrix - Bus Mute** Query / Change Matrix Mute
