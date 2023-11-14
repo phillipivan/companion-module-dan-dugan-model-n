@@ -74,24 +74,59 @@ module.exports = {
 		switch (params[0]) {
 			case '*CM':
 				//channel mode
+				if (params.length == 3) {
+					this.channelsMode[Number(params[1])] = Number(params[2])
+				} else {
+					this.log('warn', 'Unexpected response: ' + str)
+				}
 				break
 			case '*CP':
 				//channel preset
+				if (params.length == 3) {
+					this.channelsPreset[Number(params[1])] = Number(params[2])
+				} else {
+					this.log('warn', 'Unexpected response: ' + str)
+				}
 				break
 			case '*BP':
 				//channel bypass
+				if (params.length == 3) {
+					this.channelsBypass[Number(params[1])] = Number(params[2])
+				} else {
+					this.log('warn', 'Unexpected response: ' + str)
+				}
 				break
 			case '*CO':
 				//channel override
+				if (params.length == 3) {
+					this.channelsOverride[Number(params[1])] = Number(params[2])
+				} else {
+					this.log('warn', 'Unexpected response: ' + str)
+				}
 				break
 			case '*CW':
 				//channel weight
+				if (params.length == 3) {
+					this.channelsWeight[Number(params[1])] = Number(params[2])
+				} else {
+					this.log('warn', 'Unexpected response: ' + str)
+				}
 				break
 			case '*MR':
 				//music mode
+				if (params.length == 3) {
+					this.channelsMusic[Number(params[1])] = Number(params[2])
+				} else {
+					this.log('warn', 'Unexpected response: ' + str)
+				}
 				break
 			case '*NE':
 				//NOM mode
+				if (params.length == 3) {
+					this.channelsNom[Number(params[1])] = Number(params[2])
+				} else {
+					this.log('warn', 'Unexpected response: ' + str)
+				}
 				break
 			case '*GA':
 				//group assign
@@ -126,15 +161,32 @@ module.exports = {
 				break
 			case '*MXM':
 				//matrix bus mute
+				if (params.length == 3) {
+					this.matrixMute[Number(params[1])] = Number(params[2])
+				} else {
+					this.log('warn', 'Unexpected response: ' + str)
+				}
 				break
 			case '*MXP':
 				//matrix bus polarity
+				if (params.length == 3) {
+					this.matrixPolarity[Number(params[1])] = Number(params[2])
+				} else {
+					this.log('warn', 'Unexpected response: ' + str)
+				}
 				break
 			case '*MXV':
 				//matrix bus gain
+				if (params.length == 3) {
+					this.matrixGain[Number(params[1])] = Number(params[2])
+					this.log('debug', 'Interval gain value set to: ' + this.matrixGain[Number(params[1])])
+				} else {
+					this.log('warn', 'Unexpected response: ' + str)
+				}
 				break
 			case '*MXO':
 				//matrix bus ouput
+				this.log('info', 'Matrix ' + params[1] + ' output patch changed to ' + params[2])
 				break
 			case '*OM':
 				//matrix crosspoint

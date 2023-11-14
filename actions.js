@@ -100,6 +100,7 @@ module.exports = function (self) {
 					choices: [
 						{ id: 0, label: 'On' },
 						{ id: 1, label: 'Bypass' },
+						{ id: 2, label: 'Toggle' },
 					],
 				},
 				{
@@ -109,10 +110,12 @@ module.exports = function (self) {
 					default: false,
 				},
 			],
-			callback: ({ options }) => {
+			callback: async ({ options }) => {
 				let cmd = 'BP'
 				if (options.query) {
 					cmd += paramSep + options.channel
+				} else if (options.bypass == 2) {
+					cmd += paramSep + options.channel + paramSep + (self.channelsBypass[Number(options.channel)] ^ 1)
 				} else {
 					cmd += paramSep + options.channel + paramSep + options.bypass
 				}
@@ -138,6 +141,7 @@ module.exports = function (self) {
 					choices: [
 						{ id: 0, label: 'Normal' },
 						{ id: 1, label: 'Override' },
+						{ id: 2, label: 'Toggle' },
 					],
 				},
 				{
@@ -147,10 +151,12 @@ module.exports = function (self) {
 					default: false,
 				},
 			],
-			callback: ({ options }) => {
+			callback: async ({ options }) => {
 				let cmd = 'CO'
 				if (options.query) {
 					cmd += paramSep + options.channel
+				} else if (options.override == 2) {
+					cmd += paramSep + options.channel + paramSep + (self.channelsOverride[Number(options.channel)] ^ 1)
 				} else {
 					cmd += paramSep + options.channel + paramSep + options.override
 				}
@@ -197,6 +203,44 @@ module.exports = function (self) {
 				self.addCmdtoQueue(cmd)
 			},
 		},
+		channel_weight_rel: {
+			name: 'Channel - Weight, Relative',
+			description: 'Adjust automix weight of a channel',
+			options: [
+				{
+					id: 'channel',
+					type: 'dropdown',
+					label: 'Channel',
+					default: 1,
+					choices: self.channelNames,
+				},
+				{
+					id: 'weight',
+					type: 'number',
+					label: 'Weight',
+					default: 1,
+					min: -6,
+					max: +6,
+					range: true,
+					step: 0.1,
+					required: true,
+					regex: Regex.NUMBER,
+				},
+			],
+			callback: async ({ options }) => {
+				let cmd = 'CW'
+				let weight = self.channelsWeight[options.channel] + options.weight
+				let weightRound = weight.toFixed(2)
+				if (weightRound < -100) {
+					weightRound = -100
+				}
+				if (weightRound > 15) {
+					weightRound = 15
+				}
+				cmd += paramSep + options.channel + paramSep + weightRound
+				self.addCmdtoQueue(cmd)
+			},
+		},
 		channel_music_mode: {
 			name: 'Channel - Music Mode',
 			description: 'Switch a channel music mode on/off',
@@ -205,7 +249,7 @@ module.exports = function (self) {
 					id: 'channel',
 					type: 'dropdown',
 					label: 'Channel',
-					default: 0,
+					default: 1,
 					choices: self.channelNames,
 				},
 				{
@@ -216,6 +260,7 @@ module.exports = function (self) {
 					choices: [
 						{ id: 0, label: 'Off' },
 						{ id: 1, label: 'On' },
+						{ id: 2, label: 'Toggle' },
 					],
 				},
 				{
@@ -229,6 +274,8 @@ module.exports = function (self) {
 				let cmd = 'MR'
 				if (options.query) {
 					cmd += paramSep + options.channel
+				} else if (options.music == 2) {
+					cmd += paramSep + options.channel + paramSep + (self.channelsMusic[Number(options.channel)] ^ 1)
 				} else {
 					cmd += paramSep + options.channel + paramSep + options.music
 				}
@@ -243,7 +290,7 @@ module.exports = function (self) {
 					id: 'channel',
 					type: 'dropdown',
 					label: 'Channel',
-					default: 0,
+					default: 1,
 					choices: self.channelNames,
 				},
 				{
@@ -254,6 +301,7 @@ module.exports = function (self) {
 					choices: [
 						{ id: 0, label: 'Off' },
 						{ id: 1, label: 'On' },
+						{ id: 2, label: 'Toggle' },
 					],
 				},
 				{
@@ -267,6 +315,8 @@ module.exports = function (self) {
 				let cmd = 'NE'
 				if (options.query) {
 					cmd += paramSep + options.channel
+				} else if (options.nom == 2) {
+					cmd += paramSep + options.channel + paramSep + (self.channelsNom[Number(options.channel)] ^ 1)
 				} else {
 					cmd += paramSep + options.channel + paramSep + options.nom
 				}
@@ -697,10 +747,11 @@ module.exports = function (self) {
 					id: 'mute',
 					type: 'dropdown',
 					label: 'Mute',
-					default: '1',
+					default: 0,
 					choices: [
 						{ id: 0, label: 'On' },
 						{ id: 1, label: 'Mute' },
+						{ id: 2, label: 'Toggle' },
 					],
 				},
 				{
@@ -710,10 +761,13 @@ module.exports = function (self) {
 					default: false,
 				},
 			],
-			callback: ({ options }) => {
+			callback: async ({ options }) => {
 				let cmd = 'MXM'
+				let toggle = (await self.matrixMute[options.matrix]) ^ 1
 				if (options.query) {
 					cmd += paramSep + options.matrix
+				} else if (options.mute == 2) {
+					cmd += paramSep + options.matrix + paramSep + toggle
 				} else {
 					cmd += paramSep + options.matrix + paramSep + options.mute
 				}
@@ -735,10 +789,11 @@ module.exports = function (self) {
 					id: 'polarity',
 					type: 'dropdown',
 					label: 'Polarity',
-					default: '1',
+					default: 0,
 					choices: [
 						{ id: 0, label: 'Normal' },
 						{ id: 1, label: 'Reversed' },
+						{ id: 2, label: 'Toggle' },
 					],
 				},
 				{
@@ -748,10 +803,13 @@ module.exports = function (self) {
 					default: false,
 				},
 			],
-			callback: ({ options }) => {
+			callback: async ({ options }) => {
 				let cmd = 'MXP'
+				let toggle = (await self.matrixPolarity[options.matrix]) ^ 1
 				if (options.query) {
 					cmd += paramSep + options.matrix
+				} else if (options.polarity == 2) {
+					cmd += paramSep + options.matrix + paramSep + toggle
 				} else {
 					cmd += paramSep + options.matrix + paramSep + options.polarity
 				}
@@ -773,7 +831,7 @@ module.exports = function (self) {
 					id: 'gain',
 					type: 'number',
 					label: 'Gain',
-					default: -0,
+					default: 0,
 					min: -25,
 					max: 15,
 					required: true,
@@ -796,6 +854,39 @@ module.exports = function (self) {
 				} else {
 					cmd += paramSep + options.matrix + paramSep + options.gain
 				}
+				self.addCmdtoQueue(cmd)
+			},
+		},
+		matrix_gain_rel: {
+			name: 'Matrix - Gain, Relative',
+			description: 'Adjust the gain of a Matrix Bus',
+			options: [
+				{
+					id: 'matrix',
+					type: 'dropdown',
+					label: 'Matrix',
+					default: 1,
+					choices: self.matrixNames,
+				},
+				{
+					id: 'gain',
+					type: 'number',
+					label: 'Gain',
+					default: 1,
+					min: -6,
+					max: 6,
+					required: true,
+					range: true,
+					step: 0.5,
+					regex: Regex.NUMBER,
+				},
+			],
+			callback: async ({ options }) => {
+				let cmd = 'MXV'
+				let gain = (await self.matrixGain[options.matrix]) + options.gain
+				this.log('debug', 'previous gain: ' + self.matrixGain[options.matrix] + ' new gain: ' + gain)
+				//let gainRound = gain.toFixed(2)
+				cmd += paramSep + options.matrix + paramSep + gain
 				self.addCmdtoQueue(cmd)
 			},
 		},

@@ -103,12 +103,38 @@ class DUGAN_MODEL_N extends InstanceBase {
 		for (let i = 81; i <= 86; i++) {
 			this.musicInputs.push({ id: i, label: 'Mix Bus ' + (i - 80) })
 		}
+		this.matrixGain = []
+		this.matrixMute = []
+		this.matrixPolarity = []
 		for (let i = 1; i <= this.matrixCount; i++) {
 			this.matrixNames.push({ id: i, label: 'Matrix Bus ' + i })
+		}
+		for (let i = 0; i <= this.matrixCount; i++) {
+			this.matrixGain[i] = 0
+			this.matrixMute[i] = 0
+			this.matrixPolarity[i] = 0
 		}
 		this.groupNames.push({ id: 1, label: 'Group A' })
 		this.groupNames.push({ id: 2, label: 'Group B' })
 		this.groupNames.push({ id: 3, label: 'Group C' })
+		this.channelsMode = []
+		this.channelsPreset = []
+		this.channelsBypass = []
+		this.channelsOverride = []
+		this.channelsWeight = []
+		this.channelsNom = []
+		this.channelsMusic = []
+		this.channelsName = []
+		for (let i = 0; i <= this.config.channels; i++) {
+			this.channelsMode[i] = 1
+			this.channelsPreset[i] = 1
+			this.channelsBypass[i] = 0
+			this.channelsOverride[i] = 0
+			this.channelsWeight[i] = 0
+			this.channelsNom[i] = 0
+			this.channelsMusic[i] = 0
+			this.channelsName[i] = 'Channel ' + i
+		}
 	}
 
 	updateActions() {
