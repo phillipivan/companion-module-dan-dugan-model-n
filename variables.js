@@ -35,5 +35,7 @@ module.exports = async function (self) {
 		{ variableId: 'sceneActive', name: 'Active Scene' },
 		{ variableId: 'sceneActiveIndex', name: 'Active Scene Index' },
 		{ variableId: 'sceneActiveChanged', name: 'Active Scene Changed' },
+		{ variableId: 'channelName1', name: 'Channel 1 Name' },
+		{ variableId: 'channelName2', name: 'Channel 2 Name' },
 	])
 }
