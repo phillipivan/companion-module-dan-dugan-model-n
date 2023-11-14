@@ -37,6 +37,8 @@ const variableDefaults = {
     sceneActiveChanged: 'unknown',
     channelName1: 'Channel 1',
     channelName2: 'Channel 2',
+    channelName3: 'Channel 3',
+    channelName4: 'Channel 4',
 };
 
 module.exports = variableDefaults;
