@@ -489,8 +489,8 @@ module.exports = function (self) {
 			},
 		},
 		group_override: {
-			name: 'Group - Over ride',
-			description: 'Set the Over ride state of the groups',
+			name: 'Group - Override',
+			description: 'Set the Override state of the groups',
 			options: [
 				{
 					id: 'groupA',
@@ -584,9 +584,9 @@ module.exports = function (self) {
 					choices: self.groupNames,
 				},
 				{
-					id: 'weight',
+					id: 'depth',
 					type: 'number',
-					label: 'Weight',
+					label: 'Depth',
 					default: -15,
 					min: -100,
 					max: 0,
@@ -608,8 +608,46 @@ module.exports = function (self) {
 				if (options.query) {
 					cmd += paramSep + options.group
 				} else {
-					cmd += paramSep + options.group + paramSep + options.weight
+					cmd += paramSep + options.group + paramSep + options.depth
 				}
+				self.addCmdtoQueue(cmd)
+			},
+		},
+		group_automixdepth_rel: {
+			name: 'Group - Automix Depth, Relative',
+			description: 'Adjust the automix depth of a group',
+			options: [
+				{
+					id: 'group',
+					type: 'dropdown',
+					label: 'Group',
+					default: '1',
+					choices: self.groupNames,
+				},
+				{
+					id: 'depth',
+					type: 'number',
+					label: 'Depth',
+					default: 1,
+					min: -6,
+					max: 6,
+					required: true,
+					range: true,
+					step: 0.1,
+					regex: Regex.NUMBER,
+				},
+			],
+			callback: ({ options }) => {
+				let cmd = 'ME' //AD commands also works
+				let depth = self.groupAutomixDepth[options.group] + options.depth
+				if (depth < -100) {
+					depth = -100
+				}
+				if (depth > 0) {
+					depth = 0
+				}
+				let depthRound = depth.toFixed(2)
+				cmd += paramSep + options.group + paramSep + depthRound
 				self.addCmdtoQueue(cmd)
 			},
 		},
@@ -654,6 +692,44 @@ module.exports = function (self) {
 				self.addCmdtoQueue(cmd)
 			},
 		},
+		group_NOMgainlimit_rel: {
+			name: 'Group - NOM Gain Limit, Relative',
+			description: 'Adjust the NOM gain limit of a group',
+			options: [
+				{
+					id: 'group',
+					type: 'dropdown',
+					label: 'Group',
+					default: '1',
+					choices: self.groupNames,
+				},
+				{
+					id: 'nomgain',
+					type: 'number',
+					label: 'NOM Gain Limit',
+					default: 1,
+					min: -6,
+					max: 6,
+					required: true,
+					range: true,
+					step: 0.1,
+					regex: Regex.NUMBER,
+				},
+			],
+			callback: ({ options }) => {
+				let cmd = 'NL'
+				let nom = self.groupNOMgainlimit[options.group] + options.nomgain
+				if (nom < 1) {
+					nom = 1
+				}
+				if (nom > 10) {
+					nom = 10
+				}
+				let nomRound = nom.toFixed(2)
+				cmd += paramSep + options.group + paramSep + nomRound
+				self.addCmdtoQueue(cmd)
+			},
+		},
 		group_musicthreshold: {
 			name: 'Group - Music System Threshold',
 			description: 'Set the Music System Threshold of a group',
@@ -662,7 +738,7 @@ module.exports = function (self) {
 					id: 'group',
 					type: 'dropdown',
 					label: 'Group',
-					default: '1',
+					default: 1,
 					choices: self.groupNames,
 				},
 				{
@@ -682,7 +758,7 @@ module.exports = function (self) {
 					type: 'checkbox',
 					label: 'Query',
 					default: false,
-					tooltip: 'Query will poll the group musicc system threshold',
+					tooltip: 'Query will poll the group music system threshold',
 				},
 			],
 			callback: ({ options }) => {
@@ -692,6 +768,44 @@ module.exports = function (self) {
 				} else {
 					cmd += paramSep + options.group + paramSep + options.threshold
 				}
+				self.addCmdtoQueue(cmd)
+			},
+		},
+		group_musicthreshold_rel: {
+			name: 'Group - Music System Threshold, Relative',
+			description: 'Adjust the Music System Threshold of a group',
+			options: [
+				{
+					id: 'group',
+					type: 'dropdown',
+					label: 'Group',
+					default: 1,
+					choices: self.groupNames,
+				},
+				{
+					id: 'threshold',
+					type: 'number',
+					label: 'Music System Threshold',
+					default: 1,
+					min: -6,
+					max: 6,
+					required: true,
+					range: true,
+					step: 0.1,
+					regex: Regex.NUMBER,
+				},
+			],
+			callback: ({ options }) => {
+				let cmd = 'MT'
+				let thres = self.groupMusicThreshold[options.group] + options.threshold
+				if (thres < -150) {
+					thres = -150
+				}
+				if (thres > 20) {
+					thres = 20
+				}
+				let thresRound = thres.toFixed(2)
+				cmd += paramSep + options.group + paramSep + thresRound
 				self.addCmdtoQueue(cmd)
 			},
 		},
@@ -881,12 +995,17 @@ module.exports = function (self) {
 					regex: Regex.NUMBER,
 				},
 			],
-			callback: async ({ options }) => {
+			callback: ({ options }) => {
 				let cmd = 'MXV'
-				let gain = (await self.matrixGain[options.matrix]) + options.gain
-				this.log('debug', 'previous gain: ' + self.matrixGain[options.matrix] + ' new gain: ' + gain)
-				//let gainRound = gain.toFixed(2)
-				cmd += paramSep + options.matrix + paramSep + gain
+				let gain = self.matrixGain[options.matrix] + options.gain
+				if (gain < -25) {
+					gain = -25
+				}
+				if (gain > 15) {
+					gain = 15
+				}
+				let gainRound = gain.toFixed(2)
+				cmd += paramSep + options.matrix + paramSep + gainRound
 				self.addCmdtoQueue(cmd)
 			},
 		},

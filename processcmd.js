@@ -149,12 +149,27 @@ module.exports = {
 			case '*AD': //same as ME
 			case '*ME':
 				//automix depth
+				if (params.length == 3) {
+					this.groupAutomixDepth[Number(params[1])] = Number(params[2])
+				} else {
+					this.log('warn', 'Unexpected response: ' + str)
+				}
 				break
 			case '*NL':
 				//nom gain limit
+				if (params.length == 3) {
+					this.groupNOMgainlimit[Number(params[1])] = Number(params[2])
+				} else {
+					this.log('warn', 'Unexpected response: ' + str)
+				}
 				break
 			case '*MT':
 				//music system threshold
+				if (params.length == 3) {
+					this.groupMusicThreshold[Number(params[1])] = Number(params[2])
+				} else {
+					this.log('warn', 'Unexpected response: ' + str)
+				}
 				break
 			case '*MC':
 				//music system threshold input

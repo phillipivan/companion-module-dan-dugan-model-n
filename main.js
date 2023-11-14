@@ -117,6 +117,20 @@ class DUGAN_MODEL_N extends InstanceBase {
 		this.groupNames.push({ id: 1, label: 'Group A' })
 		this.groupNames.push({ id: 2, label: 'Group B' })
 		this.groupNames.push({ id: 3, label: 'Group C' })
+		this.groupAutomixDepth = []
+		this.groupMusicThreshold = []
+		this.groupNOMgainlimit = []
+		this.groupMute = []
+		this.groupPreset = []
+		this.groupOverride = []
+		for (let i = 0; i <= this.groupCount; i++) {
+			this.groupAutomixDepth[i] = -15
+			this.groupMusicThreshold[i] = -10
+			this.groupNOMgainlimit[i] = 1
+			this.groupMute[i] = 0
+			this.groupPreset[i] = 0
+			this.groupOverride[i] = 0
+		}
 		this.channelsMode = []
 		this.channelsPreset = []
 		this.channelsBypass = []
