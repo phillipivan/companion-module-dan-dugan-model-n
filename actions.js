@@ -1067,12 +1067,12 @@ module.exports = function (self) {
 					id: 'gain',
 					type: 'number',
 					label: 'Crosspoint Gain',
-					default: -96,
-					min: -96,
-					max: 20,
+					default: -96.5,
+					min: -96.5,
+					max: 0,
 					required: true,
 					range: true,
-					step: 0.1,
+					step: 0.5,
 					regex: Regex.NUMBER,
 				},
 				{
@@ -1090,6 +1090,51 @@ module.exports = function (self) {
 				} else {
 					cmd += paramSep + options.matrix + paramSep + options.channel + paramSep + options.gain
 				}
+				self.addCmdtoQueue(cmd)
+			},
+		},
+		matrix_crosspoint_rel: {
+			name: 'Matrix - Crosspoint, Relative',
+			description: 'Adjust a crosspoint in the matrix',
+			options: [
+				{
+					id: 'matrix',
+					type: 'dropdown',
+					label: 'Matrix',
+					default: 1,
+					choices: self.matrixNames,
+				},
+				{
+					id: 'channel',
+					type: 'dropdown',
+					label: 'Input Channel',
+					default: 1,
+					choices: self.matrixSources,
+				},
+				{
+					id: 'gain',
+					type: 'number',
+					label: 'Crosspoint Gain',
+					default: 1,
+					min: -6,
+					max: 6,
+					required: true,
+					range: true,
+					step: 0.5,
+					regex: Regex.NUMBER,
+				},
+			],
+			callback: ({ options }) => {
+				let cmd = 'OM'
+				let gain = self.matrixXpoint[options.matrix][options.channel] + options.gain
+				if (gain < -96.5) {
+					gain = -96.5
+				}
+				if (gain > 0) {
+					gain = 0
+				}
+				let gainRound = gain.toFixed(2)
+				cmd += paramSep + options.matrix + paramSep + options.channel + paramSep + gainRound
 				self.addCmdtoQueue(cmd)
 			},
 		},

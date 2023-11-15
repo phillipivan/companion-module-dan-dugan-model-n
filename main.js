@@ -8,7 +8,15 @@ const variableDefaults = require('./variable-defaults.js')
 const util = require('./util')
 const tcp = require('./tcp')
 const processCmd = require('./processcmd')
-const { MaxChannelCount, GroupCount, MatrixCount, EndSession, duganChannels, msgDelay } = require('./consts.js')
+const {
+	MaxChannelCount,
+	GroupCount,
+	MatrixCount,
+	MatrixSize,
+	EndSession,
+	duganChannels,
+	msgDelay,
+} = require('./consts.js')
 
 class DUGAN_MODEL_N extends InstanceBase {
 	constructor(internal) {
@@ -106,6 +114,7 @@ class DUGAN_MODEL_N extends InstanceBase {
 		this.matrixGain = []
 		this.matrixMute = []
 		this.matrixPolarity = []
+		this.matrixXpoint = []
 		for (let i = 1; i <= this.matrixCount; i++) {
 			this.matrixNames.push({ id: i, label: 'Matrix Bus ' + i })
 		}
@@ -113,6 +122,10 @@ class DUGAN_MODEL_N extends InstanceBase {
 			this.matrixGain[i] = 0
 			this.matrixMute[i] = 0
 			this.matrixPolarity[i] = 0
+			this.matrixXpoint[i] = []
+			for (let j = 0; j <= MatrixSize; j++) {
+				this.matrixXpoint[i][j] = -96.5
+			}
 		}
 		this.groupNames.push({ id: 1, label: 'Group A' })
 		this.groupNames.push({ id: 2, label: 'Group B' })

@@ -205,6 +205,11 @@ module.exports = {
 				break
 			case '*OM':
 				//matrix crosspoint
+				if (params.length == 4) {
+					this.matrixXpoint[Number(params[1])][Number(params[2])] = Number(params[3])
+				} else {
+					this.log('warn', 'Unexpected response: ' + str)
+				}
 				break
 			case '*SNC':
 				//scene count

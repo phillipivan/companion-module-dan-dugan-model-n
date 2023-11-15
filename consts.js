@@ -21,6 +21,7 @@ export const MaxChannelCount = 64
 export const MinChannelCount = 8
 export const GroupCount = 3
 export const MatrixCount = 6
+export const MatrixSize = 144
 export const EndSession = 'QUIT' //'EXIT' also works
 export const EOM = '\r\n'
 export const paramSep = ',' //seperator between parameters
