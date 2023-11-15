@@ -8,6 +8,9 @@ const {
 	sampleRate,
 	adatMirror,
 	clockSources,
+	grpAval,
+	grpBval,
+	grpCval,
 } = require('./consts.js')
 
 module.exports = {
@@ -149,9 +152,9 @@ module.exports = {
 			case '*SM':
 				//group mute
 				if (params.length == 2) {
-					this.groupMute[1] = Number(params[1]) & 1
-					this.groupMute[2] = Number(params[1]) & 2
-					this.groupMute[3] = Number(params[1]) & 4
+					this.groupMute[1] = Number(params[1]) & grpAval
+					this.groupMute[2] = Number(params[1]) & grpBval
+					this.groupMute[3] = Number(params[1]) & grpCval
 					this.log('debug', this.groupMute[1] + ' ' + this.groupMute[2] + ' ' + this.groupMute[3])
 				} else {
 					this.log('warn', 'Unexpected response: ' + str)
@@ -160,9 +163,9 @@ module.exports = {
 			case '*SP':
 				//group preset
 				if (params.length == 2) {
-					this.groupPreset[1] = Number(params[1]) & 1
-					this.groupPreset[2] = Number(params[1]) & 2
-					this.groupPreset[3] = Number(params[1]) & 4
+					this.groupPreset[1] = Number(params[1]) & grpAval
+					this.groupPreset[2] = Number(params[1]) & grpBval
+					this.groupPreset[3] = Number(params[1]) & grpCval
 				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
@@ -170,9 +173,9 @@ module.exports = {
 			case '*SO':
 				//group override
 				if (params.length == 2) {
-					this.groupOverride[1] = Number(params[1]) & 1
-					this.groupOverride[2] = Number(params[1]) & 2
-					this.groupOverride[3] = Number(params[1]) & 4
+					this.groupOverride[1] = Number(params[1]) & grpAval
+					this.groupOverride[2] = Number(params[1]) & grpBval
+					this.groupOverride[3] = Number(params[1]) & grpCval
 				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
@@ -180,9 +183,9 @@ module.exports = {
 			case '*LH':
 				//last hold
 				if (params.length == 2) {
-					this.groupLastHold[1] = Number(params[1]) & 1
-					this.groupLastHold[2] = Number(params[1]) & 2
-					this.groupLastHold[3] = Number(params[1]) & 4
+					this.groupLastHold[1] = Number(params[1]) & grpAval
+					this.groupLastHold[2] = Number(params[1]) & grpBval
+					this.groupLastHold[3] = Number(params[1]) & grpCval
 				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}

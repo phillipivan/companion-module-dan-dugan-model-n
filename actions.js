@@ -1,5 +1,5 @@
 const { Regex } = require('@companion-module/base')
-const { paramSep } = require('./consts.js')
+const { paramSep, grpAval, grpBval, grpCval, toggle, noChange } = require('./consts.js')
 
 module.exports = function (self) {
 	self.setActionDefinitions({
@@ -100,7 +100,7 @@ module.exports = function (self) {
 					choices: [
 						{ id: 0, label: 'On' },
 						{ id: 1, label: 'Bypass' },
-						{ id: 2, label: 'Toggle' },
+						{ id: toggle, label: 'Toggle' },
 					],
 				},
 				{
@@ -114,7 +114,7 @@ module.exports = function (self) {
 				let cmd = 'BP'
 				if (options.query) {
 					cmd += paramSep + options.channel
-				} else if (options.bypass == 2) {
+				} else if (options.bypass == toggle) {
 					cmd += paramSep + options.channel + paramSep + (self.channelsBypass[Number(options.channel)] ^ 1)
 				} else {
 					cmd += paramSep + options.channel + paramSep + options.bypass
@@ -141,7 +141,7 @@ module.exports = function (self) {
 					choices: [
 						{ id: 0, label: 'Normal' },
 						{ id: 1, label: 'Override' },
-						{ id: 2, label: 'Toggle' },
+						{ id: toggle, label: 'Toggle' },
 					],
 				},
 				{
@@ -155,7 +155,7 @@ module.exports = function (self) {
 				let cmd = 'CO'
 				if (options.query) {
 					cmd += paramSep + options.channel
-				} else if (options.override == 2) {
+				} else if (options.override == toggle) {
 					cmd += paramSep + options.channel + paramSep + (self.channelsOverride[Number(options.channel)] ^ 1)
 				} else {
 					cmd += paramSep + options.channel + paramSep + options.override
@@ -260,7 +260,7 @@ module.exports = function (self) {
 					choices: [
 						{ id: 0, label: 'Off' },
 						{ id: 1, label: 'On' },
-						{ id: 2, label: 'Toggle' },
+						{ id: toggle, label: 'Toggle' },
 					],
 				},
 				{
@@ -274,7 +274,7 @@ module.exports = function (self) {
 				let cmd = 'MR'
 				if (options.query) {
 					cmd += paramSep + options.channel
-				} else if (options.music == 2) {
+				} else if (options.music == toggle) {
 					cmd += paramSep + options.channel + paramSep + (self.channelsMusic[Number(options.channel)] ^ 1)
 				} else {
 					cmd += paramSep + options.channel + paramSep + options.music
@@ -301,7 +301,7 @@ module.exports = function (self) {
 					choices: [
 						{ id: 0, label: 'Off' },
 						{ id: 1, label: 'On' },
-						{ id: 2, label: 'Toggle' },
+						{ id: toggle, label: 'Toggle' },
 					],
 				},
 				{
@@ -315,7 +315,7 @@ module.exports = function (self) {
 				let cmd = 'NE'
 				if (options.query) {
 					cmd += paramSep + options.channel
-				} else if (options.nom == 2) {
+				} else if (options.nom == toggle) {
 					cmd += paramSep + options.channel + paramSep + (self.channelsNom[Number(options.channel)] ^ 1)
 				} else {
 					cmd += paramSep + options.channel + paramSep + options.nom
@@ -415,9 +415,9 @@ module.exports = function (self) {
 					default: 0,
 					choices: [
 						{ id: 0, label: 'On' },
-						{ id: 1, label: 'Mute' },
-						{ id: 10, label: 'Toggle' },
-						{ id: 11, label: 'No Change' },
+						{ id: grpAval, label: 'Mute' },
+						{ id: toggle, label: 'Toggle' },
+						{ id: noChange, label: 'No Change' },
 					],
 				},
 				{
@@ -427,9 +427,9 @@ module.exports = function (self) {
 					default: 0,
 					choices: [
 						{ id: 0, label: 'On' },
-						{ id: 2, label: 'Mute' },
-						{ id: 10, label: 'Toggle' },
-						{ id: 11, label: 'No Change' },
+						{ id: grpBval, label: 'Mute' },
+						{ id: toggle, label: 'Toggle' },
+						{ id: noChange, label: 'No Change' },
 					],
 				},
 				{
@@ -439,9 +439,9 @@ module.exports = function (self) {
 					default: 0,
 					choices: [
 						{ id: 0, label: 'On' },
-						{ id: 4, label: 'Mute' },
-						{ id: 10, label: 'Toggle' },
-						{ id: 11, label: 'No Change' },
+						{ id: grpCval, label: 'Mute' },
+						{ id: toggle, label: 'Toggle' },
+						{ id: noChange, label: 'No Change' },
 					],
 				},
 				{
@@ -456,15 +456,15 @@ module.exports = function (self) {
 				let cmd = 'SM'
 				if (!options.query) {
 					let groupMute = 0
-					if (options.groupA < 10) groupMute += options.groupA
-					if (options.groupB < 10) groupMute += options.groupB
-					if (options.groupC < 10) groupMute += options.groupC
-					if (options.groupA == 10) groupMute += self.groupMute[1] ^ 1
-					if (options.groupB == 10) groupMute += self.groupMute[2] ^ 2
-					if (options.groupC == 10) groupMute += self.groupMute[3] ^ 4
-					if (options.groupA == 11) groupMute += self.groupMute[1]
-					if (options.groupB == 11) groupMute += self.groupMute[2]
-					if (options.groupC == 11) groupMute += self.groupMute[3]
+					if (options.groupA < toggle) groupMute += options.groupA
+					if (options.groupB < toggle) groupMute += options.groupB
+					if (options.groupC < toggle) groupMute += options.groupC
+					if (options.groupA == toggle) groupMute += self.groupMute[1] ^ grpAval
+					if (options.groupB == toggle) groupMute += self.groupMute[2] ^ grpBval
+					if (options.groupC == toggle) groupMute += self.groupMute[3] ^ grpCval
+					if (options.groupA == noChange) groupMute += self.groupMute[1]
+					if (options.groupB == noChange) groupMute += self.groupMute[2]
+					if (options.groupC == noChange) groupMute += self.groupMute[3]
 					cmd += paramSep + groupMute
 				}
 				self.addCmdtoQueue(cmd)
@@ -481,9 +481,9 @@ module.exports = function (self) {
 					default: 0,
 					choices: [
 						{ id: 0, label: 'Off' },
-						{ id: 1, label: 'Preset' },
-						{ id: 10, label: 'Toggle' },
-						{ id: 11, label: 'No Change' },
+						{ id: grpAval, label: 'Preset' },
+						{ id: toggle, label: 'Toggle' },
+						{ id: noChange, label: 'No Change' },
 					],
 				},
 				{
@@ -493,9 +493,9 @@ module.exports = function (self) {
 					default: 0,
 					choices: [
 						{ id: 0, label: 'Off' },
-						{ id: 2, label: 'Preset' },
-						{ id: 10, label: 'Toggle' },
-						{ id: 11, label: 'No Change' },
+						{ id: grpBval, label: 'Preset' },
+						{ id: toggle, label: 'Toggle' },
+						{ id: noChange, label: 'No Change' },
 					],
 				},
 				{
@@ -505,9 +505,9 @@ module.exports = function (self) {
 					default: 0,
 					choices: [
 						{ id: 0, label: 'Off' },
-						{ id: 4, label: 'Preset' },
-						{ id: 10, label: 'Toggle' },
-						{ id: 11, label: 'No Change' },
+						{ id: grpCval, label: 'Preset' },
+						{ id: toggle, label: 'Toggle' },
+						{ id: noChange, label: 'No Change' },
 					],
 				},
 				{
@@ -522,15 +522,15 @@ module.exports = function (self) {
 				let cmd = 'SP'
 				if (!options.query) {
 					let groupPreset = 0
-					if (options.groupA < 10) groupPreset += options.groupA
-					if (options.groupB < 10) groupPreset += options.groupB
-					if (options.groupC < 10) groupPreset += options.groupC
-					if (options.groupA == 10) groupPreset += self.groupPreset[1] ^ 1
-					if (options.groupB == 10) groupPreset += self.groupPreset[2] ^ 2
-					if (options.groupC == 10) groupPreset += self.groupPreset[3] ^ 4
-					if (options.groupA == 11) groupPreset += self.groupPreset[1]
-					if (options.groupB == 11) groupPreset += self.groupPreset[2]
-					if (options.groupC == 11) groupPreset += self.groupPreset[3]
+					if (options.groupA < toggle) groupPreset += options.groupA
+					if (options.groupB < toggle) groupPreset += options.groupB
+					if (options.groupC < toggle) groupPreset += options.groupC
+					if (options.groupA == toggle) groupPreset += self.groupPreset[1] ^ grpAval
+					if (options.groupB == toggle) groupPreset += self.groupPreset[2] ^ grpBval
+					if (options.groupC == toggle) groupPreset += self.groupPreset[3] ^ grpCval
+					if (options.groupA == noChange) groupPreset += self.groupPreset[1]
+					if (options.groupB == noChange) groupPreset += self.groupPreset[2]
+					if (options.groupC == noChange) groupPreset += self.groupPreset[3]
 					cmd += paramSep + groupPreset
 				}
 				self.addCmdtoQueue(cmd)
@@ -547,9 +547,9 @@ module.exports = function (self) {
 					default: 0,
 					choices: [
 						{ id: 0, label: 'Off' },
-						{ id: 1, label: 'Override' },
-						{ id: 10, label: 'Toggle' },
-						{ id: 11, label: 'No Change' },
+						{ id: grpAval, label: 'Override' },
+						{ id: toggle, label: 'Toggle' },
+						{ id: noChange, label: 'No Change' },
 					],
 				},
 				{
@@ -559,9 +559,9 @@ module.exports = function (self) {
 					default: 0,
 					choices: [
 						{ id: 0, label: 'Off' },
-						{ id: 2, label: 'Override' },
-						{ id: 10, label: 'Toggle' },
-						{ id: 11, label: 'No Change' },
+						{ id: grpBval, label: 'Override' },
+						{ id: toggle, label: 'Toggle' },
+						{ id: noChange, label: 'No Change' },
 					],
 				},
 				{
@@ -571,9 +571,9 @@ module.exports = function (self) {
 					default: 0,
 					choices: [
 						{ id: 0, label: 'Off' },
-						{ id: 4, label: 'Override' },
-						{ id: 10, label: 'Toggle' },
-						{ id: 11, label: 'No Change' },
+						{ id: grpCval, label: 'Override' },
+						{ id: toggle, label: 'Toggle' },
+						{ id: noChange, label: 'No Change' },
 					],
 				},
 				{
@@ -588,15 +588,15 @@ module.exports = function (self) {
 				let cmd = 'SO'
 				if (!options.query) {
 					let groupOverride = 0
-					if (options.groupA < 10) groupOverride += options.groupA
-					if (options.groupB < 10) groupOverride += options.groupB
-					if (options.groupC < 10) groupOverride += options.groupC
-					if (options.groupA == 10) groupOverride += self.groupOverride[1] ^ 1
-					if (options.groupB == 10) groupOverride += self.groupOverride[2] ^ 2
-					if (options.groupC == 10) groupOverride += self.groupOverride[3] ^ 4
-					if (options.groupA == 11) groupOverride += self.groupOverride[1]
-					if (options.groupB == 11) groupOverride += self.groupOverride[2]
-					if (options.groupC == 11) groupOverride += self.groupOverride[3]
+					if (options.groupA < toggle) groupOverride += options.groupA
+					if (options.groupB < toggle) groupOverride += options.groupB
+					if (options.groupC < toggle) groupOverride += options.groupC
+					if (options.groupA == toggle) groupOverride += self.groupOverride[1] ^ grpAval
+					if (options.groupB == toggle) groupOverride += self.groupOverride[2] ^ grpBval
+					if (options.groupC == toggle) groupOverride += self.groupOverride[3] ^ grpCval
+					if (options.groupA == noChange) groupOverride += self.groupOverride[1]
+					if (options.groupB == noChange) groupOverride += self.groupOverride[2]
+					if (options.groupC == noChange) groupOverride += self.groupOverride[3]
 					cmd += paramSep + groupOverride
 				}
 				self.addCmdtoQueue(cmd)
@@ -613,9 +613,9 @@ module.exports = function (self) {
 					default: 0,
 					choices: [
 						{ id: 0, label: 'Off' },
-						{ id: 1, label: 'Last Hold' },
-						{ id: 10, label: 'Toggle' },
-						{ id: 11, label: 'No Change' },
+						{ id: grpAval, label: 'Last Hold' },
+						{ id: toggle, label: 'Toggle' },
+						{ id: noChange, label: 'No Change' },
 					],
 				},
 				{
@@ -625,9 +625,9 @@ module.exports = function (self) {
 					default: 0,
 					choices: [
 						{ id: 0, label: 'Off' },
-						{ id: 2, label: 'Last Hold' },
-						{ id: 10, label: 'Toggle' },
-						{ id: 11, label: 'No Change' },
+						{ id: grpBval, label: 'Last Hold' },
+						{ id: toggle, label: 'Toggle' },
+						{ id: noChange, label: 'No Change' },
 					],
 				},
 				{
@@ -637,9 +637,9 @@ module.exports = function (self) {
 					default: 0,
 					choices: [
 						{ id: 0, label: 'Off' },
-						{ id: 4, label: 'Last Hold' },
-						{ id: 10, label: 'Toggle' },
-						{ id: 11, label: 'No Change' },
+						{ id: grpCval, label: 'Last Hold' },
+						{ id: toggle, label: 'Toggle' },
+						{ id: noChange, label: 'No Change' },
 					],
 				},
 				{
@@ -654,15 +654,15 @@ module.exports = function (self) {
 				let cmd = 'LH'
 				if (!options.query) {
 					let groupLasthold = 0
-					if (options.groupA < 10) groupLasthold += options.groupA
-					if (options.groupB < 10) groupLasthold += options.groupB
-					if (options.groupC < 10) groupLasthold += options.groupC
-					if (options.groupA == 10) groupLasthold += self.groupLastHold[1] ^ 1
-					if (options.groupB == 10) groupLasthold += self.groupLastHold[2] ^ 2
-					if (options.groupC == 10) groupLasthold += self.groupLastHold[3] ^ 4
-					if (options.groupA == 11) groupLasthold += self.groupLastHold[1]
-					if (options.groupB == 11) groupLasthold += self.groupLastHold[2]
-					if (options.groupC == 11) groupLasthold += self.groupLastHold[3]
+					if (options.groupA < toggle) groupLasthold += options.groupA
+					if (options.groupB < toggle) groupLasthold += options.groupB
+					if (options.groupC < toggle) groupLasthold += options.groupC
+					if (options.groupA == toggle) groupLasthold += self.groupLastHold[1] ^ grpAval
+					if (options.groupB == toggle) groupLasthold += self.groupLastHold[2] ^ grpBval
+					if (options.groupC == toggle) groupLasthold += self.groupLastHold[3] ^ grpCval
+					if (options.groupA == noChange) groupLasthold += self.groupLastHold[1]
+					if (options.groupB == noChange) groupLasthold += self.groupLastHold[2]
+					if (options.groupC == noChange) groupLasthold += self.groupLastHold[3]
 					cmd += paramSep + groupLasthold
 				}
 				self.addCmdtoQueue(cmd)
@@ -961,7 +961,7 @@ module.exports = function (self) {
 					choices: [
 						{ id: 0, label: 'On' },
 						{ id: 1, label: 'Mute' },
-						{ id: 2, label: 'Toggle' },
+						{ id: toggle, label: 'Toggle' },
 					],
 				},
 				{
@@ -976,7 +976,7 @@ module.exports = function (self) {
 				let toggle = (await self.matrixMute[options.matrix]) ^ 1
 				if (options.query) {
 					cmd += paramSep + options.matrix
-				} else if (options.mute == 2) {
+				} else if (options.mute == toggle) {
 					cmd += paramSep + options.matrix + paramSep + toggle
 				} else {
 					cmd += paramSep + options.matrix + paramSep + options.mute
@@ -1003,7 +1003,7 @@ module.exports = function (self) {
 					choices: [
 						{ id: 0, label: 'Normal' },
 						{ id: 1, label: 'Reversed' },
-						{ id: 2, label: 'Toggle' },
+						{ id: toggle, label: 'Toggle' },
 					],
 				},
 				{
@@ -1018,7 +1018,7 @@ module.exports = function (self) {
 				let toggle = (await self.matrixPolarity[options.matrix]) ^ 1
 				if (options.query) {
 					cmd += paramSep + options.matrix
-				} else if (options.polarity == 2) {
+				} else if (options.polarity == toggle) {
 					cmd += paramSep + options.matrix + paramSep + toggle
 				} else {
 					cmd += paramSep + options.matrix + paramSep + options.polarity
