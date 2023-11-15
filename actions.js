@@ -493,7 +493,7 @@ module.exports = function (self) {
 					default: 0,
 					choices: [
 						{ id: 0, label: 'Off' },
-						{ id: 1, label: 'Preset' },
+						{ id: 2, label: 'Preset' },
 						{ id: 10, label: 'Toggle' },
 						{ id: 11, label: 'No Change' },
 					],
@@ -505,7 +505,7 @@ module.exports = function (self) {
 					default: 0,
 					choices: [
 						{ id: 0, label: 'Off' },
-						{ id: 1, label: 'Preset' },
+						{ id: 4, label: 'Preset' },
 						{ id: 10, label: 'Toggle' },
 						{ id: 11, label: 'No Change' },
 					],
@@ -559,7 +559,7 @@ module.exports = function (self) {
 					default: 0,
 					choices: [
 						{ id: 0, label: 'Off' },
-						{ id: 1, label: 'Override' },
+						{ id: 2, label: 'Override' },
 						{ id: 10, label: 'Toggle' },
 						{ id: 11, label: 'No Change' },
 					],
@@ -571,7 +571,7 @@ module.exports = function (self) {
 					default: 0,
 					choices: [
 						{ id: 0, label: 'Off' },
-						{ id: 1, label: 'Override' },
+						{ id: 4, label: 'Override' },
 						{ id: 10, label: 'Toggle' },
 						{ id: 11, label: 'No Change' },
 					],
@@ -625,7 +625,7 @@ module.exports = function (self) {
 					default: 0,
 					choices: [
 						{ id: 0, label: 'Off' },
-						{ id: 1, label: 'Last Hold' },
+						{ id: 2, label: 'Last Hold' },
 						{ id: 10, label: 'Toggle' },
 						{ id: 11, label: 'No Change' },
 					],
@@ -637,7 +637,7 @@ module.exports = function (self) {
 					default: 0,
 					choices: [
 						{ id: 0, label: 'Off' },
-						{ id: 1, label: 'Last Hold' },
+						{ id: 4, label: 'Last Hold' },
 						{ id: 10, label: 'Toggle' },
 						{ id: 11, label: 'No Change' },
 					],
