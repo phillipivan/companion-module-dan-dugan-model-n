@@ -136,6 +136,7 @@ class DUGAN_MODEL_N extends InstanceBase {
 		this.groupMute = []
 		this.groupPreset = []
 		this.groupOverride = []
+		this.groupLastHold = []
 		for (let i = 0; i <= this.groupCount; i++) {
 			this.groupAutomixDepth[i] = -15
 			this.groupMusicThreshold[i] = -10
@@ -143,6 +144,7 @@ class DUGAN_MODEL_N extends InstanceBase {
 			this.groupMute[i] = 0
 			this.groupPreset[i] = 0
 			this.groupOverride[i] = 0
+			this.groupLastHold[i] = 0
 		}
 		this.channelsMode = []
 		this.channelsPreset = []

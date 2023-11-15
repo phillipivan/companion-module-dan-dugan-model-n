@@ -410,21 +410,39 @@ module.exports = function (self) {
 			options: [
 				{
 					id: 'groupA',
-					type: 'checkbox',
+					type: 'dropdown',
 					label: 'Group A Mute',
-					default: false,
+					default: 0,
+					choices: [
+						{ id: 0, label: 'On' },
+						{ id: 1, label: 'Mute' },
+						{ id: 10, label: 'Toggle' },
+						{ id: 11, label: 'No Change' },
+					],
 				},
 				{
 					id: 'groupB',
-					type: 'checkbox',
+					type: 'dropdown',
 					label: 'Group B Mute',
-					default: false,
+					default: 0,
+					choices: [
+						{ id: 0, label: 'On' },
+						{ id: 2, label: 'Mute' },
+						{ id: 10, label: 'Toggle' },
+						{ id: 11, label: 'No Change' },
+					],
 				},
 				{
 					id: 'groupC',
-					type: 'checkbox',
+					type: 'dropdown',
 					label: 'Group C Mute',
-					default: false,
+					default: 0,
+					choices: [
+						{ id: 0, label: 'On' },
+						{ id: 4, label: 'Mute' },
+						{ id: 10, label: 'Toggle' },
+						{ id: 11, label: 'No Change' },
+					],
 				},
 				{
 					id: 'query',
@@ -438,9 +456,15 @@ module.exports = function (self) {
 				let cmd = 'SM'
 				if (!options.query) {
 					let groupMute = 0
-					if (options.groupA) groupMute += 1
-					if (options.groupB) groupMute += 2
-					if (options.groupC) groupMute += 4
+					if (options.groupA < 10) groupMute += options.groupA
+					if (options.groupB < 10) groupMute += options.groupB
+					if (options.groupC < 10) groupMute += options.groupC
+					if (options.groupA == 10) groupMute += self.groupMute[1] ^ 1
+					if (options.groupB == 10) groupMute += self.groupMute[2] ^ 2
+					if (options.groupC == 10) groupMute += self.groupMute[3] ^ 4
+					if (options.groupA == 11) groupMute += self.groupMute[1]
+					if (options.groupB == 11) groupMute += self.groupMute[2]
+					if (options.groupC == 11) groupMute += self.groupMute[3]
 					cmd += paramSep + groupMute
 				}
 				self.addCmdtoQueue(cmd)
@@ -452,21 +476,39 @@ module.exports = function (self) {
 			options: [
 				{
 					id: 'groupA',
-					type: 'checkbox',
+					type: 'dropdown',
 					label: 'Group A Preset',
-					default: false,
+					default: 0,
+					choices: [
+						{ id: 0, label: 'Off' },
+						{ id: 1, label: 'Preset' },
+						{ id: 10, label: 'Toggle' },
+						{ id: 11, label: 'No Change' },
+					],
 				},
 				{
 					id: 'groupB',
-					type: 'checkbox',
+					type: 'dropdown',
 					label: 'Group B Preset',
-					default: false,
+					default: 0,
+					choices: [
+						{ id: 0, label: 'Off' },
+						{ id: 1, label: 'Preset' },
+						{ id: 10, label: 'Toggle' },
+						{ id: 11, label: 'No Change' },
+					],
 				},
 				{
 					id: 'groupC',
-					type: 'checkbox',
+					type: 'dropdown',
 					label: 'Group C Preset',
-					default: false,
+					default: 0,
+					choices: [
+						{ id: 0, label: 'Off' },
+						{ id: 1, label: 'Preset' },
+						{ id: 10, label: 'Toggle' },
+						{ id: 11, label: 'No Change' },
+					],
 				},
 				{
 					id: 'query',
@@ -480,9 +522,15 @@ module.exports = function (self) {
 				let cmd = 'SP'
 				if (!options.query) {
 					let groupPreset = 0
-					if (options.groupA) groupPreset += 1
-					if (options.groupB) groupPreset += 2
-					if (options.groupC) groupPreset += 4
+					if (options.groupA < 10) groupPreset += options.groupA
+					if (options.groupB < 10) groupPreset += options.groupB
+					if (options.groupC < 10) groupPreset += options.groupC
+					if (options.groupA == 10) groupPreset += self.groupPreset[1] ^ 1
+					if (options.groupB == 10) groupPreset += self.groupPreset[2] ^ 2
+					if (options.groupC == 10) groupPreset += self.groupPreset[3] ^ 4
+					if (options.groupA == 11) groupPreset += self.groupPreset[1]
+					if (options.groupB == 11) groupPreset += self.groupPreset[2]
+					if (options.groupC == 11) groupPreset += self.groupPreset[3]
 					cmd += paramSep + groupPreset
 				}
 				self.addCmdtoQueue(cmd)
@@ -494,21 +542,39 @@ module.exports = function (self) {
 			options: [
 				{
 					id: 'groupA',
-					type: 'checkbox',
-					label: 'Group A Over ride',
-					default: false,
+					type: 'dropdown',
+					label: 'Group A Override',
+					default: 0,
+					choices: [
+						{ id: 0, label: 'Off' },
+						{ id: 1, label: 'Override' },
+						{ id: 10, label: 'Toggle' },
+						{ id: 11, label: 'No Change' },
+					],
 				},
 				{
 					id: 'groupB',
-					type: 'checkbox',
-					label: 'Group B Over ride',
-					default: false,
+					type: 'dropdown',
+					label: 'Group B Override',
+					default: 0,
+					choices: [
+						{ id: 0, label: 'Off' },
+						{ id: 1, label: 'Override' },
+						{ id: 10, label: 'Toggle' },
+						{ id: 11, label: 'No Change' },
+					],
 				},
 				{
 					id: 'groupC',
-					type: 'checkbox',
-					label: 'Group C Over ride',
-					default: false,
+					type: 'dropdown',
+					label: 'Group C Override',
+					default: 0,
+					choices: [
+						{ id: 0, label: 'Off' },
+						{ id: 1, label: 'Override' },
+						{ id: 10, label: 'Toggle' },
+						{ id: 11, label: 'No Change' },
+					],
 				},
 				{
 					id: 'query',
@@ -522,9 +588,15 @@ module.exports = function (self) {
 				let cmd = 'SO'
 				if (!options.query) {
 					let groupOverride = 0
-					if (options.groupA) groupOverride += 1
-					if (options.groupB) groupOverride += 2
-					if (options.groupC) groupOverride += 4
+					if (options.groupA < 10) groupOverride += options.groupA
+					if (options.groupB < 10) groupOverride += options.groupB
+					if (options.groupC < 10) groupOverride += options.groupC
+					if (options.groupA == 10) groupOverride += self.groupOverride[1] ^ 1
+					if (options.groupB == 10) groupOverride += self.groupOverride[2] ^ 2
+					if (options.groupC == 10) groupOverride += self.groupOverride[3] ^ 4
+					if (options.groupA == 11) groupOverride += self.groupOverride[1]
+					if (options.groupB == 11) groupOverride += self.groupOverride[2]
+					if (options.groupC == 11) groupOverride += self.groupOverride[3]
 					cmd += paramSep + groupOverride
 				}
 				self.addCmdtoQueue(cmd)
@@ -536,21 +608,39 @@ module.exports = function (self) {
 			options: [
 				{
 					id: 'groupA',
-					type: 'checkbox',
+					type: 'dropdown',
 					label: 'Group A Last Hold',
-					default: false,
+					default: 0,
+					choices: [
+						{ id: 0, label: 'Off' },
+						{ id: 1, label: 'Last Hold' },
+						{ id: 10, label: 'Toggle' },
+						{ id: 11, label: 'No Change' },
+					],
 				},
 				{
 					id: 'groupB',
-					type: 'checkbox',
+					type: 'dropdown',
 					label: 'Group B Last Hold',
-					default: false,
+					default: 0,
+					choices: [
+						{ id: 0, label: 'Off' },
+						{ id: 1, label: 'Last Hold' },
+						{ id: 10, label: 'Toggle' },
+						{ id: 11, label: 'No Change' },
+					],
 				},
 				{
 					id: 'groupC',
-					type: 'checkbox',
+					type: 'dropdown',
 					label: 'Group C Last Hold',
-					default: false,
+					default: 0,
+					choices: [
+						{ id: 0, label: 'Off' },
+						{ id: 1, label: 'Last Hold' },
+						{ id: 10, label: 'Toggle' },
+						{ id: 11, label: 'No Change' },
+					],
 				},
 				{
 					id: 'query',
@@ -564,9 +654,15 @@ module.exports = function (self) {
 				let cmd = 'LH'
 				if (!options.query) {
 					let groupLasthold = 0
-					if (options.groupA) groupLasthold += 1
-					if (options.groupB) groupLasthold += 2
-					if (options.groupC) groupLasthold += 4
+					if (options.groupA < 10) groupLasthold += options.groupA
+					if (options.groupB < 10) groupLasthold += options.groupB
+					if (options.groupC < 10) groupLasthold += options.groupC
+					if (options.groupA == 10) groupLasthold += self.groupLastHold[1] ^ 1
+					if (options.groupB == 10) groupLasthold += self.groupLastHold[2] ^ 2
+					if (options.groupC == 10) groupLasthold += self.groupLastHold[3] ^ 4
+					if (options.groupA == 11) groupLasthold += self.groupLastHold[1]
+					if (options.groupB == 11) groupLasthold += self.groupLastHold[2]
+					if (options.groupC == 11) groupLasthold += self.groupLastHold[3]
 					cmd += paramSep + groupLasthold
 				}
 				self.addCmdtoQueue(cmd)

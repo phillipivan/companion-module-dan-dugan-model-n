@@ -108,6 +108,7 @@ module.exports = {
 				//channel weight
 				if (params.length == 3) {
 					this.channelsWeight[Number(params[1])] = Number(params[2])
+					//then push to variable
 				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
@@ -130,21 +131,61 @@ module.exports = {
 				break
 			case '*GA':
 				//group assign
+				if (params.length == 3) {
+					this.log('info', 'Channel: ' + params[1] + ' assigned to: ' + params[2])
+				} else {
+					this.log('warn', 'Unexpected response: ' + str)
+				}
 				break
 			case '*CN':
 				//channel name
+				if (params.length == 3) {
+					this.channelsName[Number(params[1])] = params[2]
+					//then push to variable
+				} else {
+					this.log('warn', 'Unexpected response: ' + str)
+				}
 				break
 			case '*SM':
 				//group mute
+				if (params.length == 2) {
+					this.groupMute[1] = Number(params[1]) & 1
+					this.groupMute[2] = Number(params[1]) & 2
+					this.groupMute[3] = Number(params[1]) & 4
+					this.log('debug', this.groupMute[1] + ' ' + this.groupMute[2] + ' ' + this.groupMute[3])
+				} else {
+					this.log('warn', 'Unexpected response: ' + str)
+				}
 				break
 			case '*SP':
 				//group preset
+				if (params.length == 2) {
+					this.groupPreset[1] = Number(params[1]) & 1
+					this.groupPreset[2] = Number(params[1]) & 2
+					this.groupPreset[3] = Number(params[1]) & 4
+				} else {
+					this.log('warn', 'Unexpected response: ' + str)
+				}
 				break
 			case '*SO':
 				//group override
+				if (params.length == 2) {
+					this.groupOverride[1] = Number(params[1]) & 1
+					this.groupOverride[2] = Number(params[1]) & 2
+					this.groupOverride[3] = Number(params[1]) & 4
+				} else {
+					this.log('warn', 'Unexpected response: ' + str)
+				}
 				break
 			case '*LH':
 				//last hold
+				if (params.length == 2) {
+					this.groupLastHold[1] = Number(params[1]) & 1
+					this.groupLastHold[2] = Number(params[1]) & 2
+					this.groupLastHold[3] = Number(params[1]) & 4
+				} else {
+					this.log('warn', 'Unexpected response: ' + str)
+				}
 				break
 			case '*AD': //same as ME
 			case '*ME':
