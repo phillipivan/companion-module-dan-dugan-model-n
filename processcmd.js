@@ -11,6 +11,7 @@ const {
 	grpAval,
 	grpBval,
 	grpCval,
+	welcomeMessage,
 } = require('./consts.js')
 
 module.exports = {
@@ -641,7 +642,7 @@ module.exports = {
 				}
 				break
 			default:
-				if (cmd != 'Welcome to Dugan Model N Server.') {
+				if (cmd != welcomeMessage) {
 					this.log('warn', 'Unexpected response from unit: ' + cmd)
 				} else {
 					this.log('info', cmd)
