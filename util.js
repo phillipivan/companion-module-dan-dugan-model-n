@@ -20,4 +20,16 @@ module.exports = {
 		safeString = safeString != undefined ? safeString : false
 		return safeString
 	},
+	calcGain(val) {
+		if (isNaN(val)) {
+			this.log('warn', 'calcGain has been passed a Nan: ' + val)
+			return false
+		}
+		if (val < 0 || val > 255) {
+			this.log('warn', 'calcGain has been passed an out of range number: ' + val)
+			return false
+		}
+		let gain = 0 - val / 2 //common gain algo for many dugan functions
+		return gain
+	},
 }
