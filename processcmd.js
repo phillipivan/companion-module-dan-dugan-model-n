@@ -80,6 +80,7 @@ module.exports = {
 				//channel mode
 				if (params.length == 3) {
 					this.channelsMode[Number(params[1])] = Number(params[2])
+					this.checkFeedbacks('channelMode')
 				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
@@ -88,6 +89,7 @@ module.exports = {
 				//channel preset
 				if (params.length == 3) {
 					this.channelsPreset[Number(params[1])] = Number(params[2])
+					this.checkFeedbacks('channelPreset')
 				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
@@ -96,6 +98,7 @@ module.exports = {
 				//channel bypass
 				if (params.length == 3) {
 					this.channelsBypass[Number(params[1])] = Number(params[2])
+					this.checkFeedbacks('channelOverride')
 				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
@@ -104,6 +107,7 @@ module.exports = {
 				//channel override
 				if (params.length == 3) {
 					this.channelsOverride[Number(params[1])] = Number(params[2])
+					this.checkFeedbacks('channelBypass')
 				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
@@ -124,6 +128,7 @@ module.exports = {
 				//music mode
 				if (params.length == 3) {
 					this.channelsMusic[Number(params[1])] = Number(params[2])
+					this.checkFeedbacks('channelMusic')
 				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
@@ -132,6 +137,7 @@ module.exports = {
 				//NOM mode
 				if (params.length == 3) {
 					this.channelsNom[Number(params[1])] = Number(params[2])
+					this.checkFeedbacks('channelNOM')
 				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
@@ -140,6 +146,8 @@ module.exports = {
 				//group assign
 				if (params.length == 3) {
 					this.log('info', 'Channel: ' + params[1] + ' assigned to: ' + params[2])
+					this.channelsGroupAssign[Number(params[1])] = Number(params[2])
+					this.checkFeedbacks('channelGroupAssign')
 				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
@@ -162,7 +170,7 @@ module.exports = {
 					this.groupMute[1] = Number(params[1]) & grpAval
 					this.groupMute[2] = Number(params[1]) & grpBval
 					this.groupMute[3] = Number(params[1]) & grpCval
-					this.log('debug', this.groupMute[1] + ' ' + this.groupMute[2] + ' ' + this.groupMute[3])
+					this.checkFeedbacks('groupMute')
 				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
@@ -173,6 +181,7 @@ module.exports = {
 					this.groupPreset[1] = Number(params[1]) & grpAval
 					this.groupPreset[2] = Number(params[1]) & grpBval
 					this.groupPreset[3] = Number(params[1]) & grpCval
+					this.checkFeedbacks('groupPreset')
 				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
@@ -183,6 +192,7 @@ module.exports = {
 					this.groupOverride[1] = Number(params[1]) & grpAval
 					this.groupOverride[2] = Number(params[1]) & grpBval
 					this.groupOverride[3] = Number(params[1]) & grpCval
+					this.checkFeedbacks('groupOverride')
 				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
@@ -247,6 +257,7 @@ module.exports = {
 				//matrix bus polarity
 				if (params.length == 3) {
 					this.matrixPolarity[Number(params[1])] = Number(params[2])
+					this.checkFeedbacks('matrixPolarity')
 				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}

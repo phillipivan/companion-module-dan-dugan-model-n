@@ -67,6 +67,7 @@ class DUGAN_MODEL_N extends InstanceBase {
 		this.clockSources = []
 		this.offsetChannelList = []
 		this.sceneList = []
+		this.sceneChanged = false
 		this.matrixDestinations.push({ id: 0, label: 'No Output' })
 		if (this.config.channels == 1) {
 			this.config.channels = duganChannels[this.config.model]
@@ -154,6 +155,7 @@ class DUGAN_MODEL_N extends InstanceBase {
 		this.channelsNom = []
 		this.channelsMusic = []
 		this.channelsName = []
+		this.channelsGroupAssign = []
 		for (let i = 0; i <= this.config.channels; i++) {
 			this.channelsMode[i] = 1
 			this.channelsPreset[i] = 1
@@ -163,6 +165,7 @@ class DUGAN_MODEL_N extends InstanceBase {
 			this.channelsNom[i] = 0
 			this.channelsMusic[i] = 0
 			this.channelsName[i] = 'Channel ' + i
+			this.channelsGroupAssign[i] = 1
 		}
 	}
 

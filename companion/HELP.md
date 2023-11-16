@@ -70,7 +70,28 @@ Enter the IP address of the control port of the Automixer. The unit will accept 
 - **Group - Music System Threshold**  Number (dB)
 - **Group - NOM Gain Limit** Number
 - **Scene - Active** Name, Index, Has Changed
-- **System - All** All system queries returned to varibles. All queries once on connect.
+- **System - All** All system queries returned to varibles. All queried once on connect.
+
+## Feedbacks
+All feedbacks are boolean.
+
+- **Channel - Bypass**
+- **Channel - Group Assignment**
+- **Channel - Mode**
+- **Channel - Music**
+- **Channel - NOM Mode**
+- **Channel - Override**
+- **Channel - Preset**
+
+- **Group - Last Hold**
+- **Group - Mute**
+- **Group - Override**
+- **Group - Preset**
+
+- **Matrix - Bus Mute**
+- **Matrix - Bus Polarity**
+
+- **Scene - Has Changed** Goes true when any parameter is changed from the saved state of the recalled scene
 
 ## Support for other models
 At present only the Model M & N are explicitly supported. With that said, the dugan units share a common api.
