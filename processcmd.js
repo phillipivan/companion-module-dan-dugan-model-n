@@ -113,6 +113,9 @@ module.exports = {
 				if (params.length == 3) {
 					this.channelsWeight[Number(params[1])] = Number(params[2])
 					//then push to variable
+					let varObject = {}
+					varObject['channelWeight' + params[1]] = Number(params[2])
+					this.setVariableValues(varObject)
 				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
@@ -146,6 +149,9 @@ module.exports = {
 				if (params.length == 3) {
 					this.channelsName[Number(params[1])] = params[2]
 					//then push to variable
+					let varObject = {}
+					varObject['channelName' + params[1]] = params[2]
+					this.setVariableValues(varObject)
 				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
@@ -196,6 +202,9 @@ module.exports = {
 				//automix depth
 				if (params.length == 3) {
 					this.groupAutomixDepth[Number(params[1])] = Number(params[2])
+					let varObject = {}
+					varObject['groupAD' + params[1]] = Number(params[2])
+					this.setVariableValues(varObject)
 				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
@@ -204,6 +213,9 @@ module.exports = {
 				//nom gain limit
 				if (params.length == 3) {
 					this.groupNOMgainlimit[Number(params[1])] = Number(params[2])
+					let varObject = {}
+					varObject['groupNOM' + params[1]] = Number(params[2])
+					this.setVariableValues(varObject)
 				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
@@ -212,6 +224,9 @@ module.exports = {
 				//music system threshold
 				if (params.length == 3) {
 					this.groupMusicThreshold[Number(params[1])] = Number(params[2])
+					let varObject = {}
+					varObject['groupMST' + params[1]] = Number(params[2])
+					this.setVariableValues(varObject)
 				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
@@ -223,6 +238,7 @@ module.exports = {
 				//matrix bus mute
 				if (params.length == 3) {
 					this.matrixMute[Number(params[1])] = Number(params[2])
+					this.checkFeedbacks('matrixMuted')
 				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
@@ -239,7 +255,9 @@ module.exports = {
 				//matrix bus gain
 				if (params.length == 3) {
 					this.matrixGain[Number(params[1])] = Number(params[2])
-					this.log('debug', 'Interval gain value set to: ' + this.matrixGain[Number(params[1])])
+					let varObject = {}
+					varObject['matrixOutFader' + params[1]] = Number(params[2])
+					this.setVariableValues(varObject)
 				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
@@ -275,6 +293,9 @@ module.exports = {
 						sceneActiveIndex: Number(params[2]),
 						sceneActiveChanged: Number(params[3]),
 					})
+					this.sceneChanged = Number(params[3])
+					this.log('debug', 'Scene Changed: ' + this.sceneChanged)
+					this.checkFeedbacks('sceneChanged')
 				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
@@ -624,6 +645,22 @@ module.exports = {
 				break
 			case '*CNS':
 				//channel name list
+				if (params.length >= 4) {
+					if (params.length == 3 + Number(params[2])) {
+						let varObject = {}
+						let startCh = Number(params[1])
+						let count = Number(params[2])
+						for (let i = startCh; i <= startCh + count - 1; i++) {
+							varObject['channelName' + i] = params[i - startCh + 3]
+							this.channelsName[i] = params[i - startCh + 3]
+						}
+						this.setVariableValues(varObject)
+					} else {
+						this.log('warn', 'Unexpected length. Expected:' + 3 + Number(params[2]) + ' Recieved : ' + params.length)
+					}
+				} else {
+					this.log('warn', 'Unexpected length: ' + str)
+				}
 				break
 			case '*SNL':
 				//scene name list

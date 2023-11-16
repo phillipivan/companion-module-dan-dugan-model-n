@@ -973,11 +973,11 @@ module.exports = function (self) {
 			],
 			callback: async ({ options }) => {
 				let cmd = 'MXM'
-				let toggle = (await self.matrixMute[options.matrix]) ^ 1
+				let muteState = (await self.matrixMute[options.matrix]) ^ 1
 				if (options.query) {
 					cmd += paramSep + options.matrix
 				} else if (options.mute == toggle) {
-					cmd += paramSep + options.matrix + paramSep + toggle
+					cmd += paramSep + options.matrix + paramSep + muteState
 				} else {
 					cmd += paramSep + options.matrix + paramSep + options.mute
 				}
@@ -1015,11 +1015,11 @@ module.exports = function (self) {
 			],
 			callback: async ({ options }) => {
 				let cmd = 'MXP'
-				let toggle = (await self.matrixPolarity[options.matrix]) ^ 1
+				let polState = (await self.matrixPolarity[options.matrix]) ^ 1
 				if (options.query) {
 					cmd += paramSep + options.matrix
 				} else if (options.polarity == toggle) {
-					cmd += paramSep + options.matrix + paramSep + toggle
+					cmd += paramSep + options.matrix + paramSep + polState
 				} else {
 					cmd += paramSep + options.matrix + paramSep + options.polarity
 				}

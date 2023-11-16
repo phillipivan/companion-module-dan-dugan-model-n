@@ -63,6 +63,15 @@ Enter the IP address of the control port of the Automixer. The unit will accept 
 - **System - Name** Query / change unit name. Accepts variables
 - **System - Subscribe Unsolicited** Query / change unsolicited messages
 
+## Varibles
+- **Channel - Name** String
+- **Channel - Weight** Number (dB)
+- **Group - Automix Depth**  Number (dB)
+- **Group - Music System Threshold**  Number (dB)
+- **Group - NOM Gain Limit** Number
+- **Scene - Active** Name, Index, Has Changed
+- **System - All** All system queries returned to varibles. All queries once on connect.
+
 ## Support for other models
 At present only the Model M & N are explicitly supported. With that said, the dugan units share a common api.
 The Model M & N represent a complete set of API commands. All other units (MY-16, Model-E3A, etc) support a subset of of these commands. The core channel controls are supported by all units.

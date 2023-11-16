@@ -1,5 +1,5 @@
 const { InstanceStatus, TCPHelper } = require('@companion-module/base')
-const { EndSession, msgDelay, EOM, cmdOnConnect, cmdOnPollInterval } = require('./consts.js')
+const { EndSession, msgDelay, EOM, cmdOnConnect, cmdOnPollInterval, paramSep } = require('./consts.js')
 
 module.exports = {
 	async addCmdtoQueue(cmd) {
@@ -52,6 +52,15 @@ module.exports = {
 		cmdOnPollInterval.forEach((element) => {
 			this.addCmdtoQueue(element)
 		})
+		let nameQuery = Math.ceil(this.config.channels / 16)
+		for (let i = 1; i <= nameQuery; i++) {
+			let startCh = 1 + (i - 1) * 16
+			let count = 16
+			if (startCh + count - 1 > this.config.channels) {
+				count = this.config.channels - startCh + 1
+			}
+			this.addCmdtoQueue('CNS' + paramSep + startCh + paramSep + count)
+		}
 		this.keepAliveTimer = setTimeout(() => {
 			this.pollStatus()
 		}, this.config.keepAlive * 1000)

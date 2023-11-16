@@ -2,27 +2,42 @@ const { combineRgb } = require('@companion-module/base')
 
 module.exports = async function (self) {
 	self.setFeedbackDefinitions({
-		ChannelState: {
-			name: 'Example Feedback',
+		sceneChanged: {
+			name: 'Scene, Has Changed',
 			type: 'boolean',
-			label: 'Channel State',
+			label: 'Scene, Has Changed',
+			defaultStyle: {
+				bgcolor: combineRgb(255, 0, 0),
+				color: combineRgb(0, 0, 0),
+			},
+			options: [],
+			callback: (_feedback) => {
+				if (self.sceneChanged == 1) {
+					return true
+				} else {
+					return false
+				}
+			},
+		},
+		matrixMuted: {
+			name: 'Matrix Output Mute',
+			type: 'boolean',
+			label: 'Matrix Output Mute',
 			defaultStyle: {
 				bgcolor: combineRgb(255, 0, 0),
 				color: combineRgb(0, 0, 0),
 			},
 			options: [
 				{
-					id: 'num',
-					type: 'number',
-					label: 'Test',
-					default: 5,
-					min: 0,
-					max: 10,
+					type: 'dropdown',
+					label: 'Matrix',
+					id: 'matrix',
+					default: 1,
+					choices: self.matrixNames,
 				},
 			],
-			callback: (feedback) => {
-				console.log('Hello world!', feedback.options.num)
-				if (feedback.options.num > 5) {
+			callback: ({ options }) => {
+				if (self.matrixMute[options.matrix] == 1) {
 					return true
 				} else {
 					return false
