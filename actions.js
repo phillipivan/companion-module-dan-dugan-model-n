@@ -13,6 +13,9 @@ module.exports = function (self) {
 					label: 'Channel',
 					default: 1,
 					choices: self.channelNames,
+					useVariables: true,
+					allowCustom: true,
+					tooltip: 'Varible must return an integer channel number',
 				},
 				{
 					id: 'mode',
@@ -32,12 +35,19 @@ module.exports = function (self) {
 					default: false,
 				},
 			],
-			callback: ({ options }) => {
+			callback: async ({ options }) => {
 				let cmd = 'CM'
+				let chan = await self.parseVariablesInString(options.channel)
+				self.log('debug', 'chan: ' + chan)
+				chan = Math.floor(chan)
+				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
+					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					return false
+				}
 				if (options.query) {
-					cmd += paramSep + options.channel
+					cmd += paramSep + chan
 				} else {
-					cmd += paramSep + options.channel + paramSep + options.mode
+					cmd += paramSep + chan + paramSep + options.mode
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -52,6 +62,9 @@ module.exports = function (self) {
 					label: 'Channel',
 					default: 1,
 					choices: self.channelNames,
+					useVariables: true,
+					allowCustom: true,
+					tooltip: 'Varible must return an integer channel number',
 				},
 				{
 					id: 'preset',
@@ -63,6 +76,9 @@ module.exports = function (self) {
 						{ id: 1, label: 'Auto' },
 						{ id: 2, label: 'Mute' },
 					],
+					useVariables: true,
+					allowCustom: true,
+					tooltip: 'Varible must return an integer 0: Manual, 1: Auto, 2: Mute',
 				},
 				{
 					id: 'query',
@@ -71,12 +87,19 @@ module.exports = function (self) {
 					default: false,
 				},
 			],
-			callback: ({ options }) => {
+			callback: async ({ options }) => {
 				let cmd = 'CP'
+				let chan = await self.parseVariablesInString(options.channel)
+				self.log('debug', 'chan: ' + chan)
+				chan = Math.floor(chan)
+				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
+					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					return false
+				}
 				if (options.query) {
-					cmd += paramSep + options.channel
+					cmd += paramSep + chan
 				} else {
-					cmd += paramSep + options.channel + paramSep + options.preset
+					cmd += paramSep + chan + paramSep + options.preset
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -91,6 +114,9 @@ module.exports = function (self) {
 					label: 'Channel',
 					default: 1,
 					choices: self.channelNames,
+					useVariables: true,
+					allowCustom: true,
+					tooltip: 'Varible must return an integer channel number',
 				},
 				{
 					id: 'bypass',
@@ -112,12 +138,19 @@ module.exports = function (self) {
 			],
 			callback: async ({ options }) => {
 				let cmd = 'BP'
+				let chan = await self.parseVariablesInString(options.channel)
+				self.log('debug', 'chan: ' + chan)
+				chan = Math.floor(chan)
+				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
+					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					return false
+				}
 				if (options.query) {
-					cmd += paramSep + options.channel
+					cmd += paramSep + chan
 				} else if (options.bypass == toggle) {
-					cmd += paramSep + options.channel + paramSep + (self.channelsBypass[Number(options.channel)] ^ 1)
+					cmd += paramSep + chan + paramSep + (self.channelsBypass[Number(chan)] ^ 1)
 				} else {
-					cmd += paramSep + options.channel + paramSep + options.bypass
+					cmd += paramSep + chan + paramSep + options.bypass
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -132,6 +165,9 @@ module.exports = function (self) {
 					label: 'Channel',
 					default: 1,
 					choices: self.channelNames,
+					useVariables: true,
+					allowCustom: true,
+					tooltip: 'Varible must return an integer channel number',
 				},
 				{
 					id: 'override',
@@ -153,12 +189,19 @@ module.exports = function (self) {
 			],
 			callback: async ({ options }) => {
 				let cmd = 'CO'
+				let chan = await self.parseVariablesInString(options.channel)
+				self.log('debug', 'chan: ' + chan)
+				chan = Math.floor(chan)
+				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
+					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					return false
+				}
 				if (options.query) {
-					cmd += paramSep + options.channel
+					cmd += paramSep + chan
 				} else if (options.override == toggle) {
-					cmd += paramSep + options.channel + paramSep + (self.channelsOverride[Number(options.channel)] ^ 1)
+					cmd += paramSep + chan + paramSep + (self.channelsOverride[Number(chan)] ^ 1)
 				} else {
-					cmd += paramSep + options.channel + paramSep + options.override
+					cmd += paramSep + chan + paramSep + options.override
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -173,6 +216,9 @@ module.exports = function (self) {
 					label: 'Channel',
 					default: 1,
 					choices: self.channelNames,
+					useVariables: true,
+					allowCustom: true,
+					tooltip: 'Varible must return an integer channel number',
 				},
 				{
 					id: 'weight',
@@ -195,10 +241,16 @@ module.exports = function (self) {
 			],
 			callback: async ({ options }) => {
 				let cmd = 'CW'
+				let chan = await self.parseVariablesInString(options.channel)
+				chan = Math.floor(chan)
+				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
+					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					return false
+				}
 				if (options.query) {
-					cmd += paramSep + options.channel
+					cmd += paramSep + chan
 				} else {
-					cmd += paramSep + options.channel + paramSep + options.weight
+					cmd += paramSep + chan + paramSep + options.weight
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -213,6 +265,9 @@ module.exports = function (self) {
 					label: 'Channel',
 					default: 1,
 					choices: self.channelNames,
+					useVariables: true,
+					allowCustom: true,
+					tooltip: 'Varible must return an integer channel number',
 				},
 				{
 					id: 'weight',
@@ -229,6 +284,12 @@ module.exports = function (self) {
 			],
 			callback: async ({ options }) => {
 				let cmd = 'CW'
+				let chan = await self.parseVariablesInString(options.channel)
+				chan = Math.floor(chan)
+				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
+					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					return false
+				}
 				let weight = self.channelsWeight[options.channel] + options.weight
 				let weightRound = weight.toFixed(2)
 				if (weightRound < -100) {
@@ -237,7 +298,7 @@ module.exports = function (self) {
 				if (weightRound > 15) {
 					weightRound = 15
 				}
-				cmd += paramSep + options.channel + paramSep + weightRound
+				cmd += paramSep + chan + paramSep + weightRound
 				self.addCmdtoQueue(cmd)
 			},
 		},
@@ -251,6 +312,9 @@ module.exports = function (self) {
 					label: 'Channel',
 					default: 1,
 					choices: self.channelNames,
+					useVariables: true,
+					allowCustom: true,
+					tooltip: 'Varible must return an integer channel number',
 				},
 				{
 					id: 'music',
@@ -270,14 +334,20 @@ module.exports = function (self) {
 					default: false,
 				},
 			],
-			callback: ({ options }) => {
+			callback: async ({ options }) => {
 				let cmd = 'MR'
+				let chan = await self.parseVariablesInString(options.channel)
+				chan = Math.floor(chan)
+				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
+					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					return false
+				}
 				if (options.query) {
-					cmd += paramSep + options.channel
+					cmd += paramSep + chan
 				} else if (options.music == toggle) {
-					cmd += paramSep + options.channel + paramSep + (self.channelsMusic[Number(options.channel)] ^ 1)
+					cmd += paramSep + chan + paramSep + (self.channelsMusic[Number(chan)] ^ 1)
 				} else {
-					cmd += paramSep + options.channel + paramSep + options.music
+					cmd += paramSep + chan + paramSep + options.music
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -292,6 +362,9 @@ module.exports = function (self) {
 					label: 'Channel',
 					default: 1,
 					choices: self.channelNames,
+					useVariables: true,
+					allowCustom: true,
+					tooltip: 'Varible must return an integer channel number',
 				},
 				{
 					id: 'nom',
@@ -311,14 +384,20 @@ module.exports = function (self) {
 					default: false,
 				},
 			],
-			callback: ({ options }) => {
+			callback: async ({ options }) => {
 				let cmd = 'NE'
+				let chan = await self.parseVariablesInString(options.channel)
+				chan = Math.floor(chan)
+				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
+					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					return false
+				}
 				if (options.query) {
-					cmd += paramSep + options.channel
+					cmd += paramSep + chan
 				} else if (options.nom == toggle) {
-					cmd += paramSep + options.channel + paramSep + (self.channelsNom[Number(options.channel)] ^ 1)
+					cmd += paramSep + chan + paramSep + (self.channelsNom[Number(chan)] ^ 1)
 				} else {
-					cmd += paramSep + options.channel + paramSep + options.nom
+					cmd += paramSep + chan + paramSep + options.nom
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -333,6 +412,9 @@ module.exports = function (self) {
 					label: 'Channel',
 					default: 1,
 					choices: self.channelNames,
+					useVariables: true,
+					allowCustom: true,
+					tooltip: 'Varible must return an integer channel number',
 				},
 				{
 					id: 'group',
@@ -369,6 +451,9 @@ module.exports = function (self) {
 					label: 'Channel',
 					default: 1,
 					choices: self.channelNames,
+					useVariables: true,
+					allowCustom: true,
+					tooltip: 'Varible must return an integer channel number',
 				},
 				{
 					id: 'name',
@@ -390,12 +475,18 @@ module.exports = function (self) {
 			],
 			callback: async ({ options }) => {
 				let cmd = 'CN'
+				let chan = await self.parseVariablesInString(options.channel)
+				chan = Math.floor(chan)
+				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
+					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					return false
+				}
 				if (options.query) {
-					cmd += paramSep + options.channel
+					cmd += paramSep + chan
 				} else {
 					let safeChanName = await self.regexSafeString(await self.parseVariablesInString(options.name))
 					if (safeChanName != undefined && safeChanName.length >= 1) {
-						cmd += paramSep + options.channel + paramSep + safeChanName
+						cmd += paramSep + chan + paramSep + safeChanName
 					} else {
 						self.log('warn', 'Not a valid channel name')
 						return false

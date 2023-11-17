@@ -67,15 +67,17 @@ module.exports = {
 				regex: Regex.PORT,
 				tooltip: 'Port 23 or 9776',
 			},
-			//			{
-			//				type: 'checkbox',
-			//				id: 'udp',
-			//				label: 'Use UDP',
-			//				default: false,
-			//				width: 4,
-			//				tooltip: 'Connect via UDP instead of TCP',
-			//				isVisible: false,
-			//			},
+			{
+				type: 'checkbox', //not yet implemented, thus hidden
+				id: 'udp',
+				label: 'Use UDP',
+				default: false,
+				width: 4,
+				tooltip: 'Connect via UDP instead of TCP',
+				isVisible: () => {
+					return false
+				},
+			},
 			{
 				type: 'number',
 				id: 'keepAlive',
