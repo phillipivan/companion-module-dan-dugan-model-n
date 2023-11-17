@@ -467,7 +467,7 @@ module.exports = {
 			case '*BM':
 				//blink mode
 				if (params.length == 2) {
-					let blink = params[1] == '1' ? 'On' : 'Off'
+					let blink = params[1] == '1' ? true : false
 					this.setVariableValues({
 						blinkMode: blink,
 					})
@@ -478,7 +478,7 @@ module.exports = {
 			case '*DH':
 				//dhcp
 				if (params.length == 2) {
-					let dhcp = params[1] == '1' ? 'On' : 'Off'
+					let dhcp = params[1] == '1' ? true : false
 					this.setVariableValues({
 						master: dhcp,
 					})
@@ -490,7 +490,7 @@ module.exports = {
 				//system config
 				if (params.length == 13) {
 					//expected length
-					let dhcp = params[11] == '1' ? 'On' : 'Off'
+					let dhcp = params[11] == '1' ? true : false
 					this.setVariableValues({
 						deviceType: duganModels[params[1]],
 						hostName: params[2],
@@ -557,6 +557,9 @@ module.exports = {
 						clientUDP: Number(udp[1]),
 						clientTCP: Number(tcp[1]),
 					})
+					if (Number(udp[1]) + Number(tcp[1]) == 5) {
+						this.log('warn', 'All connections full, cannot accept more concurrent clients')
+					}
 				} else {
 					this.log('warn', 'Unexpected CC response: ' + str)
 				}
@@ -611,8 +614,9 @@ module.exports = {
 			case '*MM':
 				//master mode
 				if (params.length == 2) {
+					let mstSlv = Number(params[2]) == 1 ? true : false
 					this.setVariableValues({
-						master: Number(params[1]),
+						master: mstSlv,
 					})
 				} else {
 					this.log('warn', 'Unexpected MM response: ' + str)
