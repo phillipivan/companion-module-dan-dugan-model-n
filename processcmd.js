@@ -98,7 +98,7 @@ module.exports = {
 				//channel bypass
 				if (params.length == 3) {
 					this.channelsBypass[Number(params[1])] = Number(params[2])
-					this.checkFeedbacks('channelOverride')
+					this.checkFeedbacks('channelBypass')
 				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
@@ -107,7 +107,7 @@ module.exports = {
 				//channel override
 				if (params.length == 3) {
 					this.channelsOverride[Number(params[1])] = Number(params[2])
-					this.checkFeedbacks('channelBypass')
+					this.checkFeedbacks('channelOverride')
 				} else {
 					this.log('warn', 'Unexpected response: ' + str)
 				}
