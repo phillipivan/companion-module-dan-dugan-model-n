@@ -82,7 +82,7 @@ module.exports = {
 					this.channelsMode[Number(params[1])] = Number(params[2])
 					this.checkFeedbacks('channelMode')
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected CM response: ' + str)
 				}
 				break
 			case '*CP':
@@ -91,7 +91,7 @@ module.exports = {
 					this.channelsPreset[Number(params[1])] = Number(params[2])
 					this.checkFeedbacks('channelPreset')
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected CP response: ' + str)
 				}
 				break
 			case '*BP':
@@ -100,7 +100,7 @@ module.exports = {
 					this.channelsBypass[Number(params[1])] = Number(params[2])
 					this.checkFeedbacks('channelBypass')
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected BP response: ' + str)
 				}
 				break
 			case '*CO':
@@ -109,7 +109,7 @@ module.exports = {
 					this.channelsOverride[Number(params[1])] = Number(params[2])
 					this.checkFeedbacks('channelOverride')
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected CO response: ' + str)
 				}
 				break
 			case '*CW':
@@ -121,7 +121,7 @@ module.exports = {
 					varObject['channelWeight' + params[1]] = Number(params[2])
 					this.setVariableValues(varObject)
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected CW response: ' + str)
 				}
 				break
 			case '*MR':
@@ -130,7 +130,7 @@ module.exports = {
 					this.channelsMusic[Number(params[1])] = Number(params[2])
 					this.checkFeedbacks('channelMusic')
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected MR response: ' + str)
 				}
 				break
 			case '*NE':
@@ -139,7 +139,7 @@ module.exports = {
 					this.channelsNom[Number(params[1])] = Number(params[2])
 					this.checkFeedbacks('channelNOM')
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected NE response: ' + str)
 				}
 				break
 			case '*GA':
@@ -149,7 +149,7 @@ module.exports = {
 					this.channelsGroupAssign[Number(params[1])] = Number(params[2])
 					this.checkFeedbacks('channelGroupAssign')
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected GA response: ' + str)
 				}
 				break
 			case '*CN':
@@ -161,7 +161,7 @@ module.exports = {
 					varObject['channelName' + params[1]] = params[2]
 					this.setVariableValues(varObject)
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected CN response: ' + str)
 				}
 				break
 			case '*SM':
@@ -172,7 +172,7 @@ module.exports = {
 					this.groupMute[3] = Number(params[1]) & grpCval
 					this.checkFeedbacks('groupMute')
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected SM response: ' + str)
 				}
 				break
 			case '*SP':
@@ -183,7 +183,7 @@ module.exports = {
 					this.groupPreset[3] = Number(params[1]) & grpCval
 					this.checkFeedbacks('groupPreset')
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected SP response: ' + str)
 				}
 				break
 			case '*SO':
@@ -194,7 +194,7 @@ module.exports = {
 					this.groupOverride[3] = Number(params[1]) & grpCval
 					this.checkFeedbacks('groupOverride')
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected SO response: ' + str)
 				}
 				break
 			case '*LH':
@@ -204,7 +204,7 @@ module.exports = {
 					this.groupLastHold[2] = Number(params[1]) & grpBval
 					this.groupLastHold[3] = Number(params[1]) & grpCval
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected LH response: ' + str)
 				}
 				break
 			case '*AD': //same as ME
@@ -216,7 +216,7 @@ module.exports = {
 					varObject['groupAD' + params[1]] = Number(params[2])
 					this.setVariableValues(varObject)
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected AD/ME response: ' + str)
 				}
 				break
 			case '*NL':
@@ -227,7 +227,7 @@ module.exports = {
 					varObject['groupNOM' + params[1]] = Number(params[2])
 					this.setVariableValues(varObject)
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected NL response: ' + str)
 				}
 				break
 			case '*MT':
@@ -238,7 +238,7 @@ module.exports = {
 					varObject['groupMST' + params[1]] = Number(params[2])
 					this.setVariableValues(varObject)
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected MT response: ' + str)
 				}
 				break
 			case '*MC':
@@ -250,7 +250,7 @@ module.exports = {
 					this.matrixMute[Number(params[1])] = Number(params[2])
 					this.checkFeedbacks('matrixMuted')
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected MXM response: ' + str)
 				}
 				break
 			case '*MXP':
@@ -259,7 +259,7 @@ module.exports = {
 					this.matrixPolarity[Number(params[1])] = Number(params[2])
 					this.checkFeedbacks('matrixPolarity')
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected MXP response: ' + str)
 				}
 				break
 			case '*MXV':
@@ -270,7 +270,7 @@ module.exports = {
 					varObject['matrixOutFader' + params[1]] = Number(params[2])
 					this.setVariableValues(varObject)
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected MXV response: ' + str)
 				}
 				break
 			case '*MXO':
@@ -282,35 +282,37 @@ module.exports = {
 				if (params.length == 4) {
 					this.matrixXpoint[Number(params[1])][Number(params[2])] = Number(params[3])
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected OM response: ' + str)
 				}
 				break
 			case '*SNC':
 				//scene count
 				if (params.length == 2) {
+					if (isNaN(Number(params[1]))) {
+						this.log('warn', 'Unexpected SNC response: ' + str)
+						return false
+					}
 					this.setVariableValues({
 						sceneCount: Number(params[1]),
 					})
 					this.addCmdtoQueue('SNL,1,' + Number(params[1]))
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected SNC response: ' + str)
 				}
 				break
 			case '*SNA':
 				//active scene
 				if (params.length == 4) {
-					let hasChanged = false
-					hasChanged = Number(params[3]) ? true : false
+					let hasChanged = Number(params[3]) == 1 ? true : false
 					this.setVariableValues({
 						sceneActive: params[1].toString(),
 						sceneActiveIndex: Number(params[2]),
 						sceneActiveChanged: hasChanged,
 					})
-					this.sceneChanged = Number(params[3])
-					this.log('debug', 'Scene Changed: ' + this.sceneChanged)
+					this.sceneChanged = hasChanged
 					this.checkFeedbacks('sceneChanged')
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected SNA response: ' + str)
 				}
 				break
 			case '*SNR':
@@ -324,7 +326,7 @@ module.exports = {
 						this.log('warn', str)
 					}
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected SNR response: ' + str)
 				}
 				break
 			case '*SNS':
@@ -341,7 +343,7 @@ module.exports = {
 						this.log('warn', str)
 					}
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected SNN/SNS response: ' + str)
 				}
 				break
 			case '*SNE':
@@ -366,7 +368,7 @@ module.exports = {
 						this.log('warn', params[1])
 					}
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected SND response: ' + str)
 				}
 				break
 			case '*FP':
@@ -389,7 +391,7 @@ module.exports = {
 						linkGroup: Number(params[1]),
 					})
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected LG response: ' + str)
 				}
 				break
 			case '*CS':
@@ -413,7 +415,7 @@ module.exports = {
 						})
 					}
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected CS response: ' + str)
 				}
 				break
 			case '*AM':
@@ -423,7 +425,7 @@ module.exports = {
 						adatMirror: adatMirror[params[1]],
 					})
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected AM response: ' + str)
 				}
 				break
 			case '*CFN':
@@ -444,12 +446,12 @@ module.exports = {
 						this.config.channels = Number(params[1])
 						this.initVariables()
 						this.updateActions() // export actions
-						//this.updateFeedbacks() // export feedbacks
-						this.updateVariableDefinitions() // export variable definitions
+						this.updateFeedbacks() // export feedbacks
+						//this.updateVariableDefinitions() // export variable definitions
 						//this.setVariableValues(variableDefaults)
 					}
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected CFN response: ' + str)
 				}
 				break
 			case '*CFS':
@@ -459,7 +461,7 @@ module.exports = {
 						inputOffset: Number(params[1]),
 					})
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected CFS response: ' + str)
 				}
 				break
 			case '*BM':
@@ -470,7 +472,7 @@ module.exports = {
 						blinkMode: blink,
 					})
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected BM response: ' + str)
 				}
 				break
 			case '*DH':
@@ -481,7 +483,7 @@ module.exports = {
 						master: dhcp,
 					})
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected DH response: ' + str)
 				}
 				break
 			case '*SC':
@@ -530,7 +532,7 @@ module.exports = {
 						//this.setVariableValues(variableDefaults)
 					}
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected SC response: ' + str)
 				}
 				break
 			case '*VE':
@@ -543,7 +545,7 @@ module.exports = {
 						hardwareRevsion: params[4],
 					})
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected VE response: ' + str)
 				}
 				break
 			case '*CC':
@@ -556,7 +558,7 @@ module.exports = {
 						clientTCP: Number(tcp[1]),
 					})
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected CC response: ' + str)
 				}
 				break
 			case '*HW':
@@ -581,13 +583,13 @@ module.exports = {
 						mallocHeadFree: Number(malloc[1]),
 					})
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected HW response: ' + str)
 				}
 				break
 			case '*HR':
 				//switch headroom
 				this.setVariableValues({
-					switchHeadroom: params[1],
+					switchHeadroom: Number(params[1]),
 				})
 				break
 			case '*SF':
@@ -603,17 +605,17 @@ module.exports = {
 						})
 					}
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected SF response: ' + str)
 				}
 				break
 			case '*MM':
 				//master mode
 				if (params.length == 2) {
 					this.setVariableValues({
-						master: params[1],
+						master: Number(params[1]),
 					})
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected MM response: ' + str)
 				}
 				break
 			case '*NA':
@@ -623,7 +625,7 @@ module.exports = {
 						hostName: params[1],
 					})
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected NA response: ' + str)
 				}
 				break
 			case '*IP':
@@ -633,7 +635,7 @@ module.exports = {
 						ipAddress: params[2] + '.' + params[3] + '.' + params[4] + '.' + params[5],
 					})
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected IP response: ' + str)
 				}
 				break
 			case '*NM':
@@ -643,7 +645,7 @@ module.exports = {
 						netMask: params[2] + '.' + params[3] + '.' + params[4] + '.' + params[5],
 					})
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected NM response: ' + str)
 				}
 				break
 			case '*GW':
@@ -653,7 +655,7 @@ module.exports = {
 						gateway: params[2] + '.' + params[3] + '.' + params[4] + '.' + params[5],
 					})
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected GW response: ' + str)
 				}
 				break
 			case '*CNS':
@@ -672,7 +674,7 @@ module.exports = {
 						this.log('warn', 'Unexpected length. Expected:' + 3 + Number(params[2]) + ' Recieved : ' + params.length)
 					}
 				} else {
-					this.log('warn', 'Unexpected length: ' + str)
+					this.log('warn', 'Unexpected CNS length: ' + str)
 				}
 				break
 			case '*SNL':
@@ -688,7 +690,7 @@ module.exports = {
 					this.sceneList = []
 					this.updateActions()
 				} else {
-					this.log('warn', 'Unexpected response: ' + str)
+					this.log('warn', 'Unexpected SNL response: ' + str)
 				}
 				break
 			default:
