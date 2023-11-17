@@ -106,6 +106,19 @@ module.exports = {
 				default: 1,
 				width: 4,
 			},
+			{
+				type: 'dropdown',
+				id: 'rate',
+				label: 'Messaging rate',
+				choices: [
+					{ id: 0, label: 'Fast' },
+					{ id: 1, label: 'Medium' },
+					{ id: 2, label: 'Slow' },
+					{ id: 3, label: 'Very Slow' },
+				],
+				default: 0,
+				width: 4,
+			},
 		]
 	},
 }

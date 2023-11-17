@@ -299,10 +299,12 @@ module.exports = {
 			case '*SNA':
 				//active scene
 				if (params.length == 4) {
+					let hasChanged = false
+					hasChanged = Number(params[3]) ? true : false
 					this.setVariableValues({
 						sceneActive: params[1].toString(),
 						sceneActiveIndex: Number(params[2]),
-						sceneActiveChanged: Number(params[3]),
+						sceneActiveChanged: hasChanged,
 					})
 					this.sceneChanged = Number(params[3])
 					this.log('debug', 'Scene Changed: ' + this.sceneChanged)

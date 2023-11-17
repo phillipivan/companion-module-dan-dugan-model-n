@@ -20,7 +20,7 @@ module.exports = {
 		}
 		this.cmdTimer = setTimeout(() => {
 			this.processCmdQueue()
-		}, msgDelay)
+		}, msgDelay[this.config.rate])
 	},
 
 	async sendCommand(cmd) {

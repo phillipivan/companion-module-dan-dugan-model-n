@@ -34,7 +34,7 @@ const variableDefaults = {
     sceneCount: 'unknown',
     sceneActive: 'unknown',
     sceneActiveIndex: 'unknown',
-    sceneActiveChanged: 'unknown',
+    sceneActiveChanged: false,
     channelName1: 'unknown',
     channelName2: 'unknown',
     channelName3: 'unknown',

@@ -37,7 +37,7 @@ class DUGAN_MODEL_N extends InstanceBase {
 		this.initTCP()
 		this.cmdTimer = setTimeout(() => {
 			this.processCmdQueue()
-		}, msgDelay)
+		}, msgDelay[this.config.rate])
 	}
 	// When module gets deleted
 	async destroy() {
