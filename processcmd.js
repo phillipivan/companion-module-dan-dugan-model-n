@@ -8,10 +8,13 @@ const {
 	sampleRate,
 	adatMirror,
 	clockSources,
+	MatrixCount,
+	GroupCount,
 	grpAval,
 	grpBval,
 	grpCval,
 	welcomeMessage,
+	MaxChannelCount,
 } = require('./consts.js')
 
 module.exports = {
@@ -22,36 +25,15 @@ module.exports = {
 		switch (cmd) {
 			case '*GP,':
 				//get channelparams
+				//binary response
 				break
 			case '*GM,':
 				//get matrix params
+				//binary response
 				break
 			case '*GS,':
 				//channel status
-				break
-			case '*GSA,':
-				//automix gains
-				break
-			case '*GSC,':
-				//signal clip
-				break
-			case '*GSP,':
-				//signal presence
-				break
-			case '*GSI,':
-				//input peaks
-				break
-			case '*GSO,':
-				//output peaks
-				break
-			case '*GSM,':
-				//music reference peaks
-				break
-			case '*GSN,':
-				//nom gain limits
-				break
-			case '*GSX,':
-				//matrix output meters
+				//binary response
 				break
 			default:
 				await this.processCmds(strRep)
@@ -514,6 +496,7 @@ module.exports = {
 								' and connected device: ' +
 								duganModels[params[1]]
 						)
+						this.config.model = Number(params[1])
 					}
 					if (Number(params[12]) != this.config.channels) {
 						this.log(
@@ -695,6 +678,95 @@ module.exports = {
 					this.updateActions()
 				} else {
 					this.log('warn', 'Unexpected SNL response: ' + str)
+				}
+				break
+			case '*GSA':
+				//automix gains for all
+				if (params.length != MaxChannelCount + 1) {
+					this.log('warn', 'Unexpected GSA length: ' + params.length + ' response: ' + str)
+					return false
+				} else {
+					let amixGains = []
+					for (let i = 1; i <= this.config.channels; i++) {
+						amixGains[i] = this.calcGain(Number(params[i]))
+						this.log('debug', 'Channel: ' + i + ' Amix Gain: ' + amixGains[i] + 'dB')
+					}
+				}
+				break
+			case '*GSC':
+				//signal clip
+				if (params.length != 9) {
+					this.log('warn', 'Unexpected GSC length: ' + str)
+					return false
+				}
+				break
+			case '*GSS':
+			case '*GSP':
+				//signal presence GSS Model E2A, E3A, GSP for Model M & N
+				break
+			case '*GSI':
+				//input peaks
+				if (params.length != MaxChannelCount + 1) {
+					this.log('warn', 'Unexpected GSI length: ' + params.length + ' response: ' + str)
+					return false
+				} else {
+					let inPeaks = []
+					for (let i = 1; i <= this.config.channels; i++) {
+						inPeaks[i] = this.calcGain(Number(params[i]))
+						this.log('debug', 'Channel: ' + i + ' Input Peaks: ' + inPeaks[i] + 'dB')
+					}
+				}
+				break
+			case '*GSO':
+				//output peaks
+				if (params.length != MaxChannelCount + 1) {
+					this.log('warn', 'Unexpected GSO length: ' + params.length + ' response: ' + str)
+					return false
+				} else {
+					let outPeaks = []
+					for (let i = 1; i <= this.config.channels; i++) {
+						outPeaks[i] = this.calcGain(Number(params[i]))
+						this.log('debug', 'Channel: ' + i + ' Output Peaks: ' + outPeaks[i] + 'dB')
+					}
+				}
+				break
+			case '*GSM':
+				//music reference peaks
+				if (params.length != GroupCount + 1) {
+					this.log('warn', 'Unexpected GSM length: ' + params.length + ' response: ' + str)
+					return false
+				} else {
+					let musicPeaks = []
+					for (let i = 1; i <= GroupCount; i++) {
+						musicPeaks[i] = this.calcGain(Number(params[i]))
+						this.log('debug', 'Group: ' + i + ' Music Peaks: ' + musicPeaks[i] + 'dB')
+					}
+				}
+				break
+			case '*GSN':
+				//nom gain limits
+				if (params.length != GroupCount + 1) {
+					this.log('warn', 'Unexpected GSN length: ' + params.length + ' response: ' + str)
+					return false
+				} else {
+					let nomGainlimits = []
+					for (let i = 1; i <= GroupCount; i++) {
+						nomGainlimits[i] = this.calcGain(Number(params[i]))
+						this.log('debug', 'Group: ' + i + ' NOM Peaks: ' + nomGainlimits[i] + 'dB')
+					}
+				}
+				break
+			case '*GSX':
+				//matrix output meters
+				if (params.length != MatrixCount + 1) {
+					this.log('warn', 'Unexpected GSX length: ' + params.length + ' response: ' + str)
+					return false
+				} else {
+					let matrixOutputPeaks = []
+					for (let i = 1; i <= MatrixCount; i++) {
+						matrixOutputPeaks[i] = this.calcGain(Number(params[i]))
+						this.log('debug', 'Group: ' + i + 'Matrix Output Peaks: ' + matrixOutputPeaks[i] + 'dB')
+					}
 				}
 				break
 			default:

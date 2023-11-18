@@ -1,5 +1,15 @@
 const { Regex } = require('@companion-module/base')
-const { paramSep, grpAval, grpBval, grpCval, toggle, noChange } = require('./consts.js')
+const {
+	paramSep,
+	grpAval,
+	grpBval,
+	grpCval,
+	toggle,
+	noChange,
+	MatrixCount,
+	GroupCount,
+	MaxChannelCount,
+} = require('./consts.js')
 
 module.exports = function (self) {
 	self.setActionDefinitions({
@@ -38,7 +48,6 @@ module.exports = function (self) {
 			callback: async ({ options }) => {
 				let cmd = 'CM'
 				let chan = await self.parseVariablesInString(options.channel)
-				self.log('debug', 'chan: ' + chan)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
 					self.log('warn', 'an invalid varible has been passed: ' + chan)
@@ -76,9 +85,6 @@ module.exports = function (self) {
 						{ id: 1, label: 'Auto' },
 						{ id: 2, label: 'Mute' },
 					],
-					useVariables: true,
-					allowCustom: true,
-					tooltip: 'Varible must return an integer 0: Manual, 1: Auto, 2: Mute',
 				},
 				{
 					id: 'query',
@@ -90,7 +96,6 @@ module.exports = function (self) {
 			callback: async ({ options }) => {
 				let cmd = 'CP'
 				let chan = await self.parseVariablesInString(options.channel)
-				self.log('debug', 'chan: ' + chan)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
 					self.log('warn', 'an invalid varible has been passed: ' + chan)
@@ -139,7 +144,6 @@ module.exports = function (self) {
 			callback: async ({ options }) => {
 				let cmd = 'BP'
 				let chan = await self.parseVariablesInString(options.channel)
-				self.log('debug', 'chan: ' + chan)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
 					self.log('warn', 'an invalid varible has been passed: ' + chan)
@@ -190,7 +194,6 @@ module.exports = function (self) {
 			callback: async ({ options }) => {
 				let cmd = 'CO'
 				let chan = await self.parseVariablesInString(options.channel)
-				self.log('debug', 'chan: ' + chan)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
 					self.log('warn', 'an invalid varible has been passed: ' + chan)
@@ -769,6 +772,9 @@ module.exports = function (self) {
 					label: 'Group',
 					default: '1',
 					choices: self.groupNames,
+					useVariables: true,
+					allowCustom: true,
+					tooltip: 'Varible must return an integer group number',
 				},
 				{
 					id: 'depth',
@@ -790,12 +796,18 @@ module.exports = function (self) {
 					tooltip: 'Query will poll the group automix depth',
 				},
 			],
-			callback: ({ options }) => {
+			callback: async ({ options }) => {
 				let cmd = 'ME' //AD commands also works
+				let group = await self.parseVariablesInString(options.group)
+				group = Math.floor(group)
+				if (isNaN(group) || group < 1 || group > GroupCount) {
+					self.log('warn', 'an invalid varible has been passed: ' + group)
+					return false
+				}
 				if (options.query) {
-					cmd += paramSep + options.group
+					cmd += paramSep + group
 				} else {
-					cmd += paramSep + options.group + paramSep + options.depth
+					cmd += paramSep + group + paramSep + options.depth
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -810,6 +822,9 @@ module.exports = function (self) {
 					label: 'Group',
 					default: '1',
 					choices: self.groupNames,
+					useVariables: true,
+					allowCustom: true,
+					tooltip: 'Varible must return an integer group number',
 				},
 				{
 					id: 'depth',
@@ -824,8 +839,14 @@ module.exports = function (self) {
 					regex: Regex.NUMBER,
 				},
 			],
-			callback: ({ options }) => {
+			callback: async ({ options }) => {
 				let cmd = 'ME' //AD commands also works
+				let group = await self.parseVariablesInString(options.group)
+				group = Math.floor(group)
+				if (isNaN(group) || group < 1 || group > GroupCount) {
+					self.log('warn', 'an invalid varible has been passed: ' + group)
+					return false
+				}
 				let depth = self.groupAutomixDepth[options.group] + options.depth
 				if (depth < -100) {
 					depth = -100
@@ -834,7 +855,7 @@ module.exports = function (self) {
 					depth = 0
 				}
 				let depthRound = depth.toFixed(2)
-				cmd += paramSep + options.group + paramSep + depthRound
+				cmd += paramSep + group + paramSep + depthRound
 				self.addCmdtoQueue(cmd)
 			},
 		},
@@ -848,6 +869,9 @@ module.exports = function (self) {
 					label: 'Group',
 					default: '1',
 					choices: self.groupNames,
+					useVariables: true,
+					allowCustom: true,
+					tooltip: 'Varible must return an integer group number',
 				},
 				{
 					id: 'nomgain',
@@ -869,12 +893,18 @@ module.exports = function (self) {
 					tooltip: 'Query will poll the group NOM gain limit',
 				},
 			],
-			callback: ({ options }) => {
+			callback: async ({ options }) => {
 				let cmd = 'NL'
+				let group = await self.parseVariablesInString(options.group)
+				group = Math.floor(group)
+				if (isNaN(group) || group < 1 || group > GroupCount) {
+					self.log('warn', 'an invalid varible has been passed: ' + group)
+					return false
+				}
 				if (options.query) {
-					cmd += paramSep + options.group
+					cmd += paramSep + group
 				} else {
-					cmd += paramSep + options.group + paramSep + options.nomgain
+					cmd += paramSep + group + paramSep + options.nomgain
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -889,6 +919,9 @@ module.exports = function (self) {
 					label: 'Group',
 					default: '1',
 					choices: self.groupNames,
+					useVariables: true,
+					allowCustom: true,
+					tooltip: 'Varible must return an integer group number',
 				},
 				{
 					id: 'nomgain',
@@ -903,9 +936,15 @@ module.exports = function (self) {
 					regex: Regex.NUMBER,
 				},
 			],
-			callback: ({ options }) => {
+			callback: async ({ options }) => {
 				let cmd = 'NL'
-				let nom = self.groupNOMgainlimit[options.group] + options.nomgain
+				let group = await self.parseVariablesInString(options.group)
+				group = Math.floor(group)
+				if (isNaN(group) || group < 1 || group > GroupCount) {
+					self.log('warn', 'an invalid varible has been passed: ' + group)
+					return false
+				}
+				let nom = self.groupNOMgainlimit[group] + options.nomgain
 				if (nom < 1) {
 					nom = 1
 				}
@@ -913,7 +952,7 @@ module.exports = function (self) {
 					nom = 10
 				}
 				let nomRound = nom.toFixed(2)
-				cmd += paramSep + options.group + paramSep + nomRound
+				cmd += paramSep + group + paramSep + nomRound
 				self.addCmdtoQueue(cmd)
 			},
 		},
@@ -927,6 +966,9 @@ module.exports = function (self) {
 					label: 'Group',
 					default: 1,
 					choices: self.groupNames,
+					useVariables: true,
+					allowCustom: true,
+					tooltip: 'Varible must return an integer group number',
 				},
 				{
 					id: 'threshold',
@@ -948,12 +990,18 @@ module.exports = function (self) {
 					tooltip: 'Query will poll the group music system threshold',
 				},
 			],
-			callback: ({ options }) => {
+			callback: async ({ options }) => {
 				let cmd = 'MT'
+				let group = await self.parseVariablesInString(options.group)
+				group = Math.floor(group)
+				if (isNaN(group) || group < 1 || group > GroupCount) {
+					self.log('warn', 'an invalid varible has been passed: ' + group)
+					return false
+				}
 				if (options.query) {
-					cmd += paramSep + options.group
+					cmd += paramSep + group
 				} else {
-					cmd += paramSep + options.group + paramSep + options.threshold
+					cmd += paramSep + group + paramSep + options.threshold
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -968,6 +1016,9 @@ module.exports = function (self) {
 					label: 'Group',
 					default: 1,
 					choices: self.groupNames,
+					useVariables: true,
+					allowCustom: true,
+					tooltip: 'Varible must return an integer group number',
 				},
 				{
 					id: 'threshold',
@@ -982,9 +1033,15 @@ module.exports = function (self) {
 					regex: Regex.NUMBER,
 				},
 			],
-			callback: ({ options }) => {
+			callback: async ({ options }) => {
 				let cmd = 'MT'
-				let thres = self.groupMusicThreshold[options.group] + options.threshold
+				let group = await self.parseVariablesInString(options.group)
+				group = Math.floor(group)
+				if (isNaN(group) || group < 1 || group > GroupCount) {
+					self.log('warn', 'an invalid varible has been passed: ' + group)
+					return false
+				}
+				let thres = self.groupMusicThreshold[group] + options.threshold
 				if (thres < -150) {
 					thres = -150
 				}
@@ -992,7 +1049,7 @@ module.exports = function (self) {
 					thres = 20
 				}
 				let thresRound = thres.toFixed(2)
-				cmd += paramSep + options.group + paramSep + thresRound
+				cmd += paramSep + group + paramSep + thresRound
 				self.addCmdtoQueue(cmd)
 			},
 		},
@@ -1006,6 +1063,9 @@ module.exports = function (self) {
 					label: 'Group',
 					default: 1,
 					choices: self.groupNames,
+					useVariables: true,
+					allowCustom: true,
+					tooltip: 'Varible must return an integer group number',
 				},
 				{
 					id: 'input',
@@ -1013,7 +1073,9 @@ module.exports = function (self) {
 					label: 'Music System Threshold Input',
 					default: 1,
 					choices: self.musicInputs,
-					tooltip: 'Select source for music threshold',
+					useVariables: true,
+					allowCustom: true,
+					tooltip: 'Varible must return an integer input number 1 - 86',
 				},
 				{
 					id: 'query',
@@ -1023,12 +1085,24 @@ module.exports = function (self) {
 					tooltip: 'Query will poll the group music system threshold input',
 				},
 			],
-			callback: ({ options }) => {
+			callback: async ({ options }) => {
 				let cmd = 'MC'
+				let group = await self.parseVariablesInString(options.group)
+				group = Math.floor(group)
+				if (isNaN(group) || group < 1 || group > GroupCount) {
+					self.log('warn', 'an invalid varible has been passed: ' + group)
+					return false
+				}
+				let input = await self.parseVariablesInString(options.input)
+				input = Math.floor(input)
+				if (isNaN(input) || input < 1 || input > 86) {
+					self.log('warn', 'an invalid varible has been passed: ' + input)
+					return false
+				}
 				if (options.query) {
-					cmd += paramSep + options.group
+					cmd += paramSep + group
 				} else {
-					cmd += paramSep + options.group + paramSep + options.input
+					cmd += paramSep + group + paramSep + input
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -1043,6 +1117,9 @@ module.exports = function (self) {
 					label: 'Matrix',
 					default: 1,
 					choices: self.matrixNames,
+					useVariables: true,
+					allowCustom: true,
+					tooltip: 'Varible must return an integer matrix number',
 				},
 				{
 					id: 'mute',
@@ -1064,13 +1141,19 @@ module.exports = function (self) {
 			],
 			callback: async ({ options }) => {
 				let cmd = 'MXM'
-				let muteState = (await self.matrixMute[options.matrix]) ^ 1
+				let matrix = await self.parseVariablesInString(options.matrix)
+				matrix = Math.floor(matrix)
+				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
+					self.log('warn', 'an invalid varible has been passed: ' + matrix)
+					return false
+				}
+				let muteState = (await self.matrixMute[matrix]) ^ 1
 				if (options.query) {
-					cmd += paramSep + options.matrix
+					cmd += paramSep + matrix
 				} else if (options.mute == toggle) {
-					cmd += paramSep + options.matrix + paramSep + muteState
+					cmd += paramSep + matrix + paramSep + muteState
 				} else {
-					cmd += paramSep + options.matrix + paramSep + options.mute
+					cmd += paramSep + matrix + paramSep + options.mute
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -1085,6 +1168,9 @@ module.exports = function (self) {
 					label: 'Matrix',
 					default: 1,
 					choices: self.matrixNames,
+					useVariables: true,
+					allowCustom: true,
+					tooltip: 'Varible must return an integer matrix number',
 				},
 				{
 					id: 'polarity',
@@ -1106,13 +1192,19 @@ module.exports = function (self) {
 			],
 			callback: async ({ options }) => {
 				let cmd = 'MXP'
-				let polState = (await self.matrixPolarity[options.matrix]) ^ 1
+				let matrix = await self.parseVariablesInString(options.matrix)
+				matrix = Math.floor(matrix)
+				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
+					self.log('warn', 'an invalid varible has been passed: ' + matrix)
+					return false
+				}
+				let polState = (await self.matrixPolarity[matrix]) ^ 1
 				if (options.query) {
-					cmd += paramSep + options.matrix
+					cmd += paramSep + matrix
 				} else if (options.polarity == toggle) {
-					cmd += paramSep + options.matrix + paramSep + polState
+					cmd += paramSep + matrix + paramSep + polState
 				} else {
-					cmd += paramSep + options.matrix + paramSep + options.polarity
+					cmd += paramSep + matrix + paramSep + options.polarity
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -1127,6 +1219,9 @@ module.exports = function (self) {
 					label: 'Matrix',
 					default: 1,
 					choices: self.matrixNames,
+					useVariables: true,
+					allowCustom: true,
+					tooltip: 'Varible must return an integer matrix number',
 				},
 				{
 					id: 'gain',
@@ -1148,12 +1243,18 @@ module.exports = function (self) {
 					tooltip: 'Query will poll the current matrix output gain',
 				},
 			],
-			callback: ({ options }) => {
+			callback: async ({ options }) => {
 				let cmd = 'MXV'
+				let matrix = await self.parseVariablesInString(options.matrix)
+				matrix = Math.floor(matrix)
+				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
+					self.log('warn', 'an invalid varible has been passed: ' + matrix)
+					return false
+				}
 				if (options.query) {
-					cmd += paramSep + options.matrix
+					cmd += paramSep + matrix
 				} else {
-					cmd += paramSep + options.matrix + paramSep + options.gain
+					cmd += paramSep + matrix + paramSep + options.gain
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -1168,6 +1269,9 @@ module.exports = function (self) {
 					label: 'Matrix',
 					default: 1,
 					choices: self.matrixNames,
+					useVariables: true,
+					allowCustom: true,
+					tooltip: 'Varible must return an integer matrix number',
 				},
 				{
 					id: 'gain',
@@ -1182,9 +1286,15 @@ module.exports = function (self) {
 					regex: Regex.NUMBER,
 				},
 			],
-			callback: ({ options }) => {
+			callback: async ({ options }) => {
 				let cmd = 'MXV'
-				let gain = self.matrixGain[options.matrix] + options.gain
+				let matrix = await self.parseVariablesInString(options.matrix)
+				matrix = Math.floor(matrix)
+				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
+					self.log('warn', 'an invalid varible has been passed: ' + matrix)
+					return false
+				}
+				let gain = self.matrixGain[matrix] + options.gain
 				if (gain < -25) {
 					gain = -25
 				}
@@ -1192,7 +1302,7 @@ module.exports = function (self) {
 					gain = 15
 				}
 				let gainRound = gain.toFixed(2)
-				cmd += paramSep + options.matrix + paramSep + gainRound
+				cmd += paramSep + matrix + paramSep + gainRound
 				self.addCmdtoQueue(cmd)
 			},
 		},
@@ -1206,6 +1316,9 @@ module.exports = function (self) {
 					label: 'Matrix',
 					default: 1,
 					choices: self.matrixNames,
+					useVariables: true,
+					allowCustom: true,
+					tooltip: 'Varible must return an integer matrix number',
 				},
 				{
 					id: 'output',
@@ -1213,6 +1326,9 @@ module.exports = function (self) {
 					label: 'Output',
 					default: 0,
 					choices: self.matrixDestinations,
+					useVariables: true,
+					allowCustom: true,
+					tooltip: 'Varible must return an integer output number 0 - 64',
 				},
 				{
 					id: 'query',
@@ -1222,12 +1338,24 @@ module.exports = function (self) {
 					tooltip: 'Query will poll the matrix output channel',
 				},
 			],
-			callback: ({ options }) => {
+			callback: async ({ options }) => {
 				let cmd = 'MXO'
+				let matrix = await self.parseVariablesInString(options.matrix)
+				matrix = Math.floor(matrix)
+				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
+					self.log('warn', 'an invalid varible has been passed: ' + matrix)
+					return false
+				}
+				let output = await self.parseVariablesInString(options.output)
+				output = Math.floor(output)
+				if (isNaN(output) || output < 0 || output > MaxChannelCount) {
+					self.log('warn', 'an invalid varible has been passed: ' + matrix)
+					return false
+				}
 				if (options.query) {
-					cmd += paramSep + options.matrix
+					cmd += paramSep + matrix
 				} else {
-					cmd += paramSep + options.matrix + paramSep + options.output
+					cmd += paramSep + matrix + paramSep + output
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -1242,6 +1370,9 @@ module.exports = function (self) {
 					label: 'Matrix',
 					default: 1,
 					choices: self.matrixNames,
+					useVariables: true,
+					allowCustom: true,
+					tooltip: 'Varible must return an integer matrix number',
 				},
 				{
 					id: 'channel',
@@ -1249,6 +1380,9 @@ module.exports = function (self) {
 					label: 'Input Channel',
 					default: 1,
 					choices: self.matrixSources,
+					useVariables: true,
+					allowCustom: true,
+					tooltip: 'Varible must return an integer channel number',
 				},
 				{
 					id: 'gain',
@@ -1270,12 +1404,24 @@ module.exports = function (self) {
 					tooltip: 'Query will poll the matrix crosspoint gain',
 				},
 			],
-			callback: ({ options }) => {
+			callback: async ({ options }) => {
 				let cmd = 'OM'
+				let matrix = await self.parseVariablesInString(options.matrix)
+				matrix = Math.floor(matrix)
+				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
+					self.log('warn', 'an invalid varible has been passed: ' + matrix)
+					return false
+				}
+				let chan = await self.parseVariablesInString(options.channel)
+				chan = Math.floor(chan)
+				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
+					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					return false
+				}
 				if (options.query) {
-					cmd += paramSep + options.matrix + paramSep + options.channel
+					cmd += paramSep + matrix + paramSep + chan
 				} else {
-					cmd += paramSep + options.matrix + paramSep + options.channel + paramSep + options.gain
+					cmd += paramSep + matrix + paramSep + chan + paramSep + options.gain
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -1290,6 +1436,9 @@ module.exports = function (self) {
 					label: 'Matrix',
 					default: 1,
 					choices: self.matrixNames,
+					useVariables: true,
+					allowCustom: true,
+					tooltip: 'Varible must return an integer matrix number',
 				},
 				{
 					id: 'channel',
@@ -1297,6 +1446,9 @@ module.exports = function (self) {
 					label: 'Input Channel',
 					default: 1,
 					choices: self.matrixSources,
+					useVariables: true,
+					allowCustom: true,
+					tooltip: 'Varible must return an integer channel number',
 				},
 				{
 					id: 'gain',
@@ -1311,8 +1463,20 @@ module.exports = function (self) {
 					regex: Regex.NUMBER,
 				},
 			],
-			callback: ({ options }) => {
+			callback: async ({ options }) => {
 				let cmd = 'OM'
+				let matrix = await self.parseVariablesInString(options.matrix)
+				matrix = Math.floor(matrix)
+				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
+					self.log('warn', 'an invalid varible has been passed: ' + matrix)
+					return false
+				}
+				let chan = await self.parseVariablesInString(options.channel)
+				chan = Math.floor(chan)
+				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
+					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					return false
+				}
 				let gain = self.matrixXpoint[options.matrix][options.channel] + options.gain
 				if (gain < -96.5) {
 					gain = -96.5
@@ -1321,7 +1485,7 @@ module.exports = function (self) {
 					gain = 0
 				}
 				let gainRound = gain.toFixed(2)
-				cmd += paramSep + options.matrix + paramSep + options.channel + paramSep + gainRound
+				cmd += paramSep + matrix + paramSep + chan + paramSep + gainRound
 				self.addCmdtoQueue(cmd)
 			},
 		},

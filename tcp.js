@@ -13,10 +13,8 @@ module.exports = {
 	},
 
 	async processCmdQueue() {
-		//this.log('debug', 'processCmdQueue. Queue length: ' + this.cmdQueue.length)
 		if (this.cmdQueue.length > 0) {
-			let txCmd = await this.cmdQueue.splice(0, 1)
-			this.sendCommand(txCmd)
+			this.sendCommand(await this.cmdQueue.splice(0, 1))
 		}
 		this.cmdTimer = setTimeout(() => {
 			this.processCmdQueue()
