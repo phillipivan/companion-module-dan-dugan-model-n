@@ -21,6 +21,7 @@ module.exports = async function (self) {
 			},
 			subscribe: () => {
 				self.addCmdtoQueue('SNA')
+				self.checkSubscriptionLevel(1)
 			},
 		},
 		matrixLevel: {
@@ -76,6 +77,7 @@ module.exports = async function (self) {
 			},
 			subscribe: () => {
 				self.addCmdtoQueue('GSX')
+				self.checkSubscriptionLevel(1)
 			},
 		},
 		matrixMuted: {
@@ -104,6 +106,7 @@ module.exports = async function (self) {
 			},
 			subscribe: ({ options }) => {
 				self.addCmdtoQueue('MXM' + paramSep + options.matrix)
+				self.checkSubscriptionLevel(1)
 			},
 		},
 		matrixPolarity: {
@@ -132,6 +135,7 @@ module.exports = async function (self) {
 			},
 			subscribe: ({ options }) => {
 				self.addCmdtoQueue('MXP' + paramSep + options.matrix)
+				self.checkSubscriptionLevel(1)
 			},
 		},
 		channelMode: {
@@ -171,6 +175,7 @@ module.exports = async function (self) {
 			},
 			subscribe: ({ options }) => {
 				self.addCmdtoQueue('CM' + paramSep + options.channel)
+				self.checkSubscriptionLevel(1)
 			},
 		},
 		channelPreset: {
@@ -210,6 +215,7 @@ module.exports = async function (self) {
 			},
 			subscribe: ({ options }) => {
 				self.addCmdtoQueue('CP' + paramSep + options.channel)
+				self.checkSubscriptionLevel(1)
 			},
 		},
 		channelBypass: {
@@ -238,6 +244,7 @@ module.exports = async function (self) {
 			},
 			subscribe: ({ options }) => {
 				self.addCmdtoQueue('BP' + paramSep + options.channel)
+				self.checkSubscriptionLevel(1)
 			},
 		},
 		channelOverride: {
@@ -266,6 +273,7 @@ module.exports = async function (self) {
 			},
 			subscribe: ({ options }) => {
 				self.addCmdtoQueue('CO' + paramSep + options.channel)
+				self.checkSubscriptionLevel(1)
 			},
 		},
 		channelMusic: {
@@ -294,6 +302,7 @@ module.exports = async function (self) {
 			},
 			subscribe: ({ options }) => {
 				self.addCmdtoQueue('MR' + paramSep + options.channel)
+				self.checkSubscriptionLevel(1)
 			},
 		},
 		channelNOM: {
@@ -322,6 +331,7 @@ module.exports = async function (self) {
 			},
 			subscribe: ({ options }) => {
 				self.addCmdtoQueue('NE' + paramSep + options.channel)
+				self.checkSubscriptionLevel(1)
 			},
 		},
 		channelGroupAssign: {
@@ -357,6 +367,7 @@ module.exports = async function (self) {
 			},
 			subscribe: ({ options }) => {
 				self.addCmdtoQueue('GA' + paramSep + options.channel)
+				self.checkSubscriptionLevel(1)
 			},
 		},
 		channelClip: {
@@ -385,6 +396,7 @@ module.exports = async function (self) {
 			},
 			subscribe: () => {
 				self.addCmdtoQueue('GSC')
+				self.checkSubscriptionLevel(2)
 			},
 		},
 		channelPresence: {
@@ -413,6 +425,7 @@ module.exports = async function (self) {
 			},
 			subscribe: () => {
 				self.addCmdtoQueue('GSS')
+				self.checkSubscriptionLevel(2)
 			},
 		},
 		channelInputPeak: {
@@ -468,6 +481,7 @@ module.exports = async function (self) {
 			},
 			subscribe: () => {
 				self.addCmdtoQueue('GSI')
+				self.checkSubscriptionLevel(2)
 			},
 		},
 		channelOutputPeak: {
@@ -523,6 +537,7 @@ module.exports = async function (self) {
 			},
 			subscribe: () => {
 				self.addCmdtoQueue('GSO')
+				self.checkSubscriptionLevel(2)
 			},
 		},
 		channelAmixGain: {
@@ -578,6 +593,7 @@ module.exports = async function (self) {
 			},
 			subscribe: () => {
 				self.addCmdtoQueue('GSA')
+				self.checkSubscriptionLevel(2)
 			},
 		},
 		groupMute: {
@@ -606,6 +622,7 @@ module.exports = async function (self) {
 			},
 			subscribe: () => {
 				self.addCmdtoQueue('SM')
+				self.checkSubscriptionLevel(1)
 			},
 		},
 		groupPreset: {
@@ -634,6 +651,7 @@ module.exports = async function (self) {
 			},
 			subscribe: () => {
 				self.addCmdtoQueue('SP')
+				self.checkSubscriptionLevel(1)
 			},
 		},
 		groupOverride: {
@@ -662,6 +680,7 @@ module.exports = async function (self) {
 			},
 			subscribe: () => {
 				self.addCmdtoQueue('SO')
+				self.checkSubscriptionLevel(1)
 			},
 		},
 		groupLastHold: {
@@ -690,6 +709,7 @@ module.exports = async function (self) {
 			},
 			subscribe: () => {
 				self.addCmdtoQueue('LH')
+				self.checkSubscriptionLevel(1)
 			},
 		},
 		groupNOMgain: {
@@ -745,6 +765,7 @@ module.exports = async function (self) {
 			},
 			subscribe: () => {
 				self.addCmdtoQueue('GSN')
+				self.checkSubscriptionLevel(2)
 			},
 		},
 		groupMusicPeak: {
@@ -800,6 +821,7 @@ module.exports = async function (self) {
 			},
 			subscribe: () => {
 				self.addCmdtoQueue('GSM')
+				self.checkSubscriptionLevel(2)
 			},
 		},
 	})

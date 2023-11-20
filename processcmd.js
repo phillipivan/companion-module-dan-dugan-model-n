@@ -466,6 +466,11 @@ module.exports = {
 				break
 			case '*SU':
 				//subscribe unsolicited
+				if (isNaN(params[1])) {
+					this.log('warn', 'SU has returned an unexpected value: ' + str)
+					return false
+				}
+				this.config.subscription = params[1]
 				this.log('info', 'Subscribe unsolicited level changed. Level: ' + params[1])
 				break
 			case '*LG':
