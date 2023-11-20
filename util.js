@@ -61,4 +61,22 @@ module.exports = {
 		}
 		return flags
 	},
+	process2BitFlags(val) {
+		if (isNaN(val)) {
+			this.log('warn', 'processBitFlags has been passed a Nan: ' + val)
+			return false
+		}
+		if (val < 0 || val > 255) {
+			this.log('warn', 'processBitFlags has been passed an out of range number: ' + val)
+			return false
+		}
+		let flags = []
+		let operators = [3, 12, 48, 192]
+		let base = [1, 4, 16, 64]
+		for (let i = 0; i < operators.length; i++) {
+			let x = val & operators[i]
+			flags[i] = x / base[i]
+		}
+		return flags
+	},
 }
