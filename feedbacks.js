@@ -849,7 +849,7 @@ module.exports = async function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				if (self.groupMusicInput[options.group] == options.channel) {
+				if (self.groupMusicInput[options.group] == options.input) {
 					return true
 				} else {
 					return false
