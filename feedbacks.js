@@ -417,7 +417,7 @@ module.exports = async function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				if (self.channelsClip[options.channel]) {
+				if (self.channelsPresence[options.channel]) {
 					return true
 				} else {
 					return false

@@ -811,6 +811,7 @@ module.exports = {
 						varObject['channelAmixGain' + i] = this.channelsAmixGain[i]
 					}
 					this.setVariableValues(varObject)
+					this.checkFeedbacks('channelAmixGain')
 				}
 				break
 			case '*GSC':
@@ -869,6 +870,7 @@ module.exports = {
 						varObject['channelInputLevel' + i] = this.channelsInputPeak[i]
 					}
 					this.setVariableValues(varObject)
+					this.checkFeedbacks('channelInputPeak')
 				}
 				break
 			case '*GSO':
@@ -884,6 +886,7 @@ module.exports = {
 						varObject['channelOutputLevel' + i] = this.channelsOutputPeak[i]
 					}
 					this.setVariableValues(varObject)
+					this.checkFeedbacks('channelOutputPeak')
 				}
 				break
 			case '*GSM':
@@ -899,6 +902,7 @@ module.exports = {
 						varObject['groupMSTgain' + i] = this.groupMusicPeak[i]
 					}
 					this.setVariableValues(varObject)
+					this.checkFeedbacks('groupMusicPeak')
 				}
 				break
 			case '*GSN':
@@ -914,6 +918,7 @@ module.exports = {
 						varObject['groupNOMpeak' + i] = this.groupNOMpeak[i]
 					}
 					this.setVariableValues(varObject)
+					this.checkFeedbacks('groupNOMgain')
 				}
 				break
 			case '*GSX':
@@ -929,6 +934,7 @@ module.exports = {
 						varObject['matrixOutLevel' + i] = this.matrixOutputPeak[i]
 					}
 					this.setVariableValues(varObject)
+					this.checkFeedbacks('matrixLevel')
 				}
 				break
 			default:
