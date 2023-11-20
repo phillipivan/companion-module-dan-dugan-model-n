@@ -144,6 +144,7 @@ class DUGAN_AUTOMIXER extends InstanceBase {
 		this.matrixPolarity = []
 		this.matrixXpoint = []
 		this.matrixOutputPeak = []
+		this.matrixOutput = []
 		for (let i = 1; i <= this.matrixCount; i++) {
 			this.matrixNames.push({ id: i, label: 'Matrix Bus ' + i })
 		}
@@ -153,6 +154,7 @@ class DUGAN_AUTOMIXER extends InstanceBase {
 			this.matrixPolarity[i] = 0
 			this.matrixXpoint[i] = []
 			this.matrixOutputPeak[i] = -127.5
+			this.matrixOutput[i] = 0
 			for (let j = 0; j <= MatrixSize; j++) {
 				this.matrixXpoint[i][j] = -96
 			}
@@ -169,6 +171,7 @@ class DUGAN_AUTOMIXER extends InstanceBase {
 		this.groupLastHold = []
 		this.groupNOMpeak = []
 		this.groupMusicPeak = []
+		this.groupMusicInput = []
 		for (let i = 0; i <= this.groupCount; i++) {
 			this.groupAutomixDepth[i] = -15
 			this.groupMusicThreshold[i] = -10
@@ -179,6 +182,7 @@ class DUGAN_AUTOMIXER extends InstanceBase {
 			this.groupLastHold[i] = 0
 			this.groupNOMpeak[i] = 0
 			this.groupMusicPeak[i] = 0
+			this.groupMusicInput[i] = 0
 		}
 		this.channelsMode = []
 		this.channelsPreset = []

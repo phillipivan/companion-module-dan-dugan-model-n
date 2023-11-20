@@ -324,6 +324,12 @@ module.exports = {
 				break
 			case '*MC':
 				//music system threshold input
+				if (params.length == 3) {
+					this.groupMusicInput[Number(params[1])] = Number(params[2])
+					this.checkFeedbacks('groupMusicInput')
+				} else {
+					this.log('warn', 'Unexpected MXM response: ' + str)
+				}
 				break
 			case '*MXM':
 				//matrix bus mute
@@ -357,6 +363,12 @@ module.exports = {
 			case '*MXO':
 				//matrix bus ouput
 				this.log('info', 'Matrix ' + params[1] + ' output patch changed to ' + params[2])
+				if (params.length == 3) {
+					this.matrixOutput[Number(params[1])] = Number(params[2])
+					this.checkFeedbacks('matrixOutput')
+				} else {
+					this.log('warn', 'Unexpected MXM response: ' + str)
+				}
 				break
 			case '*OM':
 				//matrix crosspoint

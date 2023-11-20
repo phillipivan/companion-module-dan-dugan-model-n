@@ -824,5 +824,95 @@ module.exports = async function (self) {
 				self.checkSubscriptionLevel(2)
 			},
 		},
+		groupMusicInput: {
+			name: 'Group Music Threshold Input',
+			type: 'boolean',
+			label: 'Group Music Threshold Input',
+			defaultStyle: {
+				bgcolor: combineRgb(255, 0, 0),
+				color: combineRgb(0, 0, 0),
+			},
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Group',
+					id: 'group',
+					default: 1,
+					choices: self.groupNames,
+				},
+				{
+					id: 'input',
+					type: 'dropdown',
+					label: 'Music System Threshold Input',
+					default: 1,
+					choices: self.musicInputs,
+				},
+			],
+			callback: ({ options }) => {
+				if (self.groupMusicInput[options.group] == options.channel) {
+					return true
+				} else {
+					return false
+				}
+			},
+			subscribe: ({ options }) => {
+				self.addCmdtoQueue('MC' + paramSep + options.group)
+				self.checkSubscriptionLevel(1)
+			},
+			learn: async (feedback) => {
+				let cmd = 'MC'
+				self.addCmdtoQueue(cmd + paramSep + feedback.options.group)
+				const grpMTinput = self.groupMusicInput[feedback.options.group]
+				return {
+					...feedback.options,
+					input: grpMTinput,
+				}
+			},
+		},
+		matrixOutput: {
+			name: 'Matrix Output Route',
+			type: 'boolean',
+			label: 'Matrix Output Route',
+			defaultStyle: {
+				bgcolor: combineRgb(255, 0, 0),
+				color: combineRgb(0, 0, 0),
+			},
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Group',
+					id: 'group',
+					default: 1,
+					choices: self.matrixNames,
+				},
+				{
+					id: 'output',
+					type: 'dropdown',
+					label: 'Output',
+					default: 1,
+					choices: self.matrixDestinations,
+				},
+			],
+			callback: ({ options }) => {
+				if (self.matrixOutput[options.matrix] == options.output) {
+					return true
+				} else {
+					return false
+				}
+			},
+			subscribe: ({ options }) => {
+				self.addCmdtoQueue('MXO' + paramSep + options.matrix)
+				self.checkSubscriptionLevel(1)
+			},
+			learn: async (feedback) => {
+				let cmd = 'MXO'
+				self.addCmdtoQueue(cmd + paramSep + feedback.options.matrix)
+				const matrixOutput = self.matrixOutput[feedback.options.matrix]
+				return {
+					...feedback.options,
+					output: matrixOutput,
+				}
+			},
+		},
 	})
 }

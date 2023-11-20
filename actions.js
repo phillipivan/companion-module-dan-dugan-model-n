@@ -1339,6 +1339,21 @@ module.exports = function (self) {
 				}
 				self.addCmdtoQueue(cmd)
 			},
+			learn: async (action) => {
+				let cmd = 'MC'
+				let group = await self.parseVariablesInString(action.options.group)
+				group = Math.floor(group)
+				if (isNaN(group) || group < 1 || group > GroupCount) {
+					self.log('warn', 'an invalid varible has been passed: ' + group)
+					return undefined
+				}
+				self.addCmdtoQueue(cmd + paramSep + group)
+				const grpMTinput = self.groupMusicInput[group]
+				return {
+					...action.options,
+					input: grpMTinput,
+				}
+			},
 		},
 		matrix_mute: {
 			name: 'Matrix - Bus Mute',
@@ -1636,6 +1651,21 @@ module.exports = function (self) {
 					cmd += paramSep + matrix + paramSep + output
 				}
 				self.addCmdtoQueue(cmd)
+			},
+			learn: async (action) => {
+				let cmd = 'MXO'
+				let matrix = await self.parseVariablesInString(action.options.matrix)
+				matrix = Math.floor(matrix)
+				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
+					self.log('warn', 'an invalid varible has been passed: ' + matrix)
+					return false
+				}
+				self.addCmdtoQueue(cmd + paramSep + matrix)
+				const matrixOutput = self.matrixOutput[matrix]
+				return {
+					...action.options,
+					output: matrixOutput,
+				}
 			},
 		},
 		matrix_crosspoint: {
