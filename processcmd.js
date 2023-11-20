@@ -26,6 +26,7 @@ module.exports = {
 		let cmd = await this.regexCmd(strRep)
 		let buffer = new ArrayBuffer(chunk.length)
 		let vals = new Uint8Array(buffer)
+		//let weights = new Float32Array(buffer, 140, 64)
 		let varObject = []
 		for (let i = 0; i < chunk.length; i++) {
 			vals[i] = chunk[i]
@@ -34,10 +35,78 @@ module.exports = {
 			case '*GP,':
 				//get channelparams
 				//binary response
-				this.log('debug', '*GP response detected. Buffer length: ' + vals.length)
-				for (let i = 0; i < vals.length; i++) {
-					this.log('debug', 'Index: ' + i + ' value: ' + vals[i])
+				this.log(
+					'debug',
+					'*GP response detected. Buffer Uint8 length: ' + vals.length + ' float32 length: ' //+ weights.length
+				)
+				//for (let i = 0; i < vals.length; i++) {
+				//	this.log('debug', 'Index: ' + i + ' value: ' + vals[i])
+				//}
+				//for (let i = 0; i < weights.length; i++) {
+				//	this.log('debug', 'Index: ' + i + 'Weight value: ' + weights[i])
+				//}
+				if (vals.length != 454) {
+					this.log('warn', '*GP response detected. Expected length 454 bytes. Buffer length: ' + vals.length)
 				}
+				for (let i = 1; i <= MaxChannelCount; i++) {
+					this.channelsMode[i] = vals[i + 3]
+				}
+				if (this.config.channels != vals[68]) {
+					this.log(
+						'warn',
+						'Mismatch between configured channels: ' +
+							this.config.channels +
+							' and connected device: ' +
+							vals[68] +
+							'. Changing configuration.'
+					)
+					this.config.channels = vals[68]
+					this.initVariables()
+					this.updateActions() // export actions
+					this.updateFeedbacks() // export feedbacks
+					//this.updateVariableDefinitions() // export variable definitions
+					//this.setVariableValues(variableDefaults)
+				}
+				for (let i = 1; i <= 8; i++) {
+					let bypassFlags = this.processBitFlags(i + 68)
+					let nomFlags = this.processBitFlags(i + 76)
+					let musicFlags = this.processBitFlags(i + 84)
+					let overrideFlags = this.processBitFlags(i + 92)
+					if (bypassFlags == false || nomFlags == false || musicFlags == false || overrideFlags == false) {
+						this.log('warn', 'Unexpected response')
+						return false
+					}
+					for (let y = 0; y < bypassFlags.length; y++) {
+						let channel = y + 1 + (i - 1) * 8
+						this.channelsBypass[channel] = bypassFlags[y]
+						this.channelsNom[channel] = nomFlags[y]
+						this.channelsMusic[channel] = musicFlags[y]
+						this.channelsOverride[channel] = overrideFlags[y]
+					}
+				}
+				for (let i = 1; i <= 16; i++) {
+					let groupAssignFlags = this.process2BitFlags(i + 100)
+					let presetFlags = this.process2BitFlags(i + 116)
+					if (groupAssignFlags == false || presetFlags == false) {
+						this.log('warn', 'Unexpected response')
+						return false
+					}
+					for (let y = 0; y < presetFlags.length; y++) {
+						let channel = y + 1 + (i - 1) * 4
+						this.channelsPreset[channel] = presetFlags[y]
+						this.channelsGroupAssign[channel] = groupAssignFlags[y]
+						this.channelsPreset[channel] = presetFlags[y]
+					}
+				}
+				this.checkFeedbacks(
+					'channelMode',
+					'channelPreset',
+					'channelBypass',
+					'channelOverride',
+					'channelMusic',
+					'channelNOM',
+					'channelGroupAssign'
+				)
 				break
 			case '*GM,':
 				//get matrix params
@@ -45,9 +114,6 @@ module.exports = {
 				if (vals.length != 902) {
 					this.log('warn', '*GM response detected. Expected length 902 bytes. Buffer length: ' + vals.length)
 				}
-				//for (let i = 0; i < vals.length; i++) {
-				//	this.log('debug', 'Index: ' + i + ' value: ' + vals[i])
-				//}
 				for (let i = 1; i <= MatrixCount; i++) {
 					this.matrixGain[i] = this.calcXpointGain(vals[i + 879])
 					varObject['matrixOutFader' + vals[1]] = this.matrixGain[i]

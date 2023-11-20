@@ -154,7 +154,7 @@ class DUGAN_AUTOMIXER extends InstanceBase {
 			this.matrixXpoint[i] = []
 			this.matrixOutputPeak[i] = -127.5
 			for (let j = 0; j <= MatrixSize; j++) {
-				this.matrixXpoint[i][j] = -96.5
+				this.matrixXpoint[i][j] = -96
 			}
 		}
 		this.groupNames.push({ id: 1, label: 'Group A' })
