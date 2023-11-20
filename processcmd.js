@@ -16,6 +16,7 @@ const {
 	welcomeMessage,
 	MaxChannelCount,
 } = require('./consts.js')
+const { processBitFlags } = require('./util.js')
 
 module.exports = {
 	async processBuffer(buffer) {
@@ -44,7 +45,7 @@ module.exports = {
 		let line = cmd.toString()
 		let str = line.split('\r\n')
 		let cmds = str[0].split(cmdSep)
-		cmds.forEach((element) => {
+		await cmds.forEach((element) => {
 			this.processParams(element)
 		})
 		return true
@@ -263,6 +264,9 @@ module.exports = {
 				//matrix crosspoint
 				if (params.length == 4) {
 					this.matrixXpoint[Number(params[1])][Number(params[2])] = Number(params[3])
+					let varObject = {}
+					varObject['matrix' + params[1] + 'Xpoint' + params[2]] = Number(params[3])
+					this.setVariableValues(varObject)
 				} else {
 					this.log('warn', 'Unexpected OM response: ' + str)
 				}
@@ -471,7 +475,6 @@ module.exports = {
 			case '*SC':
 				//system config
 				if (params.length == 13) {
-					//expected length
 					let dhcp = params[11] == '1' ? true : false
 					this.setVariableValues({
 						deviceType: duganModels[params[1]],
@@ -686,11 +689,13 @@ module.exports = {
 					this.log('warn', 'Unexpected GSA length: ' + params.length + ' response: ' + str)
 					return false
 				} else {
-					let amixGains = []
+					let varObject = {}
 					for (let i = 1; i <= this.config.channels; i++) {
-						amixGains[i] = this.calcGain(Number(params[i]))
-						this.log('debug', 'Channel: ' + i + ' Amix Gain: ' + amixGains[i] + 'dB')
+						this.channelsAmixGain[i] = this.calcGain(Number(params[i]))
+						this.checkFeedbacks('channelAmixGain')
+						varObject['channelAmixGain' + i] = this.channelsAmixGain[i]
 					}
+					this.setVariableValues(varObject)
 				}
 				break
 			case '*GSC':
@@ -698,11 +703,43 @@ module.exports = {
 				if (params.length != 9) {
 					this.log('warn', 'Unexpected GSC length: ' + str)
 					return false
+				} else {
+					for (let i = 1; 1 < params.length; i++) {
+						let flags = processBitFlags(params[i])
+						if (flags == false) {
+							this.log('warn', 'Unexpected response: ' + flags)
+							return false
+						}
+						for (let y = 0; y < flags.length; y++) {
+							let channel = y + 1 + (i - 1) * 8
+							this.channelsClip[channel] = flags[y]
+							this.log('debug', 'Channel ' + channel + ' Clip flag is ' + flags[y])
+						}
+					}
+					this.checkFeedbacks('channelClip')
 				}
 				break
 			case '*GSS':
 			case '*GSP':
 				//signal presence GSS Model E2A, E3A, GSP for Model M & N
+				if (params.length != 9) {
+					this.log('warn', 'Unexpected GSS/GSP length: ' + str)
+					return false
+				} else {
+					for (let i = 1; 1 < params.length; i++) {
+						let flags = processBitFlags(params[i])
+						if (flags == false) {
+							this.log('warn', 'Unexpected response: ' + flags)
+							return false
+						}
+						for (let y = 0; y < flags.length; y++) {
+							let channel = y + 1 + (i - 1) * 8
+							this.channelsPresence[channel] = flags[y]
+							this.log('debug', 'Channel ' + channel + ' Signal flag is ' + flags[y])
+						}
+					}
+					this.checkFeedbacks('channelPresence')
+				}
 				break
 			case '*GSI':
 				//input peaks
@@ -710,11 +747,13 @@ module.exports = {
 					this.log('warn', 'Unexpected GSI length: ' + params.length + ' response: ' + str)
 					return false
 				} else {
-					let inPeaks = []
+					let varObject = {}
 					for (let i = 1; i <= this.config.channels; i++) {
-						inPeaks[i] = this.calcGain(Number(params[i]))
-						this.log('debug', 'Channel: ' + i + ' Input Peaks: ' + inPeaks[i] + 'dB')
+						this.channelsInputPeak[i] = this.calcGain(Number(params[i]))
+						this.checkFeedbacks('channelInputPeak')
+						varObject['channelInputLevel' + i] = this.channelsInputPeak[i]
 					}
+					this.setVariableValues(varObject)
 				}
 				break
 			case '*GSO':
@@ -723,11 +762,13 @@ module.exports = {
 					this.log('warn', 'Unexpected GSO length: ' + params.length + ' response: ' + str)
 					return false
 				} else {
-					let outPeaks = []
+					let varObject = {}
 					for (let i = 1; i <= this.config.channels; i++) {
-						outPeaks[i] = this.calcGain(Number(params[i]))
-						this.log('debug', 'Channel: ' + i + ' Output Peaks: ' + outPeaks[i] + 'dB')
+						this.channelsOutputPeak[i] = this.calcGain(Number(params[i]))
+						this.checkFeedbacks('channelOutputPeak')
+						varObject['channelOutputLevel' + i] = this.channelsOutputPeak[i]
 					}
+					this.setVariableValues(varObject)
 				}
 				break
 			case '*GSM':
@@ -736,11 +777,13 @@ module.exports = {
 					this.log('warn', 'Unexpected GSM length: ' + params.length + ' response: ' + str)
 					return false
 				} else {
-					let musicPeaks = []
+					let varObject = {}
 					for (let i = 1; i <= GroupCount; i++) {
-						musicPeaks[i] = this.calcGain(Number(params[i]))
-						this.log('debug', 'Group: ' + i + ' Music Peaks: ' + musicPeaks[i] + 'dB')
+						this.groupMusicPeak[i] = this.calcGain(Number(params[i]))
+						this.checkFeedbacks('groupMusicPeak')
+						varObject['groupMSTgain' + i] = this.groupMusicPeak[i]
 					}
+					this.setVariableValues(varObject)
 				}
 				break
 			case '*GSN':
@@ -749,11 +792,13 @@ module.exports = {
 					this.log('warn', 'Unexpected GSN length: ' + params.length + ' response: ' + str)
 					return false
 				} else {
-					let nomGainlimits = []
+					let varObject = {}
 					for (let i = 1; i <= GroupCount; i++) {
-						nomGainlimits[i] = this.calcGain(Number(params[i]))
-						this.log('debug', 'Group: ' + i + ' NOM Peaks: ' + nomGainlimits[i] + 'dB')
+						this.groupNOMpeak[i] = this.calcGain(Number(params[i]))
+						this.checkFeedbacks('groupNOMgain')
+						varObject['groupNOMpeak' + i] = this.groupNOMpeak[i]
 					}
+					this.setVariableValues(varObject)
 				}
 				break
 			case '*GSX':
@@ -762,11 +807,13 @@ module.exports = {
 					this.log('warn', 'Unexpected GSX length: ' + params.length + ' response: ' + str)
 					return false
 				} else {
-					let matrixOutputPeaks = []
+					let varObject = {}
 					for (let i = 1; i <= MatrixCount; i++) {
-						matrixOutputPeaks[i] = this.calcGain(Number(params[i]))
-						this.log('debug', 'Group: ' + i + 'Matrix Output Peaks: ' + matrixOutputPeaks[i] + 'dB')
+						this.matrixOutputPeak[i] = this.calcGain(Number(params[i]))
+						this.checkFeedbacks('matrixLevel')
+						varObject['matrixOutLevel' + i] = this.matrixOutputPeak[i]
 					}
+					this.setVariableValues(varObject)
 				}
 				break
 			default:

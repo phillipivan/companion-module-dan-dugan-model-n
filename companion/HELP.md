@@ -66,9 +66,20 @@ Enter the IP address of the control port of the Automixer. The unit will accept 
 ## Varibles
 - **Channel - Name** String
 - **Channel - Weight** Number (dB)
+- **Channel - Input Level** Number (dB)
+- **Channel - Output Level** Number (dB)
+- **Channel - Automix Gain Reduction** Number (dB)
+
 - **Group - Automix Depth**  Number (dB)
 - **Group - Music System Threshold**  Number (dB)
+- **Group - Music System Gain Reduction**  Number (dB)
 - **Group - NOM Gain Limit** Number
+- **Group - NOM Gain Reduction** Number(dB)
+
+- **Matrix - Fader** Number(dB)
+- **Matrix - Output Level** Number(dB)
+- **Matrix - Crosspoint** Number(dB)
+
 - **Scene - Active** Name, Index, Has Changed
 - **System - All** All system queries returned to varibles. All queried once on connect.
 
@@ -82,14 +93,20 @@ All feedbacks are boolean.
 - **Channel - NOM Mode**
 - **Channel - Override**
 - **Channel - Preset**
+- **Channel - Input Level**
+- **Channel - Output Level**
+- **Channel - Automix Gain Reduction**
 
 - **Group - Last Hold**
 - **Group - Mute**
 - **Group - Override**
 - **Group - Preset**
+- **Group - Music System Gain Reducction**
+- **Group - NOM Gain Limit**
 
 - **Matrix - Bus Mute**
 - **Matrix - Bus Polarity**
+- **Matrix - Output Level**
 
 - **Scene - Has Changed** Goes true when any parameter is changed from the saved state of the recalled scene
 

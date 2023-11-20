@@ -18,7 +18,7 @@ const {
 	msgDelay,
 } = require('./consts.js')
 
-class DUGAN_MODEL_N extends InstanceBase {
+class DUGAN_AUTOMIXER extends InstanceBase {
 	constructor(internal) {
 		super(internal)
 		Object.assign(this, { ...config, ...util, ...tcp, ...processCmd })
@@ -34,6 +34,7 @@ class DUGAN_MODEL_N extends InstanceBase {
 		this.updateFeedbacks() // export feedbacks
 		this.updateVariableDefinitions() // export variable definitions
 		this.setVariableValues(variableDefaults)
+		this.setInterativeVariables()
 		this.initTCP()
 		this.cmdTimer = setTimeout(() => {
 			this.processCmdQueue()
@@ -52,6 +53,32 @@ class DUGAN_MODEL_N extends InstanceBase {
 		} else {
 			this.updateStatus(InstanceStatus.Disconnected)
 		}
+	}
+
+	setInterativeVariables() {
+		let varList = []
+		for (let i = 1; i <= MaxChannelCount; i++) {
+			varList['channelName' + i] = 'Channel ' + i
+			varList['channelWeight' + i] = 0
+			varList['channelAmixGain' + i] = 0
+			varList['channelInputLevel' + i] = -127.5
+			varList['channelOutputLevel' + i] = -127.5
+		}
+		for (let i = 1; i <= MatrixCount; i++) {
+			varList['matrixOutFader' + i] = 0
+			varList['matrixOutLevel' + i] = -127.5
+			for (let x = 1; x <= MatrixSize; x++) {
+				varList['matrix' + i + 'Xpoint' + x] = -96.5
+			}
+		}
+		for (let i = 1; i <= GroupCount; i++) {
+			varList['groupNOM' + i] = 1
+			varList['groupNOMpeak' + i] = -127.5
+			varList['groupAD' + i] = -15
+			varList['groupMST' + i] = -15
+			varList['groupMSTgain' + i] = -127.5
+		}
+		this.setVariableValues(varList)
 	}
 
 	initVariables() {
@@ -116,6 +143,7 @@ class DUGAN_MODEL_N extends InstanceBase {
 		this.matrixMute = []
 		this.matrixPolarity = []
 		this.matrixXpoint = []
+		this.matrixOutputPeak = []
 		for (let i = 1; i <= this.matrixCount; i++) {
 			this.matrixNames.push({ id: i, label: 'Matrix Bus ' + i })
 		}
@@ -124,6 +152,7 @@ class DUGAN_MODEL_N extends InstanceBase {
 			this.matrixMute[i] = 0
 			this.matrixPolarity[i] = 0
 			this.matrixXpoint[i] = []
+			this.matrixOutputPeak[i] = -127.5
 			for (let j = 0; j <= MatrixSize; j++) {
 				this.matrixXpoint[i][j] = -96.5
 			}
@@ -138,6 +167,8 @@ class DUGAN_MODEL_N extends InstanceBase {
 		this.groupPreset = []
 		this.groupOverride = []
 		this.groupLastHold = []
+		this.groupNOMpeak = []
+		this.groupMusicPeak = []
 		for (let i = 0; i <= this.groupCount; i++) {
 			this.groupAutomixDepth[i] = -15
 			this.groupMusicThreshold[i] = -10
@@ -146,6 +177,8 @@ class DUGAN_MODEL_N extends InstanceBase {
 			this.groupPreset[i] = 0
 			this.groupOverride[i] = 0
 			this.groupLastHold[i] = 0
+			this.groupNOMpeak[i] = 0
+			this.groupMusicPeak[i] = 0
 		}
 		this.channelsMode = []
 		this.channelsPreset = []
@@ -156,6 +189,11 @@ class DUGAN_MODEL_N extends InstanceBase {
 		this.channelsMusic = []
 		this.channelsName = []
 		this.channelsGroupAssign = []
+		this.channelsAmixGain = []
+		this.channelsPresence = []
+		this.channelsClip = []
+		this.channelsInputPeak = []
+		this.channelsOutputPeak = []
 		for (let i = 0; i <= this.config.channels; i++) {
 			this.channelsMode[i] = 1
 			this.channelsPreset[i] = 1
@@ -166,6 +204,11 @@ class DUGAN_MODEL_N extends InstanceBase {
 			this.channelsMusic[i] = 0
 			this.channelsName[i] = 'Channel ' + i
 			this.channelsGroupAssign[i] = 1
+			this.channelsAmixGain[i] = -127.5
+			this.channelsPresence[i] = false
+			this.channelsClip[i] = false
+			this.channelsInputPeak[i] = -127.5
+			this.channelsOutputPeak[i] = -127.5
 		}
 	}
 
@@ -182,4 +225,4 @@ class DUGAN_MODEL_N extends InstanceBase {
 	}
 }
 
-runEntrypoint(DUGAN_MODEL_N, UpgradeScripts)
+runEntrypoint(DUGAN_AUTOMIXER, UpgradeScripts)

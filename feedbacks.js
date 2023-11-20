@@ -1,4 +1,4 @@
-const { combineRgb } = require('@companion-module/base')
+const { combineRgb, Regex } = require('@companion-module/base')
 
 module.exports = async function (self) {
 	self.setFeedbackDefinitions({
@@ -13,6 +13,58 @@ module.exports = async function (self) {
 			options: [],
 			callback: (_feedback) => {
 				if (self.sceneChanged == 1) {
+					return true
+				} else {
+					return false
+				}
+			},
+		},
+		matrixLevel: {
+			name: 'Matrix Output Level',
+			type: 'boolean',
+			label: 'Matrix Output Level',
+			defaultStyle: {
+				bgcolor: combineRgb(255, 0, 0),
+				color: combineRgb(0, 0, 0),
+			},
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Matrix',
+					id: 'matrix',
+					default: 1,
+					choices: self.matrixNames,
+				},
+				{
+					type: 'number',
+					label: 'Less than or equal to',
+					id: 'lessThan',
+					default: 0,
+					max: 0,
+					min: -128,
+					range: true,
+					step: 0.1,
+					required: true,
+					regex: Regex.NUMBER,
+				},
+				{
+					type: 'number',
+					label: 'Greater than or equal to',
+					id: 'greaterThan',
+					default: -12,
+					max: 0,
+					min: -128,
+					range: true,
+					step: 0.1,
+					required: true,
+					regex: Regex.NUMBER,
+				},
+			],
+			callback: ({ options }) => {
+				if (
+					self.matrixOutputPeak[options.matrix] <= options.lessThan &&
+					self.matrixOutputPeak[options.matrix] >= options.greaterThan
+				) {
 					return true
 				} else {
 					return false
@@ -273,6 +325,212 @@ module.exports = async function (self) {
 				}
 			},
 		},
+		channelClip: {
+			name: 'Channel Clip Flag',
+			type: 'boolean',
+			label: 'Channel Clip Flag',
+			defaultStyle: {
+				bgcolor: combineRgb(255, 0, 0),
+				color: combineRgb(0, 0, 0),
+			},
+			options: [
+				{
+					type: 'dropdown',
+					label: 'channel',
+					id: 'channel',
+					default: 1,
+					choices: self.channelNames,
+				},
+			],
+			callback: ({ options }) => {
+				if (self.channelsClip[options.channel]) {
+					return true
+				} else {
+					return false
+				}
+			},
+		},
+		channelPresence: {
+			name: 'Channel Signal Presence Flag',
+			type: 'boolean',
+			label: 'Channel Signal Presence Flag',
+			defaultStyle: {
+				bgcolor: combineRgb(255, 0, 0),
+				color: combineRgb(0, 0, 0),
+			},
+			options: [
+				{
+					type: 'dropdown',
+					label: 'channel',
+					id: 'channel',
+					default: 1,
+					choices: self.channelNames,
+				},
+			],
+			callback: ({ options }) => {
+				if (self.channelsClip[options.channel]) {
+					return true
+				} else {
+					return false
+				}
+			},
+		},
+		channelInputPeak: {
+			name: 'Channel Input Peak Meter',
+			type: 'boolean',
+			label: 'Channel Input Peak Meter',
+			defaultStyle: {
+				bgcolor: combineRgb(255, 0, 0),
+				color: combineRgb(0, 0, 0),
+			},
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Channel',
+					id: 'channel',
+					default: 1,
+					choices: self.channelNames,
+				},
+				{
+					type: 'number',
+					label: 'Less than or equal to',
+					id: 'lessThan',
+					default: 0,
+					max: 0,
+					min: -128,
+					range: true,
+					step: 0.1,
+					required: true,
+					regex: Regex.NUMBER,
+				},
+				{
+					type: 'number',
+					label: 'Greater than or equal to',
+					id: 'greaterThan',
+					default: -12,
+					max: 0,
+					min: -128,
+					range: true,
+					step: 0.1,
+					required: true,
+					regex: Regex.NUMBER,
+				},
+			],
+			callback: ({ options }) => {
+				if (
+					self.channelsInputPeak[options.channel] <= options.lessThan &&
+					self.channelsInputPeak[options.channel] >= options.greaterThan
+				) {
+					return true
+				} else {
+					return false
+				}
+			},
+		},
+		channelOutputPeak: {
+			name: 'Channel Output Peak Meter',
+			type: 'boolean',
+			label: 'Channel Output Peak Meter',
+			defaultStyle: {
+				bgcolor: combineRgb(255, 0, 0),
+				color: combineRgb(0, 0, 0),
+			},
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Channel',
+					id: 'channel',
+					default: 1,
+					choices: self.channelNames,
+				},
+				{
+					type: 'number',
+					label: 'Less than or equal to',
+					id: 'lessThan',
+					default: 0,
+					max: 0,
+					min: -128,
+					range: true,
+					step: 0.1,
+					required: true,
+					regex: Regex.NUMBER,
+				},
+				{
+					type: 'number',
+					label: 'Greater than or equal to',
+					id: 'greaterThan',
+					default: -12,
+					max: 0,
+					min: -128,
+					range: true,
+					step: 0.1,
+					required: true,
+					regex: Regex.NUMBER,
+				},
+			],
+			callback: ({ options }) => {
+				if (
+					self.channelsOutputPeak[options.channel] <= options.lessThan &&
+					self.channelsOutputPeak[options.channel] >= options.greaterThan
+				) {
+					return true
+				} else {
+					return false
+				}
+			},
+		},
+		channelAmixGain: {
+			name: 'Channel Automix Gain Reduction',
+			type: 'boolean',
+			label: 'Channel Automix Gain Reduction',
+			defaultStyle: {
+				bgcolor: combineRgb(255, 0, 0),
+				color: combineRgb(0, 0, 0),
+			},
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Channel',
+					id: 'channel',
+					default: 1,
+					choices: self.channelNames,
+				},
+				{
+					type: 'number',
+					label: 'Less than or equal to',
+					id: 'lessThan',
+					default: 0,
+					max: 0,
+					min: -128,
+					range: true,
+					step: 0.1,
+					required: true,
+					regex: Regex.NUMBER,
+				},
+				{
+					type: 'number',
+					label: 'Greater than or equal to',
+					id: 'greaterThan',
+					default: -12,
+					max: 0,
+					min: -128,
+					range: true,
+					step: 0.1,
+					required: true,
+					regex: Regex.NUMBER,
+				},
+			],
+			callback: ({ options }) => {
+				if (
+					self.channelsAmixGain[options.channel] <= options.lessThan &&
+					self.channelsAmixGain[options.channel] >= options.greaterThan
+				) {
+					return true
+				} else {
+					return false
+				}
+			},
+		},
 		groupMute: {
 			name: 'Group Mute',
 			type: 'boolean',
@@ -367,6 +625,110 @@ module.exports = async function (self) {
 			],
 			callback: ({ options }) => {
 				if (self.groupLastHold[options.group] != 0) {
+					return true
+				} else {
+					return false
+				}
+			},
+		},
+		groupNOMgain: {
+			name: 'Group NOM Gain reduction',
+			type: 'boolean',
+			label: 'Group NOM Gain reduction',
+			defaultStyle: {
+				bgcolor: combineRgb(255, 0, 0),
+				color: combineRgb(0, 0, 0),
+			},
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Group',
+					id: 'group',
+					default: 1,
+					choices: self.groupNames,
+				},
+				{
+					type: 'number',
+					label: 'Less than or equal to',
+					id: 'lessThan',
+					default: 0,
+					max: 0,
+					min: -128,
+					range: true,
+					step: 0.1,
+					required: true,
+					regex: Regex.NUMBER,
+				},
+				{
+					type: 'number',
+					label: 'Greater than or equal to',
+					id: 'greaterThan',
+					default: -12,
+					max: 0,
+					min: -128,
+					range: true,
+					step: 0.1,
+					required: true,
+					regex: Regex.NUMBER,
+				},
+			],
+			callback: ({ options }) => {
+				if (
+					self.groupNOMpeak[options.group] <= options.lessThan &&
+					self.groupNOMpeak[options.group] >= options.greaterThan
+				) {
+					return true
+				} else {
+					return false
+				}
+			},
+		},
+		groupMusicPeak: {
+			name: 'Group Music Gain reduction',
+			type: 'boolean',
+			label: 'Group Music Gain reduction',
+			defaultStyle: {
+				bgcolor: combineRgb(255, 0, 0),
+				color: combineRgb(0, 0, 0),
+			},
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Group',
+					id: 'group',
+					default: 1,
+					choices: self.groupNames,
+				},
+				{
+					type: 'number',
+					label: 'Less than or equal to',
+					id: 'lessThan',
+					default: 0,
+					max: 0,
+					min: -128,
+					range: true,
+					step: 0.1,
+					required: true,
+					regex: Regex.NUMBER,
+				},
+				{
+					type: 'number',
+					label: 'Greater than or equal to',
+					id: 'greaterThan',
+					default: -12,
+					max: 0,
+					min: -128,
+					range: true,
+					step: 0.1,
+					required: true,
+					regex: Regex.NUMBER,
+				},
+			],
+			callback: ({ options }) => {
+				if (
+					self.groupMusicPeak[options.group] <= options.lessThan &&
+					self.groupMusicPeak[options.group] >= options.greaterThan
+				) {
 					return true
 				} else {
 					return false
