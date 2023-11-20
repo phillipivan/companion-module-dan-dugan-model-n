@@ -9,6 +9,7 @@ const {
 	adatMirror,
 	clockSources,
 	MatrixCount,
+	MatrixSize,
 	GroupCount,
 	grpAval,
 	grpBval,
@@ -19,22 +20,53 @@ const {
 const { processBitFlags } = require('./util.js')
 
 module.exports = {
-	async processBuffer(buffer) {
-		this.log('debug', 'processBuffer: ' + buffer)
-		let strRep = buffer.toString()
+	async processBuffer(chunk) {
+		this.log('debug', 'processBuffer: ' + chunk)
+		let strRep = chunk.toString()
 		let cmd = await this.regexCmd(strRep)
+		let buffer = new ArrayBuffer(chunk.length)
+		let vals = new Uint8Array(buffer)
+		let varObject = []
+		for (let i = 0; i < chunk.length; i++) {
+			vals[i] = chunk[i]
+		}
 		switch (cmd) {
 			case '*GP,':
 				//get channelparams
 				//binary response
+				this.log('debug', '*GP response detected. Buffer length: ' + vals.length)
+				for (let i = 0; i < vals.length; i++) {
+					this.log('debug', 'Index: ' + i + ' value: ' + vals[i])
+				}
 				break
 			case '*GM,':
 				//get matrix params
 				//binary response
+				if (vals.length != 902) {
+					this.log('warn', '*GM response detected. Expected length 902 bytes. Buffer length: ' + vals.length)
+				}
+				//for (let i = 0; i < vals.length; i++) {
+				//	this.log('debug', 'Index: ' + i + ' value: ' + vals[i])
+				//}
+				for (let i = 1; i <= MatrixCount; i++) {
+					this.matrixGain[i] = this.calcXpointGain(vals[i + 879])
+					varObject['matrixOutFader' + vals[1]] = this.matrixGain[i]
+					for (let x = 1; x <= MatrixSize; x++) {
+						this.matrixXpoint[i][x] = this.calcXpointGain(vals[x + 3 + (i - 1) * MatrixSize])
+						varObject['matrix' + i + 'Xpoint' + x] = this.matrixXpoint[i][x]
+					}
+					this.setVariableValues(varObject)
+				}
 				break
+			// unknown data in indexes 868 - 891, 892 - 901
+			// perhaps 886 - 891 are matrix output patch
 			case '*GS,':
 				//channel status
 				//binary response
+				this.log('debug', '*GS response detected. Buffer length: ' + vals.length)
+				//for (let i = 0; i < vals.length; i++) {
+				//	this.log('debug', 'Index: ' + i + ' value: ' + vals[i])
+				//}
 				break
 			default:
 				await this.processCmds(strRep)
@@ -705,7 +737,7 @@ module.exports = {
 					return false
 				} else {
 					for (let i = 1; 1 < params.length; i++) {
-						let flags = processBitFlags(params[i])
+						let flags = processBitFlags(parseInt(params[i], 16))
 						if (flags == false) {
 							this.log('warn', 'Unexpected response: ' + flags)
 							return false
@@ -727,7 +759,7 @@ module.exports = {
 					return false
 				} else {
 					for (let i = 1; 1 < params.length; i++) {
-						let flags = processBitFlags(params[i])
+						let flags = processBitFlags(parseInt(params[i], 16))
 						if (flags == false) {
 							this.log('warn', 'Unexpected response: ' + flags)
 							return false

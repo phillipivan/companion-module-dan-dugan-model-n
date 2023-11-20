@@ -7,6 +7,7 @@ const {
 	toggle,
 	noChange,
 	MatrixCount,
+	MatrixSize,
 	GroupCount,
 	MaxChannelCount,
 } = require('./consts.js')
@@ -1348,7 +1349,7 @@ module.exports = function (self) {
 				}
 				let output = await self.parseVariablesInString(options.output)
 				output = Math.floor(output)
-				if (isNaN(output) || output < 0 || output > MaxChannelCount) {
+				if (isNaN(output) || output < 0 || output > MaxChannelCount + 16) {
 					self.log('warn', 'an invalid varible has been passed: ' + matrix)
 					return false
 				}
@@ -1414,7 +1415,7 @@ module.exports = function (self) {
 				}
 				let chan = await self.parseVariablesInString(options.channel)
 				chan = Math.floor(chan)
-				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
+				if (isNaN(chan) || chan < 1 || chan > MatrixSize) {
 					self.log('warn', 'an invalid varible has been passed: ' + chan)
 					return false
 				}
@@ -1473,7 +1474,7 @@ module.exports = function (self) {
 				}
 				let chan = await self.parseVariablesInString(options.channel)
 				chan = Math.floor(chan)
-				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
+				if (isNaN(chan) || chan < 1 || chan > MatrixSize) {
 					self.log('warn', 'an invalid varible has been passed: ' + chan)
 					return false
 				}

@@ -1,5 +1,5 @@
 const { Regex } = require('@companion-module/base')
-const { duganModels, duganChannels, automixChannels, EndSession } = require('./consts.js')
+const { duganModels, duganChannels, automixChannels, EndSession, paramSep } = require('./consts.js')
 module.exports = {
 	async configUpdated(config) {
 		let oldConfig = this.config
@@ -46,6 +46,8 @@ module.exports = {
 				this.updateVariableDefinitions() // export variable definitions
 				//this.setVariableValues(variableDefaults)
 			}
+			this.config.subscription = this.config.subscription == undefined ? 1 : this.config.subscription
+			this.addCmdtoQueue('SU' + paramSep + this.config.subscription)
 		}
 	},
 	// Return config fields for web config
@@ -119,6 +121,18 @@ module.exports = {
 					{ id: 3, label: 'Very Slow' },
 				],
 				default: 0,
+				width: 4,
+			},
+			{
+				type: 'dropdown',
+				id: 'subscription',
+				label: 'Unsocilicted Message Subscription',
+				choices: [
+					{ id: 0, label: 'Off' },
+					{ id: 1, label: 'On' },
+					{ id: 2, label: 'On with Metering' },
+				],
+				default: 1,
 				width: 4,
 			},
 		]

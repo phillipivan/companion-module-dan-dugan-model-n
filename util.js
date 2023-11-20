@@ -32,4 +32,33 @@ module.exports = {
 		let gain = 0 - val / 2 //common gain algo for many dugan functions
 		return gain
 	},
+	calcXpointGain(val) {
+		if (isNaN(val)) {
+			this.log('warn', 'calcXpointGain has been passed a Nan: ' + val)
+			return false
+		}
+		if (val < 0 || val > 255) {
+			this.log('warn', 'calcXpointGain has been passed an out of range number: ' + val)
+			return false
+		}
+		let gain = (val - 192) / 2 //common gain algo for dugan matrix crosspoints
+		return gain
+	},
+	processBitFlags(val) {
+		if (isNaN(val)) {
+			this.log('warn', 'processBitFlags has been passed a Nan: ' + val)
+			return false
+		}
+		if (val < 0 || val > 255) {
+			this.log('warn', 'processBitFlags has been passed an out of range number: ' + val)
+			return false
+		}
+		let flags = []
+		let operators = [1, 2, 4, 8, 16, 32, 64, 128]
+		for (let i = 0; i < operators.length; i++) {
+			let x = val & operators[i]
+			flags[i] = x == operators[i] ? true : false
+		}
+		return flags
+	},
 }

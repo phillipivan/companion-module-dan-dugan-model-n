@@ -54,6 +54,8 @@ module.exports = {
 		cmdOnConnect.forEach((element) => {
 			this.addCmdtoQueue(element)
 		})
+		this.config.subscription = this.config.subscription == undefined ? 1 : this.config.subscription
+		this.addCmdtoQueue('SU' + paramSep + this.config.subscription)
 		this.getNames()
 		return true
 	},
@@ -96,8 +98,6 @@ module.exports = {
 				this.queryOnConnect()
 			})
 			this.socket.on('data', (chunk) => {
-				console.log('Data received')
-				console.log(chunk)
 				this.processBuffer(chunk)
 			})
 		} else {
