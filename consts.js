@@ -38,6 +38,7 @@ export const errSyntax1 = 'Error: syntax'
 export const errSyntax2 = 'ERROR: syntax'
 export const errRange = 'Error: Channel number out of range'
 export const welcomeMessage = 'Welcome to Dugan Model N Server.'
+export const duganPrompt = ['Dugan M >', 'Dugan N >']
 export const sampleRate = ['48kHz', '96kHz']
 export const adatMirror = ['0 Channels', '8 Channels', '16 Channels']
 export const clockSources = ['Dante/Madi', 'Word Clock', 'Internal', 'ADAT']

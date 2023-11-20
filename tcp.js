@@ -58,6 +58,9 @@ module.exports = {
 		this.addCmdtoQueue('SU' + paramSep + this.config.subscription)
 		this.getNames()
 		this.subscribeFeedbacks()
+		if (this.config.model == 11 || this.config.model == 12) {
+			this.addCmdtoQueue('GM') //only query matrix params if connected to model M or N
+		}
 		return true
 	},
 
