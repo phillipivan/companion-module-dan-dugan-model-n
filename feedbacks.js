@@ -880,8 +880,8 @@ module.exports = async function (self) {
 			options: [
 				{
 					type: 'dropdown',
-					label: 'Group',
-					id: 'group',
+					label: 'Matrix',
+					id: 'matrix',
 					default: 1,
 					choices: self.matrixNames,
 				},
