@@ -102,11 +102,13 @@ All feedbacks are boolean. Using any feedbacks will force the subscription level
 - **Group - Override**
 - **Group - Preset**
 - **Group - Music System Gain Reducction**
+- **Group - Music System Input**
 - **Group - NOM Gain Limit**
 
 - **Matrix - Bus Mute**
 - **Matrix - Bus Polarity**
 - **Matrix - Output Level**
+- **Matrix - Output**
 
 - **Scene - Has Changed** Goes true when any parameter is changed from the saved state of the recalled scene
 
