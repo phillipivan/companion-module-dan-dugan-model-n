@@ -1,4 +1,5 @@
 const { combineRgb, Regex } = require('@companion-module/base')
+const { paramSep } = require('./consts')
 
 module.exports = async function (self) {
 	self.setFeedbackDefinitions({
@@ -11,12 +12,15 @@ module.exports = async function (self) {
 				color: combineRgb(0, 0, 0),
 			},
 			options: [],
-			callback: (_feedback) => {
+			callback: () => {
 				if (self.sceneChanged == 1) {
 					return true
 				} else {
 					return false
 				}
+			},
+			subscribe: () => {
+				self.addCmdtoQueue('SNA')
 			},
 		},
 		matrixLevel: {
@@ -70,6 +74,9 @@ module.exports = async function (self) {
 					return false
 				}
 			},
+			subscribe: () => {
+				self.addCmdtoQueue('GSX')
+			},
 		},
 		matrixMuted: {
 			name: 'Matrix Output Mute',
@@ -94,6 +101,9 @@ module.exports = async function (self) {
 				} else {
 					return false
 				}
+			},
+			subscribe: ({ options }) => {
+				self.addCmdtoQueue('MXM' + paramSep + options.matrix)
 			},
 		},
 		matrixPolarity: {
@@ -120,6 +130,9 @@ module.exports = async function (self) {
 					return false
 				}
 			},
+			subscribe: ({ options }) => {
+				self.addCmdtoQueue('MXP' + paramSep + options.matrix)
+			},
 		},
 		channelMode: {
 			name: 'Channel Mode',
@@ -132,7 +145,7 @@ module.exports = async function (self) {
 			options: [
 				{
 					type: 'dropdown',
-					label: 'channel',
+					label: 'Channel',
 					id: 'channel',
 					default: 1,
 					choices: self.channelNames,
@@ -155,6 +168,9 @@ module.exports = async function (self) {
 				} else {
 					return false
 				}
+			},
+			subscribe: ({ options }) => {
+				self.addCmdtoQueue('CM' + paramSep + options.channel)
 			},
 		},
 		channelPreset: {
@@ -192,6 +208,9 @@ module.exports = async function (self) {
 					return false
 				}
 			},
+			subscribe: ({ options }) => {
+				self.addCmdtoQueue('CP' + paramSep + options.channel)
+			},
 		},
 		channelBypass: {
 			name: 'Channel Bypass',
@@ -204,7 +223,7 @@ module.exports = async function (self) {
 			options: [
 				{
 					type: 'dropdown',
-					label: 'channel',
+					label: 'Channel',
 					id: 'channel',
 					default: 1,
 					choices: self.channelNames,
@@ -216,6 +235,9 @@ module.exports = async function (self) {
 				} else {
 					return false
 				}
+			},
+			subscribe: ({ options }) => {
+				self.addCmdtoQueue('BP' + paramSep + options.channel)
 			},
 		},
 		channelOverride: {
@@ -229,7 +251,7 @@ module.exports = async function (self) {
 			options: [
 				{
 					type: 'dropdown',
-					label: 'channel',
+					label: 'Channel',
 					id: 'channel',
 					default: 1,
 					choices: self.channelNames,
@@ -241,6 +263,9 @@ module.exports = async function (self) {
 				} else {
 					return false
 				}
+			},
+			subscribe: ({ options }) => {
+				self.addCmdtoQueue('CO' + paramSep + options.channel)
 			},
 		},
 		channelMusic: {
@@ -254,7 +279,7 @@ module.exports = async function (self) {
 			options: [
 				{
 					type: 'dropdown',
-					label: 'channel',
+					label: 'Channel',
 					id: 'channel',
 					default: 1,
 					choices: self.channelNames,
@@ -266,6 +291,9 @@ module.exports = async function (self) {
 				} else {
 					return false
 				}
+			},
+			subscribe: ({ options }) => {
+				self.addCmdtoQueue('MR' + paramSep + options.channel)
 			},
 		},
 		channelNOM: {
@@ -279,7 +307,7 @@ module.exports = async function (self) {
 			options: [
 				{
 					type: 'dropdown',
-					label: 'channel',
+					label: 'Channel',
 					id: 'channel',
 					default: 1,
 					choices: self.channelNames,
@@ -291,6 +319,9 @@ module.exports = async function (self) {
 				} else {
 					return false
 				}
+			},
+			subscribe: ({ options }) => {
+				self.addCmdtoQueue('NE' + paramSep + options.channel)
 			},
 		},
 		channelGroupAssign: {
@@ -304,7 +335,7 @@ module.exports = async function (self) {
 			options: [
 				{
 					type: 'dropdown',
-					label: 'channel',
+					label: 'Channel',
 					id: 'channel',
 					default: 1,
 					choices: self.channelNames,
@@ -324,6 +355,9 @@ module.exports = async function (self) {
 					return false
 				}
 			},
+			subscribe: ({ options }) => {
+				self.addCmdtoQueue('GA' + paramSep + options.channel)
+			},
 		},
 		channelClip: {
 			name: 'Channel Clip Flag',
@@ -336,7 +370,7 @@ module.exports = async function (self) {
 			options: [
 				{
 					type: 'dropdown',
-					label: 'channel',
+					label: 'Channel',
 					id: 'channel',
 					default: 1,
 					choices: self.channelNames,
@@ -348,6 +382,9 @@ module.exports = async function (self) {
 				} else {
 					return false
 				}
+			},
+			subscribe: () => {
+				self.addCmdtoQueue('GSC')
 			},
 		},
 		channelPresence: {
@@ -373,6 +410,9 @@ module.exports = async function (self) {
 				} else {
 					return false
 				}
+			},
+			subscribe: () => {
+				self.addCmdtoQueue('GSS')
 			},
 		},
 		channelInputPeak: {
@@ -426,6 +466,9 @@ module.exports = async function (self) {
 					return false
 				}
 			},
+			subscribe: () => {
+				self.addCmdtoQueue('GSI')
+			},
 		},
 		channelOutputPeak: {
 			name: 'Channel Output Peak Meter',
@@ -477,6 +520,9 @@ module.exports = async function (self) {
 				} else {
 					return false
 				}
+			},
+			subscribe: () => {
+				self.addCmdtoQueue('GSO')
 			},
 		},
 		channelAmixGain: {
@@ -530,6 +576,9 @@ module.exports = async function (self) {
 					return false
 				}
 			},
+			subscribe: () => {
+				self.addCmdtoQueue('GSA')
+			},
 		},
 		groupMute: {
 			name: 'Group Mute',
@@ -554,6 +603,9 @@ module.exports = async function (self) {
 				} else {
 					return false
 				}
+			},
+			subscribe: () => {
+				self.addCmdtoQueue('SM')
 			},
 		},
 		groupPreset: {
@@ -580,6 +632,9 @@ module.exports = async function (self) {
 					return false
 				}
 			},
+			subscribe: () => {
+				self.addCmdtoQueue('SP')
+			},
 		},
 		groupOverride: {
 			name: 'Group Override',
@@ -605,6 +660,9 @@ module.exports = async function (self) {
 					return false
 				}
 			},
+			subscribe: () => {
+				self.addCmdtoQueue('SO')
+			},
 		},
 		groupLastHold: {
 			name: 'Group Last Hold',
@@ -629,6 +687,9 @@ module.exports = async function (self) {
 				} else {
 					return false
 				}
+			},
+			subscribe: () => {
+				self.addCmdtoQueue('LH')
 			},
 		},
 		groupNOMgain: {
@@ -682,6 +743,9 @@ module.exports = async function (self) {
 					return false
 				}
 			},
+			subscribe: () => {
+				self.addCmdtoQueue('GSN')
+			},
 		},
 		groupMusicPeak: {
 			name: 'Group Music Gain reduction',
@@ -733,6 +797,9 @@ module.exports = async function (self) {
 				} else {
 					return false
 				}
+			},
+			subscribe: () => {
+				self.addCmdtoQueue('GSM')
 			},
 		},
 	})

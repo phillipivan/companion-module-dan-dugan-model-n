@@ -21,6 +21,7 @@ module.exports = {
 			this.updateFeedbacks() // export feedbacks
 			this.updateVariableDefinitions() // export variable definitions
 			//this.setVariableValues(variableDefaults)
+			this.subscribeFeedbacks()
 		}
 		if (oldConfig.host != this.config.host || oldConfig.port != this.config.port || oldConfig.udp != this.config.udp) {
 			//changed connection

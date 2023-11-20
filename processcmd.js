@@ -802,7 +802,7 @@ module.exports = {
 					this.log('warn', 'Unexpected GSC length: ' + str)
 					return false
 				} else {
-					for (let i = 1; 1 < params.length; i++) {
+					for (let i = 1; i < params.length; i++) {
 						let flags = processBitFlags(parseInt(params[i], 16))
 						if (flags == false) {
 							this.log('warn', 'Unexpected response: ' + flags)
@@ -824,7 +824,7 @@ module.exports = {
 					this.log('warn', 'Unexpected GSS/GSP length: ' + str)
 					return false
 				} else {
-					for (let i = 1; 1 < params.length; i++) {
+					for (let i = 1; i < params.length; i++) {
 						let flags = processBitFlags(parseInt(params[i], 16))
 						if (flags == false) {
 							this.log('warn', 'Unexpected response: ' + flags)

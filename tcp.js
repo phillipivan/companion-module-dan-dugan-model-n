@@ -57,6 +57,7 @@ module.exports = {
 		this.config.subscription = this.config.subscription == undefined ? 1 : this.config.subscription
 		this.addCmdtoQueue('SU' + paramSep + this.config.subscription)
 		this.getNames()
+		this.subscribeFeedbacks()
 		return true
 	},
 
