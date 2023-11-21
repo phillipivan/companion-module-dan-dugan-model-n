@@ -86,29 +86,31 @@ Enter the IP address of the control port of the Automixer. The unit will accept 
 ## Feedbacks
 All feedbacks are boolean. Using any feedbacks will force the subscription level to at least the minimum required.
 
+- **Channel - Automix Gain Reduction**
 - **Channel - Bypass**
+- **Channel - Clip**
 - **Channel - Group Assignment**
+- **Channel - Input Level**
 - **Channel - Mode**
 - **Channel - Music**
 - **Channel - NOM Mode**
+- **Channel - Output Level**
 - **Channel - Override**
 - **Channel - Preset**
-- **Channel - Input Level**
-- **Channel - Output Level**
-- **Channel - Automix Gain Reduction**
+- **Channel - Signal Presence**
 
 - **Group - Last Hold**
+- **Group - Music System Gain Reducction**
+- **Group - Music System Threshold Input**
 - **Group - Mute**
+- **Group - NOM Gain Limit**
 - **Group - Override**
 - **Group - Preset**
-- **Group - Music System Gain Reducction**
-- **Group - Music System Input**
-- **Group - NOM Gain Limit**
 
 - **Matrix - Bus Mute**
 - **Matrix - Bus Polarity**
 - **Matrix - Output Level**
-- **Matrix - Output**
+- **Matrix - Output Route**
 
 - **Scene - Has Changed** Goes true when any parameter is changed from the saved state of the recalled scene
 

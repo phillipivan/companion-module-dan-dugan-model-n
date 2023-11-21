@@ -371,9 +371,9 @@ module.exports = async function (self) {
 			},
 		},
 		channelClip: {
-			name: 'Channel Clip Flag',
+			name: 'Channel Clip',
 			type: 'boolean',
-			label: 'Channel Clip Flag',
+			label: 'Channel Clip',
 			defaultStyle: {
 				bgcolor: combineRgb(255, 0, 0),
 				color: combineRgb(0, 0, 0),
@@ -400,9 +400,9 @@ module.exports = async function (self) {
 			},
 		},
 		channelPresence: {
-			name: 'Channel Signal Presence Flag',
+			name: 'Channel Signal Presence',
 			type: 'boolean',
-			label: 'Channel Signal Presence Flag',
+			label: 'Channel Signal Presence',
 			defaultStyle: {
 				bgcolor: combineRgb(255, 0, 0),
 				color: combineRgb(0, 0, 0),
@@ -713,9 +713,9 @@ module.exports = async function (self) {
 			},
 		},
 		groupNOMgain: {
-			name: 'Group NOM Gain reduction',
+			name: 'Group NOM Gain Reduction',
 			type: 'boolean',
-			label: 'Group NOM Gain reduction',
+			label: 'Group NOM Gain Reduction',
 			defaultStyle: {
 				bgcolor: combineRgb(255, 0, 0),
 				color: combineRgb(0, 0, 0),
@@ -769,9 +769,9 @@ module.exports = async function (self) {
 			},
 		},
 		groupMusicPeak: {
-			name: 'Group Music Gain reduction',
+			name: 'Group Music System Gain Reduction',
 			type: 'boolean',
-			label: 'Group Music Gain reduction',
+			label: 'Group Music System Gain Reduction',
 			defaultStyle: {
 				bgcolor: combineRgb(255, 0, 0),
 				color: combineRgb(0, 0, 0),
@@ -825,9 +825,9 @@ module.exports = async function (self) {
 			},
 		},
 		groupMusicInput: {
-			name: 'Group Music Threshold Input',
+			name: 'Group Music System Threshold Input',
 			type: 'boolean',
-			label: 'Group Music Threshold Input',
+			label: 'Group Music System Threshold Input',
 			defaultStyle: {
 				bgcolor: combineRgb(255, 0, 0),
 				color: combineRgb(0, 0, 0),
