@@ -333,8 +333,8 @@ module.exports = function (self) {
 					step: 0.1,
 					required: true,
 					regex: Regex.NUMBER,
-					isVisible: ({ options }) => {
-						return !options.useVar
+					isVisible: (options) => {
+						return options.useVar === false
 					},
 				},
 				{
@@ -344,8 +344,8 @@ module.exports = function (self) {
 					default: '',
 					useVariables: true,
 					regex: Regex.SOMETHING,
-					isVisible: ({ options }) => {
-						return options.useVar
+					isVisible: (options) => {
+						return options.useVar === true
 					},
 				},
 				{
@@ -1087,6 +1087,12 @@ module.exports = function (self) {
 					tooltip: 'Varible must return an integer group number',
 				},
 				{
+					id: 'useVar',
+					type: 'checkbox',
+					label: 'Use Variable',
+					default: false,
+				},
+				{
 					id: 'depth',
 					type: 'number',
 					label: 'Depth',
@@ -1097,6 +1103,20 @@ module.exports = function (self) {
 					range: true,
 					step: 0.1,
 					regex: Regex.NUMBER,
+					isVisible: (options) => {
+						return options.useVar === false
+					},
+				},
+				{
+					id: 'depthVar',
+					type: 'textinput',
+					label: 'Depth - Variable',
+					default: '',
+					useVariables: true,
+					regex: Regex.SOMETHING,
+					isVisible: (options) => {
+						return options.useVar === true
+					},
 				},
 				{
 					id: 'query',
@@ -1109,15 +1129,27 @@ module.exports = function (self) {
 			callback: async ({ options }) => {
 				let cmd = 'ME' //AD commands also works
 				let group = await self.parseVariablesInString(options.group)
+				let depthVar = Number(await self.parseVariablesInString(options.depthVar))
+				depthVar = depthVar.toFixed(2)
+				let depth = 0
 				group = Math.floor(group)
 				if (isNaN(group) || group < 1 || group > GroupCount) {
 					self.log('warn', 'an invalid varible has been passed: ' + group)
 					return false
 				}
+				if (options.useVar) {
+					if (isNaN(depthVar)) {
+						return undefined
+					}
+					depth = depthVar > 0 ? 0 : depthVar
+					depth = depthVar < -100 ? -100 : depthVar
+				} else {
+					depth = options.depth
+				}
 				if (options.query) {
 					cmd += paramSep + group
 				} else {
-					cmd += paramSep + group + paramSep + options.depth
+					cmd += paramSep + group + paramSep + depth
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -1217,6 +1249,12 @@ module.exports = function (self) {
 					tooltip: 'Varible must return an integer group number',
 				},
 				{
+					id: 'useVar',
+					type: 'checkbox',
+					label: 'Use Variable',
+					default: false,
+				},
+				{
 					id: 'nomgain',
 					type: 'number',
 					label: 'NOM Gain Limit',
@@ -1227,6 +1265,20 @@ module.exports = function (self) {
 					range: true,
 					step: 0.1,
 					regex: Regex.NUMBER,
+					isVisible: (options) => {
+						return options.useVar === false
+					},
+				},
+				{
+					id: 'nomVar',
+					type: 'textinput',
+					label: 'NOM Gain Limit - Variable',
+					default: '',
+					useVariables: true,
+					regex: Regex.SOMETHING,
+					isVisible: (options) => {
+						return options.useVar === true
+					},
 				},
 				{
 					id: 'query',
@@ -1238,16 +1290,28 @@ module.exports = function (self) {
 			],
 			callback: async ({ options }) => {
 				let cmd = 'NL'
+				let nomVar = Number(await self.parseVariablesInString(options.nomVar))
+				nomVar = nomVar.toFixed(2)
+				let nom = 0
 				let group = await self.parseVariablesInString(options.group)
 				group = Math.floor(group)
 				if (isNaN(group) || group < 1 || group > GroupCount) {
 					self.log('warn', 'an invalid varible has been passed: ' + group)
 					return false
 				}
+				if (options.useVar) {
+					if (isNaN(nomVar)) {
+						return undefined
+					}
+					nom = nomVar > 10 ? 10 : nomVar
+					nom = nomVar < 1 ? 1 : nomVar
+				} else {
+					nom = options.nomgain
+				}
 				if (options.query) {
 					cmd += paramSep + group
 				} else {
-					cmd += paramSep + group + paramSep + options.nomgain
+					cmd += paramSep + group + paramSep + nom
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -1347,16 +1411,36 @@ module.exports = function (self) {
 					tooltip: 'Varible must return an integer group number',
 				},
 				{
+					id: 'useVar',
+					type: 'checkbox',
+					label: 'Use Variable',
+					default: false,
+				},
+				{
 					id: 'threshold',
 					type: 'number',
 					label: 'Music System Threshold',
 					default: -10,
-					min: -150,
-					max: 20,
+					min: -100,
+					max: 0,
 					required: true,
 					range: true,
 					step: 0.1,
 					regex: Regex.NUMBER,
+					isVisible: (options) => {
+						return options.useVar === false
+					},
+				},
+				{
+					id: 'thresholdVar',
+					type: 'textinput',
+					label: 'Music System Threshold - Variable',
+					default: '',
+					useVariables: true,
+					regex: Regex.SOMETHING,
+					isVisible: (options) => {
+						return options.useVar === true
+					},
 				},
 				{
 					id: 'query',
@@ -1368,16 +1452,28 @@ module.exports = function (self) {
 			],
 			callback: async ({ options }) => {
 				let cmd = 'MT'
+				let threshVar = Number(await self.parseVariablesInString(options.thresholdVar))
+				threshVar = threshVar.toFixed(2)
+				let threshold = 0
 				let group = await self.parseVariablesInString(options.group)
 				group = Math.floor(group)
 				if (isNaN(group) || group < 1 || group > GroupCount) {
 					self.log('warn', 'an invalid varible has been passed: ' + group)
 					return false
 				}
+				if (options.useVar) {
+					if (isNaN(threshVar)) {
+						return undefined
+					}
+					threshold = threshVar > 0 ? 0 : threshVar
+					threshold = threshVar < -100 ? -100 : threshVar
+				} else {
+					threshold = options.threshold
+				}
 				if (options.query) {
 					cmd += paramSep + group
 				} else {
-					cmd += paramSep + group + paramSep + options.threshold
+					cmd += paramSep + group + paramSep + threshold
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -1702,6 +1798,12 @@ module.exports = function (self) {
 					tooltip: 'Varible must return an integer matrix number',
 				},
 				{
+					id: 'useVar',
+					type: 'checkbox',
+					label: 'Use Variable',
+					default: false,
+				},
+				{
 					id: 'gain',
 					type: 'number',
 					label: 'Gain',
@@ -1712,6 +1814,20 @@ module.exports = function (self) {
 					range: true,
 					step: 0.5,
 					regex: Regex.NUMBER,
+					isVisible: (options) => {
+						return options.useVar === false
+					},
+				},
+				{
+					id: 'gainVar',
+					type: 'textinput',
+					label: 'Gain - Variable',
+					default: '',
+					useVariables: true,
+					regex: Regex.SOMETHING,
+					isVisible: (options) => {
+						return options.useVar === true
+					},
 				},
 				{
 					id: 'query',
@@ -1723,16 +1839,28 @@ module.exports = function (self) {
 			],
 			callback: async ({ options }) => {
 				let cmd = 'MXV'
+				let gainVar = Number(await self.parseVariablesInString(options.gainVar))
+				gainVar = gainVar.toFixed(2)
+				let gain = 0
 				let matrix = await self.parseVariablesInString(options.matrix)
 				matrix = Math.floor(matrix)
 				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
 					self.log('warn', 'an invalid varible has been passed: ' + matrix)
 					return false
 				}
+				if (options.useVar) {
+					if (isNaN(gainVar)) {
+						return undefined
+					}
+					gain = gainVar > 15 ? 15 : gainVar
+					gain = gainVar < -25 ? -25 : gainVar
+				} else {
+					gain = options.gain
+				}
 				if (options.query) {
 					cmd += paramSep + matrix
 				} else {
-					cmd += paramSep + matrix + paramSep + options.gain
+					cmd += paramSep + matrix + paramSep + gain
 				}
 				self.addCmdtoQueue(cmd)
 			},
@@ -1919,16 +2047,36 @@ module.exports = function (self) {
 					tooltip: 'Varible must return an integer channel number',
 				},
 				{
+					id: 'useVar',
+					type: 'checkbox',
+					label: 'Use Variable',
+					default: false,
+				},
+				{
 					id: 'gain',
 					type: 'number',
 					label: 'Crosspoint Gain',
-					default: -96.5,
-					min: -96.5,
+					default: -96,
+					min: -96,
 					max: 0,
 					required: true,
 					range: true,
 					step: 0.5,
 					regex: Regex.NUMBER,
+					isVisible: (options) => {
+						return options.useVar === false
+					},
+				},
+				{
+					id: 'gainVar',
+					type: 'textinput',
+					label: 'Gain - Variable',
+					default: '',
+					useVariables: true,
+					regex: Regex.SOMETHING,
+					isVisible: (options) => {
+						return options.useVar === true
+					},
 				},
 				{
 					id: 'query',
@@ -1940,6 +2088,9 @@ module.exports = function (self) {
 			],
 			callback: async ({ options }) => {
 				let cmd = 'OM'
+				let gainVar = Number(await self.parseVariablesInString(options.gainVar))
+				gainVar = gainVar.toFixed(2)
+				let gain = 0
 				let matrix = await self.parseVariablesInString(options.matrix)
 				matrix = Math.floor(matrix)
 				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
@@ -1952,10 +2103,19 @@ module.exports = function (self) {
 					self.log('warn', 'an invalid varible has been passed: ' + chan)
 					return false
 				}
+				if (options.useVar) {
+					if (isNaN(gainVar)) {
+						return undefined
+					}
+					gain = gainVar > 0 ? 0 : gainVar
+					gain = gainVar < -96 ? -96 : gainVar
+				} else {
+					gain = options.gain
+				}
 				if (options.query) {
 					cmd += paramSep + matrix + paramSep + chan
 				} else {
-					cmd += paramSep + matrix + paramSep + chan + paramSep + options.gain
+					cmd += paramSep + matrix + paramSep + chan + paramSep + gain
 				}
 				self.addCmdtoQueue(cmd)
 			},
