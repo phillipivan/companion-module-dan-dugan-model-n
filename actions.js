@@ -380,6 +380,19 @@ module.exports = function (self) {
 				cmd += paramSep + chan + paramSep + weightRound
 				self.addCmdtoQueue(cmd)
 			},
+			learn: async (action) => {
+				let cmd = 'CW'
+				let chan = await self.parseVariablesInString(action.options.channel)
+				chan = Math.floor(chan)
+				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
+					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					return undefined
+				}
+				self.addCmdtoQueue(cmd + paramSep + chan)
+				return {
+					...action.options,
+				}
+			},
 		},
 		channel_music_mode: {
 			name: 'Channel - Music Mode',
@@ -1061,6 +1074,19 @@ module.exports = function (self) {
 				cmd += paramSep + group + paramSep + depthRound
 				self.addCmdtoQueue(cmd)
 			},
+			learn: async (action) => {
+				let cmd = 'ME' //AD commands also works
+				let group = await self.parseVariablesInString(action.options.group)
+				group = Math.floor(group)
+				if (isNaN(group) || group < 1 || group > GroupCount) {
+					self.log('warn', 'an invalid varible has been passed: ' + group)
+					return undefined
+				}
+				self.addCmdtoQueue(cmd + paramSep + group)
+				return {
+					...action.options,
+				}
+			},
 		},
 		group_NOMgainlimit: {
 			name: 'Group - NOM Gain Limit',
@@ -1173,6 +1199,19 @@ module.exports = function (self) {
 				cmd += paramSep + group + paramSep + nomRound
 				self.addCmdtoQueue(cmd)
 			},
+			learn: async (action) => {
+				let cmd = 'NL'
+				let group = await self.parseVariablesInString(action.options.group)
+				group = Math.floor(group)
+				if (isNaN(group) || group < 1 || group > GroupCount) {
+					self.log('warn', 'an invalid varible has been passed: ' + group)
+					return undefined
+				}
+				self.addCmdtoQueue(cmd + paramSep + group)
+				return {
+					...action.options,
+				}
+			},
 		},
 		group_musicthreshold: {
 			name: 'Group - Music System Threshold',
@@ -1284,6 +1323,19 @@ module.exports = function (self) {
 				let thresRound = thres.toFixed(2)
 				cmd += paramSep + group + paramSep + thresRound
 				self.addCmdtoQueue(cmd)
+			},
+			learn: async (action) => {
+				let cmd = 'MT'
+				let group = await self.parseVariablesInString(action.options.group)
+				group = Math.floor(group)
+				if (isNaN(group) || group < 1 || group > GroupCount) {
+					self.log('warn', 'an invalid varible has been passed: ' + group)
+					return undefined
+				}
+				self.addCmdtoQueue(cmd + paramSep + group)
+				return {
+					...action.options,
+				}
 			},
 		},
 		group_musicinput: {
@@ -1598,6 +1650,19 @@ module.exports = function (self) {
 				cmd += paramSep + matrix + paramSep + gainRound
 				self.addCmdtoQueue(cmd)
 			},
+			learn: async (action) => {
+				let cmd = 'MXV'
+				let matrix = await self.parseVariablesInString(action.options.matrix)
+				matrix = Math.floor(matrix)
+				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
+					self.log('warn', 'an invalid varible has been passed: ' + MatrixCount)
+					return undefined
+				}
+				self.addCmdtoQueue(cmd + paramSep + matrix)
+				return {
+					...action.options,
+				}
+			},
 		},
 		matrix_output: {
 			name: 'Matrix - Output',
@@ -1658,7 +1723,7 @@ module.exports = function (self) {
 				matrix = Math.floor(matrix)
 				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
 					self.log('warn', 'an invalid varible has been passed: ' + matrix)
-					return false
+					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + matrix)
 				const matrixOutput = self.matrixOutput[matrix]
@@ -1745,7 +1810,7 @@ module.exports = function (self) {
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > MatrixSize) {
 					self.log('warn', 'an invalid varible has been passed: ' + chan)
-					return false
+					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + matrix + paramSep + chan)
 				const matrixXpoint = self.matrixXpoint[matrix][chan]
@@ -1816,6 +1881,25 @@ module.exports = function (self) {
 				let gainRound = gain.toFixed(2)
 				cmd += paramSep + matrix + paramSep + chan + paramSep + gainRound
 				self.addCmdtoQueue(cmd)
+			},
+			learn: async (action) => {
+				let cmd = 'OM'
+				let matrix = await self.parseVariablesInString(action.options.matrix)
+				matrix = Math.floor(matrix)
+				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
+					self.log('warn', 'an invalid varible has been passed: ' + MatrixCount)
+					return undefined
+				}
+				let chan = await self.parseVariablesInString(action.options.channel)
+				chan = Math.floor(chan)
+				if (isNaN(chan) || chan < 1 || chan > MatrixSize) {
+					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					return undefined
+				}
+				self.addCmdtoQueue(cmd + paramSep + matrix + paramSep + chan)
+				return {
+					...action.options,
+				}
 			},
 		},
 		sc_count: {
