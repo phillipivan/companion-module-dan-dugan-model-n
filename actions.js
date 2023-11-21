@@ -62,6 +62,19 @@ module.exports = function (self) {
 				self.addCmdtoQueue(cmd)
 			},
 			learn: async (action) => {
+				let chan = await self.parseVariablesInString(action.options.channel)
+				chan = Math.floor(chan)
+				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
+					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					return undefined
+				}
+				const chMode = self.channelsMode[chan]
+				return {
+					...action.options,
+					mode: chMode,
+				}
+			},
+			subscribe: async (action) => {
 				let cmd = 'CM'
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
@@ -70,11 +83,6 @@ module.exports = function (self) {
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + chan)
-				const chMode = self.channelsMode[chan]
-				return {
-					...action.options,
-					mode: chMode,
-				}
 			},
 		},
 		channel_preset: {
@@ -125,6 +133,19 @@ module.exports = function (self) {
 				self.addCmdtoQueue(cmd)
 			},
 			learn: async (action) => {
+				let chan = await self.parseVariablesInString(action.options.channel)
+				chan = Math.floor(chan)
+				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
+					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					return undefined
+				}
+				const chPreset = self.channelsPreset[chan]
+				return {
+					...action.options,
+					preset: chPreset,
+				}
+			},
+			subscribe: async (action) => {
 				let cmd = 'CP'
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
@@ -133,11 +154,6 @@ module.exports = function (self) {
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + chan)
-				const chPreset = self.channelsPreset[chan]
-				return {
-					...action.options,
-					preset: chPreset,
-				}
 			},
 		},
 		channel_bypass: {
@@ -190,6 +206,19 @@ module.exports = function (self) {
 				self.addCmdtoQueue(cmd)
 			},
 			learn: async (action) => {
+				let chan = await self.parseVariablesInString(action.options.channel)
+				chan = Math.floor(chan)
+				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
+					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					return undefined
+				}
+				const chBypass = self.channelsBypass[chan]
+				return {
+					...action.options,
+					bypass: chBypass,
+				}
+			},
+			subscribe: async (action) => {
 				let cmd = 'BP'
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
@@ -198,11 +227,6 @@ module.exports = function (self) {
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + chan)
-				const chBypass = self.channelsBypass[chan]
-				return {
-					...action.options,
-					bypass: chBypass,
-				}
 			},
 		},
 		channel_override: {
@@ -255,6 +279,19 @@ module.exports = function (self) {
 				self.addCmdtoQueue(cmd)
 			},
 			learn: async (action) => {
+				let chan = await self.parseVariablesInString(action.options.channel)
+				chan = Math.floor(chan)
+				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
+					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					return undefined
+				}
+				const chOverride = self.channelsOverride[chan]
+				return {
+					...action.options,
+					override: chOverride,
+				}
+			},
+			subscribe: async (action) => {
 				let cmd = 'CO'
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
@@ -263,11 +300,6 @@ module.exports = function (self) {
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + chan)
-				const chOverride = self.channelsOverride[chan]
-				return {
-					...action.options,
-					override: chOverride,
-				}
 			},
 		},
 		channel_weight: {
@@ -285,6 +317,12 @@ module.exports = function (self) {
 					tooltip: 'Varible must return an integer channel number',
 				},
 				{
+					id: 'useVar',
+					type: 'checkbox',
+					label: 'Use Variable',
+					default: false,
+				},
+				{
 					id: 'weight',
 					type: 'number',
 					label: 'Weight',
@@ -295,6 +333,20 @@ module.exports = function (self) {
 					step: 0.1,
 					required: true,
 					regex: Regex.NUMBER,
+					isVisible: ({ options }) => {
+						return !options.useVar
+					},
+				},
+				{
+					id: 'weightVar',
+					type: 'textinput',
+					label: 'Weight - Variable',
+					default: '',
+					useVariables: true,
+					regex: Regex.SOMETHING,
+					isVisible: ({ options }) => {
+						return options.useVar
+					},
 				},
 				{
 					id: 'query',
@@ -305,20 +357,45 @@ module.exports = function (self) {
 			],
 			callback: async ({ options }) => {
 				let cmd = 'CW'
+				let weightVar = Number(await self.parseVariablesInString(options.weightVar))
+				weightVar = weightVar.toFixed(2)
 				let chan = await self.parseVariablesInString(options.channel)
+				let weight = 0
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
 					self.log('warn', 'an invalid varible has been passed: ' + chan)
 					return false
 				}
+				if (options.useVar) {
+					if (isNaN(weightVar)) {
+						return undefined
+					}
+					weight = weightVar > 15 ? 15 : weightVar
+					weight = weightVar < -100 ? -100 : weightVar
+				} else {
+					weight = options.weight
+				}
 				if (options.query) {
 					cmd += paramSep + chan
 				} else {
-					cmd += paramSep + chan + paramSep + options.weight
+					cmd += paramSep + chan + paramSep + weight
 				}
 				self.addCmdtoQueue(cmd)
 			},
 			learn: async (action) => {
+				let chan = await self.parseVariablesInString(action.options.channel)
+				chan = Math.floor(chan)
+				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
+					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					return undefined
+				}
+				const chWeight = self.channelsWeight[chan]
+				return {
+					...action.options,
+					weight: chWeight,
+				}
+			},
+			subscribe: async (action) => {
 				let cmd = 'CW'
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
@@ -327,11 +404,6 @@ module.exports = function (self) {
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + chan)
-				const chWeight = self.channelsWeight[chan]
-				return {
-					...action.options,
-					weight: chWeight,
-				}
 			},
 		},
 		channel_weight_rel: {
@@ -380,7 +452,7 @@ module.exports = function (self) {
 				cmd += paramSep + chan + paramSep + weightRound
 				self.addCmdtoQueue(cmd)
 			},
-			learn: async (action) => {
+			subscribe: async (action) => {
 				let cmd = 'CW'
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
@@ -389,9 +461,6 @@ module.exports = function (self) {
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + chan)
-				return {
-					...action.options,
-				}
 			},
 		},
 		channel_music_mode: {
@@ -444,6 +513,19 @@ module.exports = function (self) {
 				self.addCmdtoQueue(cmd)
 			},
 			learn: async (action) => {
+				let chan = await self.parseVariablesInString(action.options.channel)
+				chan = Math.floor(chan)
+				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
+					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					return undefined
+				}
+				const chMusic = self.channelsMusic[chan]
+				return {
+					...action.options,
+					music: chMusic,
+				}
+			},
+			subscribe: async (action) => {
 				let cmd = 'MR'
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
@@ -452,11 +534,6 @@ module.exports = function (self) {
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + chan)
-				const chMusic = self.channelsMusic[chan]
-				return {
-					...action.options,
-					music: chMusic,
-				}
 			},
 		},
 		channel_NOM_mode: {
@@ -509,6 +586,19 @@ module.exports = function (self) {
 				self.addCmdtoQueue(cmd)
 			},
 			learn: async (action) => {
+				let chan = await self.parseVariablesInString(action.options.channel)
+				chan = Math.floor(chan)
+				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
+					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					return undefined
+				}
+				const chNOM = self.channelsNom[chan]
+				return {
+					...action.options,
+					nom: chNOM,
+				}
+			},
+			subscribe: async (action) => {
 				let cmd = 'NE'
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
@@ -517,11 +607,6 @@ module.exports = function (self) {
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + chan)
-				const chNOM = self.channelsNom[chan]
-				return {
-					...action.options,
-					nom: chNOM,
-				}
 			},
 		},
 		channel_group_assign: {
@@ -563,6 +648,19 @@ module.exports = function (self) {
 				self.addCmdtoQueue(cmd)
 			},
 			learn: async (action) => {
+				let chan = await self.parseVariablesInString(action.options.channel)
+				chan = Math.floor(chan)
+				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
+					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					return undefined
+				}
+				const chGroup = self.channelsGroupAssign[chan]
+				return {
+					...action.options,
+					group: chGroup,
+				}
+			},
+			subscribe: async (action) => {
 				let cmd = 'GA'
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
@@ -571,11 +669,6 @@ module.exports = function (self) {
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + chan)
-				const chGroup = self.channelsGroupAssign[chan]
-				return {
-					...action.options,
-					group: chGroup,
-				}
 			},
 		},
 		channel_name: {
@@ -632,6 +725,19 @@ module.exports = function (self) {
 				self.addCmdtoQueue(cmd)
 			},
 			learn: async (action) => {
+				let chan = await self.parseVariablesInString(action.options.channel)
+				chan = Math.floor(chan)
+				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
+					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					return undefined
+				}
+				const chName = self.channelsName[chan]
+				return {
+					...action.options,
+					name: chName,
+				}
+			},
+			subscribe: async (action) => {
 				let cmd = 'CN'
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
@@ -640,11 +746,6 @@ module.exports = function (self) {
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + chan)
-				const chName = self.channelsName[chan]
-				return {
-					...action.options,
-					name: chName,
-				}
 			},
 		},
 		group_mute: {
@@ -713,17 +814,19 @@ module.exports = function (self) {
 				self.addCmdtoQueue(cmd)
 			},
 			learn: (action) => {
-				let cmd = 'SM'
 				const grpA = self.groupMute[1]
 				const grpB = self.groupMute[2]
 				const grpC = self.groupMute[3]
-				self.addCmdtoQueue(cmd)
 				return {
 					...action.options,
 					groupA: grpA,
 					groupB: grpB,
 					groupC: grpC,
 				}
+			},
+			subscribe: () => {
+				let cmd = 'SM'
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		group_preset: {
@@ -792,17 +895,19 @@ module.exports = function (self) {
 				self.addCmdtoQueue(cmd)
 			},
 			learn: (action) => {
-				let cmd = 'SP'
 				const grpA = self.groupPreset[1]
 				const grpB = self.groupPreset[2]
 				const grpC = self.groupPreset[3]
-				self.addCmdtoQueue(cmd)
 				return {
 					...action.options,
 					groupA: grpA,
 					groupB: grpB,
 					groupC: grpC,
 				}
+			},
+			subscribe: () => {
+				let cmd = 'SP'
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		group_override: {
@@ -871,17 +976,19 @@ module.exports = function (self) {
 				self.addCmdtoQueue(cmd)
 			},
 			learn: (action) => {
-				let cmd = 'SO'
 				const grpA = self.groupOverride[1]
 				const grpB = self.groupOverride[2]
 				const grpC = self.groupOverride[3]
-				self.addCmdtoQueue(cmd)
 				return {
 					...action.options,
 					groupA: grpA,
 					groupB: grpB,
 					groupC: grpC,
 				}
+			},
+			subscribe: () => {
+				let cmd = 'SO'
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		group_lasthold: {
@@ -950,17 +1057,19 @@ module.exports = function (self) {
 				self.addCmdtoQueue(cmd)
 			},
 			learn: (action) => {
-				let cmd = 'LH'
 				const grpA = self.groupLastHold[1]
 				const grpB = self.groupLastHold[2]
 				const grpC = self.groupLastHold[3]
-				self.addCmdtoQueue(cmd)
 				return {
 					...action.options,
 					groupA: grpA,
 					groupB: grpB,
 					groupC: grpC,
 				}
+			},
+			subscribe: () => {
+				let cmd = 'LH'
+				self.addCmdtoQueue(cmd)
 			},
 		},
 		group_automixdepth: {
@@ -1013,6 +1122,19 @@ module.exports = function (self) {
 				self.addCmdtoQueue(cmd)
 			},
 			learn: async (action) => {
+				let group = await self.parseVariablesInString(action.options.group)
+				group = Math.floor(group)
+				if (isNaN(group) || group < 1 || group > GroupCount) {
+					self.log('warn', 'an invalid varible has been passed: ' + group)
+					return undefined
+				}
+				const grpAD = self.groupAutomixDepth[group]
+				return {
+					...action.options,
+					depth: grpAD,
+				}
+			},
+			subscribe: async (action) => {
 				let cmd = 'ME' //AD commands also works
 				let group = await self.parseVariablesInString(action.options.group)
 				group = Math.floor(group)
@@ -1021,11 +1143,6 @@ module.exports = function (self) {
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + group)
-				const grpAD = self.groupAutomixDepth[group]
-				return {
-					...action.options,
-					depth: grpAD,
-				}
 			},
 		},
 		group_automixdepth_rel: {
@@ -1074,7 +1191,7 @@ module.exports = function (self) {
 				cmd += paramSep + group + paramSep + depthRound
 				self.addCmdtoQueue(cmd)
 			},
-			learn: async (action) => {
+			subscribe: async (action) => {
 				let cmd = 'ME' //AD commands also works
 				let group = await self.parseVariablesInString(action.options.group)
 				group = Math.floor(group)
@@ -1083,9 +1200,6 @@ module.exports = function (self) {
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + group)
-				return {
-					...action.options,
-				}
 			},
 		},
 		group_NOMgainlimit: {
@@ -1138,6 +1252,19 @@ module.exports = function (self) {
 				self.addCmdtoQueue(cmd)
 			},
 			learn: async (action) => {
+				let group = await self.parseVariablesInString(action.options.group)
+				group = Math.floor(group)
+				if (isNaN(group) || group < 1 || group > GroupCount) {
+					self.log('warn', 'an invalid varible has been passed: ' + group)
+					return undefined
+				}
+				const grpNL = self.groupNOMgainlimit[group]
+				return {
+					...action.options,
+					nomgain: grpNL,
+				}
+			},
+			subscribe: async (action) => {
 				let cmd = 'NL'
 				let group = await self.parseVariablesInString(action.options.group)
 				group = Math.floor(group)
@@ -1146,11 +1273,6 @@ module.exports = function (self) {
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + group)
-				const grpNL = self.groupNOMgainlimit[group]
-				return {
-					...action.options,
-					nomgain: grpNL,
-				}
 			},
 		},
 		group_NOMgainlimit_rel: {
@@ -1199,7 +1321,7 @@ module.exports = function (self) {
 				cmd += paramSep + group + paramSep + nomRound
 				self.addCmdtoQueue(cmd)
 			},
-			learn: async (action) => {
+			subscribe: async (action) => {
 				let cmd = 'NL'
 				let group = await self.parseVariablesInString(action.options.group)
 				group = Math.floor(group)
@@ -1208,9 +1330,6 @@ module.exports = function (self) {
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + group)
-				return {
-					...action.options,
-				}
 			},
 		},
 		group_musicthreshold: {
@@ -1263,6 +1382,19 @@ module.exports = function (self) {
 				self.addCmdtoQueue(cmd)
 			},
 			learn: async (action) => {
+				let group = await self.parseVariablesInString(action.options.group)
+				group = Math.floor(group)
+				if (isNaN(group) || group < 1 || group > GroupCount) {
+					self.log('warn', 'an invalid varible has been passed: ' + group)
+					return undefined
+				}
+				const grpMT = self.groupMusicThreshold[group]
+				return {
+					...action.options,
+					threshold: grpMT,
+				}
+			},
+			subscribe: async (action) => {
 				let cmd = 'MT'
 				let group = await self.parseVariablesInString(action.options.group)
 				group = Math.floor(group)
@@ -1271,11 +1403,6 @@ module.exports = function (self) {
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + group)
-				const grpMT = self.groupMusicThreshold[group]
-				return {
-					...action.options,
-					threshold: grpMT,
-				}
 			},
 		},
 		group_musicthreshold_rel: {
@@ -1324,7 +1451,7 @@ module.exports = function (self) {
 				cmd += paramSep + group + paramSep + thresRound
 				self.addCmdtoQueue(cmd)
 			},
-			learn: async (action) => {
+			subscribe: async (action) => {
 				let cmd = 'MT'
 				let group = await self.parseVariablesInString(action.options.group)
 				group = Math.floor(group)
@@ -1333,9 +1460,6 @@ module.exports = function (self) {
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + group)
-				return {
-					...action.options,
-				}
 			},
 		},
 		group_musicinput: {
@@ -1392,6 +1516,19 @@ module.exports = function (self) {
 				self.addCmdtoQueue(cmd)
 			},
 			learn: async (action) => {
+				let group = await self.parseVariablesInString(action.options.group)
+				group = Math.floor(group)
+				if (isNaN(group) || group < 1 || group > GroupCount) {
+					self.log('warn', 'an invalid varible has been passed: ' + group)
+					return undefined
+				}
+				const grpMTinput = self.groupMusicInput[group]
+				return {
+					...action.options,
+					input: grpMTinput,
+				}
+			},
+			subscribe: async (action) => {
 				let cmd = 'MC'
 				let group = await self.parseVariablesInString(action.options.group)
 				group = Math.floor(group)
@@ -1400,11 +1537,6 @@ module.exports = function (self) {
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + group)
-				const grpMTinput = self.groupMusicInput[group]
-				return {
-					...action.options,
-					input: grpMTinput,
-				}
 			},
 		},
 		matrix_mute: {
@@ -1458,6 +1590,19 @@ module.exports = function (self) {
 				self.addCmdtoQueue(cmd)
 			},
 			learn: async (action) => {
+				let matrix = await self.parseVariablesInString(action.options.matrix)
+				matrix = Math.floor(matrix)
+				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
+					self.log('warn', 'an invalid varible has been passed: ' + MatrixCount)
+					return undefined
+				}
+				const muteState = self.matrixMute[matrix]
+				return {
+					...action.options,
+					mute: muteState,
+				}
+			},
+			subscribe: async (action) => {
 				let cmd = 'MXM'
 				let matrix = await self.parseVariablesInString(action.options.matrix)
 				matrix = Math.floor(matrix)
@@ -1466,11 +1611,6 @@ module.exports = function (self) {
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + matrix)
-				const muteState = self.matrixMute[matrix]
-				return {
-					...action.options,
-					mute: muteState,
-				}
 			},
 		},
 		matrix_polarity: {
@@ -1524,6 +1664,19 @@ module.exports = function (self) {
 				self.addCmdtoQueue(cmd)
 			},
 			learn: async (action) => {
+				let matrix = await self.parseVariablesInString(action.options.matrix)
+				matrix = Math.floor(matrix)
+				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
+					self.log('warn', 'an invalid varible has been passed: ' + MatrixCount)
+					return undefined
+				}
+				const polState = self.matrixPolarity[matrix]
+				return {
+					...action.options,
+					polarity: polState,
+				}
+			},
+			subscribe: async (action) => {
 				let cmd = 'MXP'
 				let matrix = await self.parseVariablesInString(action.options.matrix)
 				matrix = Math.floor(matrix)
@@ -1532,11 +1685,6 @@ module.exports = function (self) {
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + matrix)
-				const polState = self.matrixPolarity[matrix]
-				return {
-					...action.options,
-					polarity: polState,
-				}
 			},
 		},
 		matrix_gain: {
@@ -1589,6 +1737,19 @@ module.exports = function (self) {
 				self.addCmdtoQueue(cmd)
 			},
 			learn: async (action) => {
+				let matrix = await self.parseVariablesInString(action.options.matrix)
+				matrix = Math.floor(matrix)
+				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
+					self.log('warn', 'an invalid varible has been passed: ' + MatrixCount)
+					return undefined
+				}
+				const matrixGain = self.matrixGain[matrix]
+				return {
+					...action.options,
+					gain: matrixGain,
+				}
+			},
+			subscribe: async (action) => {
 				let cmd = 'MXV'
 				let matrix = await self.parseVariablesInString(action.options.matrix)
 				matrix = Math.floor(matrix)
@@ -1597,11 +1758,6 @@ module.exports = function (self) {
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + matrix)
-				const matrixGain = self.matrixGain[matrix]
-				return {
-					...action.options,
-					gain: matrixGain,
-				}
 			},
 		},
 		matrix_gain_rel: {
@@ -1650,7 +1806,7 @@ module.exports = function (self) {
 				cmd += paramSep + matrix + paramSep + gainRound
 				self.addCmdtoQueue(cmd)
 			},
-			learn: async (action) => {
+			subscribe: async (action) => {
 				let cmd = 'MXV'
 				let matrix = await self.parseVariablesInString(action.options.matrix)
 				matrix = Math.floor(matrix)
@@ -1659,9 +1815,6 @@ module.exports = function (self) {
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + matrix)
-				return {
-					...action.options,
-				}
 			},
 		},
 		matrix_output: {
@@ -1718,6 +1871,19 @@ module.exports = function (self) {
 				self.addCmdtoQueue(cmd)
 			},
 			learn: async (action) => {
+				let matrix = await self.parseVariablesInString(action.options.matrix)
+				matrix = Math.floor(matrix)
+				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
+					self.log('warn', 'an invalid varible has been passed: ' + matrix)
+					return undefined
+				}
+				const matrixOutput = self.matrixOutput[matrix]
+				return {
+					...action.options,
+					output: matrixOutput,
+				}
+			},
+			subscribe: async (action) => {
 				let cmd = 'MXO'
 				let matrix = await self.parseVariablesInString(action.options.matrix)
 				matrix = Math.floor(matrix)
@@ -1726,11 +1892,6 @@ module.exports = function (self) {
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + matrix)
-				const matrixOutput = self.matrixOutput[matrix]
-				return {
-					...action.options,
-					output: matrixOutput,
-				}
 			},
 		},
 		matrix_crosspoint: {
@@ -1799,6 +1960,25 @@ module.exports = function (self) {
 				self.addCmdtoQueue(cmd)
 			},
 			learn: async (action) => {
+				let matrix = await self.parseVariablesInString(action.options.matrix)
+				matrix = Math.floor(matrix)
+				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
+					self.log('warn', 'an invalid varible has been passed: ' + MatrixCount)
+					return undefined
+				}
+				let chan = await self.parseVariablesInString(action.options.channel)
+				chan = Math.floor(chan)
+				if (isNaN(chan) || chan < 1 || chan > MatrixSize) {
+					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					return undefined
+				}
+				const matrixXpoint = self.matrixXpoint[matrix][chan]
+				return {
+					...action.options,
+					gain: matrixXpoint,
+				}
+			},
+			subscribe: async (action) => {
 				let cmd = 'OM'
 				let matrix = await self.parseVariablesInString(action.options.matrix)
 				matrix = Math.floor(matrix)
@@ -1813,11 +1993,6 @@ module.exports = function (self) {
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + matrix + paramSep + chan)
-				const matrixXpoint = self.matrixXpoint[matrix][chan]
-				return {
-					...action.options,
-					gain: matrixXpoint,
-				}
 			},
 		},
 		matrix_crosspoint_rel: {
@@ -1882,7 +2057,7 @@ module.exports = function (self) {
 				cmd += paramSep + matrix + paramSep + chan + paramSep + gainRound
 				self.addCmdtoQueue(cmd)
 			},
-			learn: async (action) => {
+			subscribe: async (action) => {
 				let cmd = 'OM'
 				let matrix = await self.parseVariablesInString(action.options.matrix)
 				matrix = Math.floor(matrix)
@@ -1897,9 +2072,6 @@ module.exports = function (self) {
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + matrix + paramSep + chan)
-				return {
-					...action.options,
-				}
 			},
 		},
 		sc_count: {
@@ -2127,6 +2299,10 @@ module.exports = function (self) {
 				}
 				self.addCmdtoQueue(cmd)
 			},
+			subscribe: () => {
+				let cmd = 'SU'
+				self.addCmdtoQueue(cmd)
+			},
 		},
 		system_linkgroup: {
 			name: 'System - Link Group',
@@ -2160,6 +2336,10 @@ module.exports = function (self) {
 				}
 				self.addCmdtoQueue(cmd)
 			},
+			subscribe: () => {
+				let cmd = 'LG'
+				self.addCmdtoQueue(cmd)
+			},
 		},
 		system_clocksource: {
 			name: 'System - Clock Source',
@@ -2185,6 +2365,10 @@ module.exports = function (self) {
 				if (!options.query) {
 					cmd += paramSep + options.clock
 				}
+				self.addCmdtoQueue(cmd)
+			},
+			subscribe: () => {
+				let cmd = 'CS'
 				self.addCmdtoQueue(cmd)
 			},
 		},
@@ -2214,6 +2398,10 @@ module.exports = function (self) {
 				if (!options.query) {
 					cmd += paramSep + options.mirror
 				}
+				self.addCmdtoQueue(cmd)
+			},
+			subscribe: () => {
+				let cmd = 'AM'
 				self.addCmdtoQueue(cmd)
 			},
 		},
@@ -2249,6 +2437,10 @@ module.exports = function (self) {
 				}
 				self.addCmdtoQueue(cmd)
 			},
+			subscribe: () => {
+				let cmd = 'CFN'
+				self.addCmdtoQueue(cmd)
+			},
 		},
 		system_channeloffset: {
 			name: 'System - Automix Channel Offset',
@@ -2274,6 +2466,10 @@ module.exports = function (self) {
 				if (!options.query) {
 					cmd += paramSep + options.offset
 				}
+				self.addCmdtoQueue(cmd)
+			},
+			subscribe: () => {
+				let cmd = 'CFS'
 				self.addCmdtoQueue(cmd)
 			},
 		},
@@ -2305,6 +2501,10 @@ module.exports = function (self) {
 				}
 				self.addCmdtoQueue(cmd)
 			},
+			subscribe: () => {
+				let cmd = 'BM'
+				self.addCmdtoQueue(cmd)
+			},
 		},
 		system_DHCP: {
 			name: 'System - Network DHCP',
@@ -2332,6 +2532,10 @@ module.exports = function (self) {
 				if (!options.query) {
 					cmd += paramSep + options.dhcp
 				}
+				self.addCmdtoQueue(cmd)
+			},
+			subscribe: () => {
+				let cmd = 'DH'
 				self.addCmdtoQueue(cmd)
 			},
 		},

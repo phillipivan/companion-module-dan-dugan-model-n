@@ -45,8 +45,9 @@ module.exports = {
 				//for (let i = 0; i < weights.length; i++) {
 				//	this.log('debug', 'Index: ' + i + 'Weight value: ' + weights[i])
 				//}
-				if (vals.length != 454) {
-					this.log('warn', '*GP response detected. Expected length 454 bytes. Buffer length: ' + vals.length)
+				if (vals.length < 446) {
+					// observed 454 but that may be with 'Dugan N >'
+					this.log('warn', '*GP response detected. Expected length > 446 bytes. Buffer length: ' + vals.length)
 				}
 				for (let i = 1; i <= MaxChannelCount; i++) {
 					this.channelsMode[i] = vals[i + 3]
@@ -111,8 +112,8 @@ module.exports = {
 			case '*GM,':
 				//get matrix params
 				//binary response
-				if (vals.length != 902) {
-					this.log('warn', '*GM response detected. Expected length 902 bytes. Buffer length: ' + vals.length)
+				if (vals.length < 891) {
+					this.log('warn', '*GM response detected. Expected length >= 891 bytes. Buffer length: ' + vals.length)
 				}
 				for (let i = 1; i <= MatrixCount; i++) {
 					this.matrixGain[i] = this.calcXpointGain(vals[i + 879])
