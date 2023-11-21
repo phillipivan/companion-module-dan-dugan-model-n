@@ -13,26 +13,26 @@ Enter the IP address of the control port of the Automixer. The unit will accept 
 - **Channel - Group Assignment** Query / Change Channel Group Assignment
 - **Channel - Mode** Query / Change Channel Mode: Manual, Auto, Mute
 - **Channel - Music** Query / Change Channel Music Mode
-- **Channel - Name** Query / Change Channel Name - up to 15 characters.  Accepts variables
+- **Channel - Name** Query / Change Channel Name - up to 15 characters. Accepts variables
 - **Channel - NOM Mode** Query / Change Channel NOM Mode
 - **Channel - Override** Query / Change Channel Override
 - **Channel - Preset** Query / Change Channel Preset: Manual, Auto, Mute
-- **Channel - Weight** Query / Change Channel Weight. Float from -100.00 dB to +20.00 dB
+- **Channel - Weight** Query / Change Channel Weight. Accepts variables
 
-- **Group - Automix Depth** Query / Change Group Automix Depth
+- **Group - Automix Depth** Query / Change Group Automix Depth. Accepts variables
 - **Group - Last Hold** Query / Change Group Last Hold
-- **Group - Music System Threshold** Query / Change Group Music System Threshold
+- **Group - Music System Threshold** Query / Change Group Music System Threshold. Accepts variables
 - **Group - Music System Threshold Input** Query / Change Group Music System Threshold Input
 - **Group - Mute** Query / Change Group Mute
-- **Group - NOM Gain Limit** Query / Change Group Gain Limit
+- **Group - NOM Gain Limit** Query / Change Group Gain Limit. Accepts variables
 - **Group - Override** Query / Change Group Override
 - **Group - Preset** Query / Change Group Preset
 
 - **Matrix - Bus Mute** Query / Change Matrix Mute
 - **Matrix - Bus Polarity** Query / Change Matrix Polarity
 - **Matrix - Crosspoint** Query / Change Matrix Crosspoint Gain
-- **Matrix - Gain** Query / Change Matrix Output Gain
-- **Matrix - Output** Query / Change Matrix Output
+- **Matrix - Gain** Query / Change Matrix Output Gain. Accepts variables
+- **Matrix - Output** Query / Change Matrix Output. Accepts variables
 
 - **Metering** Query various metering and channel flags. Return data not handled yet.
 
