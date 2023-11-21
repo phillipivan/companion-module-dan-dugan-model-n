@@ -34,7 +34,7 @@ class DUGAN_AUTOMIXER extends InstanceBase {
 		this.updateFeedbacks() // export feedbacks
 		this.updateVariableDefinitions() // export variable definitions
 		this.setVariableValues(variableDefaults)
-		this.setInterativeVariables()
+		this.setIterativeVariables()
 		this.initTCP()
 		this.cmdTimer = setTimeout(() => {
 			this.processCmdQueue()
@@ -55,28 +55,28 @@ class DUGAN_AUTOMIXER extends InstanceBase {
 		}
 	}
 
-	setInterativeVariables() {
+	setIterativeVariables() {
 		let varList = []
 		for (let i = 1; i <= MaxChannelCount; i++) {
-			varList['channelName' + i] = 'Channel ' + i
-			varList['channelWeight' + i] = 0
-			varList['channelAmixGain' + i] = 0
-			varList['channelInputLevel' + i] = -127.5
-			varList['channelOutputLevel' + i] = -127.5
+			varList['channelName' + i] = this.channelsName[i]
+			varList['channelWeight' + i] = this.channelsWeight[i]
+			varList['channelAmixGain' + i] = this.channelsAmixGain[i]
+			varList['channelInputLevel' + i] = this.channelsInputPeak[i]
+			varList['channelOutputLevel' + i] = this.channelsOutputPeak[i]
 		}
 		for (let i = 1; i <= MatrixCount; i++) {
-			varList['matrixOutFader' + i] = 0
-			varList['matrixOutLevel' + i] = -127.5
+			varList['matrixOutFader' + i] = this.matrixOutput[i]
+			varList['matrixOutLevel' + i] = this.matrixOutputPeak[i]
 			for (let x = 1; x <= MatrixSize; x++) {
-				varList['matrix' + i + 'Xpoint' + x] = -96.5
+				varList['matrix' + i + 'Xpoint' + x] = this.matrixXpoint[i][x]
 			}
 		}
 		for (let i = 1; i <= GroupCount; i++) {
-			varList['groupNOM' + i] = 1
-			varList['groupNOMpeak' + i] = -127.5
-			varList['groupAD' + i] = -15
-			varList['groupMST' + i] = -15
-			varList['groupMSTgain' + i] = -127.5
+			varList['groupNOM' + i] = this.groupNOMgainlimit[i]
+			varList['groupNOMpeak' + i] = this.groupNOMpeak[i]
+			varList['groupAD' + i] = this.groupAutomixDepth[i]
+			varList['groupMST' + i] = this.groupMusicThreshold[i]
+			varList['groupMSTgain' + i] = this.groupMusicPeak[i]
 		}
 		this.setVariableValues(varList)
 	}
