@@ -46,18 +46,17 @@ module.exports = {
 	},
 	processBitFlags(val) {
 		if (isNaN(val)) {
-			this.log('warn', 'processBitFlags has been passed a Nan: ' + val)
+			//this.log('warn', 'processBitFlags has been passed a Nan: ' + val)
 			return false
 		}
 		if (val < 0 || val > 255) {
-			this.log('warn', 'processBitFlags has been passed an out of range number: ' + val)
+			//this.log('warn', 'processBitFlags has been passed an out of range number: ' + val)
 			return false
 		}
 		let flags = []
 		let operators = [1, 2, 4, 8, 16, 32, 64, 128]
 		for (let i = 0; i < operators.length; i++) {
-			let x = val & operators[i]
-			flags[i] = x == operators[i] ? true : false
+			flags[i] = !!(val & operators[i])
 		}
 		return flags
 	},
@@ -89,6 +88,7 @@ module.exports = {
 		if (this.config.subscription >= val) {
 			return true
 		}
+		this.config.subscription = val
 		this.addCmdtoQueue('SU' + paramSep + val)
 		return val
 	},

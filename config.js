@@ -88,7 +88,7 @@ module.exports = {
 				default: 60,
 				width: 2,
 				mix: 0,
-				max: 3600,
+				max: 180,
 				regex: Regex.NUMBER,
 				tooltip: 'Seconds, set to 0 to turn off',
 			},
@@ -121,7 +121,7 @@ module.exports = {
 					{ id: 2, label: 'Slow' },
 					{ id: 3, label: 'Very Slow' },
 				],
-				default: 0,
+				default: 1,
 				width: 4,
 			},
 			{

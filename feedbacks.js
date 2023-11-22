@@ -76,7 +76,9 @@ module.exports = async function (self) {
 				}
 			},
 			subscribe: () => {
-				self.addCmdtoQueue('GSX')
+				if (self.config.model != 11 && self.config.model != 12) {
+					self.addCmdtoQueue('GSX')
+				}
 				self.checkSubscriptionLevel(1)
 			},
 		},
@@ -395,7 +397,9 @@ module.exports = async function (self) {
 				}
 			},
 			subscribe: () => {
-				self.addCmdtoQueue('GSC')
+				if (self.config.model != 11 && self.config.model != 12) {
+					self.addCmdtoQueue('GSC')
+				}
 				self.checkSubscriptionLevel(2)
 			},
 		},
@@ -424,7 +428,9 @@ module.exports = async function (self) {
 				}
 			},
 			subscribe: () => {
-				self.addCmdtoQueue('GSS')
+				if (self.config.model != 11 && self.config.model != 12) {
+					self.addCmdtoQueue('GSS')
+				}
 				self.checkSubscriptionLevel(2)
 			},
 		},
@@ -480,7 +486,9 @@ module.exports = async function (self) {
 				}
 			},
 			subscribe: () => {
-				self.addCmdtoQueue('GSI')
+				if (self.config.model != 11 && self.config.model != 12) {
+					self.addCmdtoQueue('GSI')
+				}
 				self.checkSubscriptionLevel(2)
 			},
 		},
@@ -536,7 +544,9 @@ module.exports = async function (self) {
 				}
 			},
 			subscribe: () => {
-				self.addCmdtoQueue('GSO')
+				if (self.config.model != 11 && self.config.model != 12) {
+					self.addCmdtoQueue('GSO')
+				}
 				self.checkSubscriptionLevel(2)
 			},
 		},
@@ -592,7 +602,9 @@ module.exports = async function (self) {
 				}
 			},
 			subscribe: () => {
-				self.addCmdtoQueue('GSA')
+				if (self.config.model != 11 && self.config.model != 12) {
+					self.addCmdtoQueue('GSA')
+				}
 				self.checkSubscriptionLevel(2)
 			},
 		},
@@ -764,7 +776,9 @@ module.exports = async function (self) {
 				}
 			},
 			subscribe: () => {
-				self.addCmdtoQueue('GSN')
+				if (self.config.model != 11 && self.config.model != 12) {
+					self.addCmdtoQueue('GSN')
+				}
 				self.checkSubscriptionLevel(2)
 			},
 		},
@@ -820,7 +834,9 @@ module.exports = async function (self) {
 				}
 			},
 			subscribe: () => {
-				self.addCmdtoQueue('GSM')
+				if (self.config.model != 11 && self.config.model != 12) {
+					self.addCmdtoQueue('GSM')
+				}
 				self.checkSubscriptionLevel(2)
 			},
 		},

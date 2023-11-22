@@ -53,15 +53,15 @@ Enter the IP address of the control port of the Automixer. The unit will accept 
 - **System - Adat Mirror** Query / Change channel count echod to Adat
 - **System - Automix Channel Offset** Query / change input channel mapped to Automix Channel 1
 - **System - Automix Channels** Query / Change channel count (8 > 64)
-- **System - Blink Mode** Query / change blink mode
+- **System - Blink Mode** Query / Change blink mode
 - **System - Clock Source** Query / Change clock Source
 - **System - Link Group** Query / Change link group
 - **System - Clock Source** Query / Change clock Source
-- **System - Name** Query / change unit name. Accepts variables
+- **System - Name** Query / Change unit name. Accepts variables
 - **System - Network** Query / Change IP, Subnet or Gateway address
 - **System - Network DHCP** Query / Change DHCP 
-- **System - Name** Query / change unit name. Accepts variables
-- **System - Subscribe Unsolicited** Query / change unsolicited messages
+- **System - Name** Query / Change unit name. Accepts variables
+- **System - Subscribe Unsolicited** Query / Change unsolicited messages
 
 ## Varibles
 - **Channel - Name** String

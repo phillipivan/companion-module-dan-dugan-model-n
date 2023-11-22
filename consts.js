@@ -1,6 +1,6 @@
 export const regexpCmd = new RegExp(/(^[*])([a-zA-Z]{0,3})([,])/g)
 export const regexpSafeString = new RegExp(/^[^,*;:]{1,16}/g)
-export const msgDelay = [50, 60, 75, 100] //Dugan advice is 50ms minimum
+export const msgDelay = [55, 65, 75, 100] //Dugan advice is 50ms minimum
 export const duganModels = [
 	'0',
 	'1',
@@ -33,7 +33,7 @@ export const paramSep = ',' //seperator between parameters
 export const cmdSep = ';' //seperator between responses when multiple sent in 1 message
 // eslint-disable-next-line prettier/prettier
 export const cmdOnConnect = ['SC', 'VE', 'BM', 'HW', 'HR', 'SNC', 'SNA', 'LG', 'CS', 'AM', 'CC', 'SF', 'MM', 'CFS', 'BM'] //queries to be made on initial connection
-export const cmdOnPollInterval = ['HW', 'SNC', 'SNA', 'CC'] //queries to be made each poll interval
+export const cmdOnPollInterval = ['PN', 'SNC'] //queries to be made each poll interval
 export const errSyntax1 = 'Error: syntax'
 export const errSyntax2 = 'ERROR: syntax'
 export const errRange = 'Error: Channel number out of range'

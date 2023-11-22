@@ -48,6 +48,7 @@ module.exports = {
 				if (vals.length < 446) {
 					// observed 454 but that may be with 'Dugan N >'
 					this.log('warn', '*GP response detected. Expected length > 446 bytes. Buffer length: ' + vals.length)
+					return undefined
 				}
 				for (let i = 1; i <= MaxChannelCount; i++) {
 					this.channelsMode[i] = vals[i + 3]
@@ -114,6 +115,7 @@ module.exports = {
 				//binary response
 				if (vals.length < 891) {
 					this.log('warn', '*GM response detected. Expected length >= 891 bytes. Buffer length: ' + vals.length)
+					return undefined
 				}
 				for (let i = 1; i <= MatrixCount; i++) {
 					this.matrixGain[i] = this.calcXpointGain(vals[i + 879])
@@ -131,9 +133,59 @@ module.exports = {
 				//channel status
 				//binary response
 				this.log('debug', '*GS response detected. Buffer length: ' + vals.length)
-				//for (let i = 0; i < vals.length; i++) {
-				//	this.log('debug', 'Index: ' + i + ' value: ' + vals[i])
-				//}
+				if (vals.length < 236) {
+					this.log('warn', '*GS response detected. Expected length >= 236 bytes. Buffer length: ' + vals.length)
+					return undefined
+				}
+				for (let i = 1; i <= 8; i++) {
+					let signalFlags = processBitFlags(parseInt(vals[i + 3], 10))
+					let clipFlags = processBitFlags(parseInt(vals[i + 11], 10))
+					if (signalFlags == false || clipFlags == false) {
+						this.log(
+							'warn',
+							'Unexpected response signal flags: ' +
+								parseInt(vals[i + 3], 10) +
+								' clip flags: ' +
+								parseInt(vals[i + 11], 10)
+						)
+						return undefined
+					}
+					for (let y = 0; y < signalFlags.length; y++) {
+						let channel = y + 1 + (i - 1) * 8
+						this.channelsPresence[channel] = signalFlags[y]
+						this.channelsClip[channel] = clipFlags[y]
+					}
+				}
+				// reclip = index 20
+				for (let i = 1; i <= MaxChannelCount; i++) {
+					this.channelsAmixGain[i] = this.calcGain(Number(vals[i + 20]))
+					this.channelsInputPeak[i] = this.calcGain(Number(vals[i + 90]))
+					this.channelsOutputPeak[i] = this.calcGain(Number(vals[i + 154]))
+					varObject['channelAmixGain' + i] = this.channelsAmixGain[i]
+					varObject['channelInputLevel' + i] = this.channelsInputPeak[i]
+					varObject['channelOutputLevel' + i] = this.channelsOutputPeak[i]
+				}
+				for (let i = 1; i <= GroupCount; i++) {
+					this.groupNOMpeak[i] = this.calcGain(Number(vals[i + 84]))
+					this.groupMusicPeak[i] = this.calcGain(Number(vals[i + 220]))
+					varObject['groupNOMpeak' + i] = this.groupNOMpeak[i]
+					varObject['groupMSTgain' + i] = this.groupMusicPeak[i]
+				}
+				for (let i = 1; i <= MatrixCount; i++) {
+					this.matrixOutputPeak[i] = this.calcGain(Number(vals[i + 226]))
+					varObject['matrixOutLevel' + i] = this.matrixOutputPeak[i]
+				}
+				this.setVariableValues(varObject)
+				this.checkFeedbacks(
+					'channelPresence',
+					'channelClip',
+					'channelAmixGain',
+					'channelInputPeak',
+					'channelOutputPeak',
+					'matrixLevel',
+					'groupNOMgain',
+					'groupMusicPeak'
+				)
 				break
 			default:
 				await this.processCmds(strRep)
@@ -830,7 +882,7 @@ module.exports = {
 						for (let y = 0; y < flags.length; y++) {
 							let channel = y + 1 + (i - 1) * 8
 							this.channelsClip[channel] = flags[y]
-							this.log('debug', 'Channel ' + channel + ' Clip flag is ' + flags[y])
+							//this.log('debug', 'Channel ' + channel + ' Clip flag is ' + flags[y])
 						}
 					}
 					this.checkFeedbacks('channelClip')
@@ -852,7 +904,7 @@ module.exports = {
 						for (let y = 0; y < flags.length; y++) {
 							let channel = y + 1 + (i - 1) * 8
 							this.channelsPresence[channel] = flags[y]
-							this.log('debug', 'Channel ' + channel + ' Signal flag is ' + flags[y])
+							//this.log('debug', 'Channel ' + channel + ' Signal flag is ' + flags[y])
 						}
 					}
 					this.checkFeedbacks('channelPresence')
@@ -937,6 +989,9 @@ module.exports = {
 					this.setVariableValues(varObject)
 					this.checkFeedbacks('matrixLevel')
 				}
+				break
+			case '*PN':
+				this.log('info', 'Ping received: ' + params[1])
 				break
 			default:
 				if (cmd != welcomeMessage) {
