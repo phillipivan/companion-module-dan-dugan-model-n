@@ -1422,7 +1422,7 @@ module.exports = function (self) {
 					label: 'Music System Threshold',
 					default: -10,
 					min: -100,
-					max: 0,
+					max: 15,
 					required: true,
 					range: true,
 					step: 0.1,
@@ -1465,7 +1465,7 @@ module.exports = function (self) {
 					if (isNaN(threshVar)) {
 						return undefined
 					}
-					threshold = threshVar > 0 ? 0 : threshVar
+					threshold = threshVar > 15 ? 15 : threshVar
 					threshold = threshVar < -100 ? -100 : threshVar
 				} else {
 					threshold = options.threshold
