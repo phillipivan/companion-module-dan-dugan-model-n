@@ -102,7 +102,17 @@ module.exports = {
 				this.queryOnConnect()
 			})
 			this.socket.on('data', (chunk) => {
-				this.processBuffer(chunk)
+				let i = 0
+				let line = ''
+				let offset = 0
+				let receivebuffer = ''
+				receivebuffer += chunk
+				while ((i = receivebuffer.indexOf('\r\n', offset)) !== -1) {
+					line = receivebuffer.slice(offset, i - offset)
+					offset = i + 2
+					this.processBuffer(line)
+				}
+				receivebuffer = receivebuffer.slice(offset)
 			})
 		} else {
 			this.updateStatus(InstanceStatus.BadConfig)

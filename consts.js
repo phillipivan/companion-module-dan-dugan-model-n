@@ -1,6 +1,6 @@
-export const regexpCmd = new RegExp(/(^[*])([a-zA-Z]{0,3})([,])/g)
+export const regexpCmd = new RegExp(/([*])([a-zA-Z]{0,3})([,])/g)
 export const regexpSafeString = new RegExp(/^[^,*;:]{1,16}/g)
-export const msgDelay = [55, 65, 75, 100] //Dugan advice is 50ms minimum
+export const msgDelay = [60, 70, 80, 100] //Dugan advice is 50ms minimum, but have often crashed unit at that rate
 export const duganModels = [
 	'0',
 	'1',
@@ -37,8 +37,8 @@ export const cmdOnPollInterval = ['PN', 'SNC'] //queries to be made each poll in
 export const errSyntax1 = 'Error: syntax'
 export const errSyntax2 = 'ERROR: syntax'
 export const errRange = 'Error: Channel number out of range'
-export const welcomeMessage = 'Welcome to Dugan Model N Server.'
-export const duganPrompt = ['Dugan M >', 'Dugan N >']
+export const welcomeMessageM = 'Welcome to Dugan Model M Server.'
+export const welcomeMessageN = 'Welcome to Dugan Model N Server.'
 export const sampleRate = ['48kHz', '96kHz']
 export const adatMirror = ['0 Channels', '8 Channels', '16 Channels']
 export const clockSources = ['Dante/Madi', 'Word Clock', 'Internal', 'ADAT']

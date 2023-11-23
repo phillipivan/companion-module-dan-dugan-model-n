@@ -14,16 +14,25 @@ const {
 	grpAval,
 	grpBval,
 	grpCval,
-	welcomeMessage,
+	welcomeMessageM,
+	welcomeMessageN,
 	MaxChannelCount,
 } = require('./consts.js')
-const { processBitFlags } = require('./util.js')
+//const { processBitFlags } = require('./util.js')
 
 module.exports = {
 	async processBuffer(chunk) {
-		this.log('debug', 'processBuffer: ' + chunk)
+		while (chunk[0] != '*' && chunk.length > 0) {
+			chunk = chunk.slice(1)
+		}
 		let strRep = chunk.toString()
 		let cmd = await this.regexCmd(strRep)
+		if (cmd) {
+			this.log('debug', 'Valid response found: ' + strRep)
+		} else {
+			//this.log('warn', 'No command found: ' + strRep)
+			return undefined
+		}
 		let buffer = new ArrayBuffer(chunk.length)
 		let vals = new Uint8Array(buffer)
 		//let weights = new Float32Array(buffer, 140, 64)
@@ -35,19 +44,15 @@ module.exports = {
 			case '*GP,':
 				//get channelparams
 				//binary response
-				this.log(
-					'debug',
-					'*GP response detected. Buffer Uint8 length: ' + vals.length + ' float32 length: ' //+ weights.length
-				)
 				//for (let i = 0; i < vals.length; i++) {
 				//	this.log('debug', 'Index: ' + i + ' value: ' + vals[i])
 				//}
 				//for (let i = 0; i < weights.length; i++) {
 				//	this.log('debug', 'Index: ' + i + 'Weight value: ' + weights[i])
 				//}
-				if (vals.length < 446) {
+				if (vals.length < 438) {
 					// observed 454 but that may be with 'Dugan N >'
-					this.log('warn', '*GP response detected. Expected length > 446 bytes. Buffer length: ' + vals.length)
+					this.log('warn', '*GP response detected. Expected length > 438 bytes. Buffer length: ' + vals.length)
 					return undefined
 				}
 				for (let i = 1; i <= MaxChannelCount; i++) {
@@ -113,8 +118,8 @@ module.exports = {
 			case '*GM,':
 				//get matrix params
 				//binary response
-				if (vals.length < 891) {
-					this.log('warn', '*GM response detected. Expected length >= 891 bytes. Buffer length: ' + vals.length)
+				if (vals.length < 884) {
+					this.log('warn', '*GM response detected. Expected length >= 884 bytes. Buffer length: ' + vals.length)
 					return undefined
 				}
 				for (let i = 1; i <= MatrixCount; i++) {
@@ -132,14 +137,13 @@ module.exports = {
 			case '*GS,':
 				//channel status
 				//binary response
-				this.log('debug', '*GS response detected. Buffer length: ' + vals.length)
-				if (vals.length < 236) {
-					this.log('warn', '*GS response detected. Expected length >= 236 bytes. Buffer length: ' + vals.length)
+				if (vals.length < 235) {
+					this.log('debug', '*GS response detected. Expected length >= 235 bytes. Buffer length: ' + vals.length)
 					return undefined
 				}
 				for (let i = 1; i <= 8; i++) {
-					let signalFlags = processBitFlags(parseInt(vals[i + 3], 10))
-					let clipFlags = processBitFlags(parseInt(vals[i + 11], 10))
+					let signalFlags = this.processBitFlags(parseInt(vals[i + 3], 10))
+					let clipFlags = this.processBitFlags(parseInt(vals[i + 11], 10))
 					if (signalFlags == false || clipFlags == false) {
 						this.log(
 							'warn',
@@ -194,10 +198,11 @@ module.exports = {
 
 	async processCmds(cmd) {
 		let line = cmd.toString()
-		let str = line.split('\r\n')
-		let cmds = str[0].split(cmdSep)
+		let cmds = line.split(cmdSep)
 		await cmds.forEach((element) => {
-			this.processParams(element)
+			if (element.length > 3) {
+				this.processParams(element)
+			}
 		})
 		return true
 	},
@@ -206,8 +211,8 @@ module.exports = {
 		let str = cmd.toString()
 		let params = str.split(paramSep)
 		if (params[1] == errSyntax1 || params[1] == errSyntax2 || params[1] == errRange) {
-			this.log('warn', 'bad response: ' + cmd)
-			return false
+			this.log('warn', 'bad response: ' + str)
+			return undefined
 		}
 		switch (params[0]) {
 			case '*CM':
@@ -874,7 +879,7 @@ module.exports = {
 					return false
 				} else {
 					for (let i = 1; i < params.length; i++) {
-						let flags = processBitFlags(parseInt(params[i], 16))
+						let flags = this.processBitFlags(parseInt(params[i], 16))
 						if (flags == false) {
 							this.log('warn', 'Unexpected response: ' + flags)
 							return false
@@ -896,7 +901,7 @@ module.exports = {
 					return false
 				} else {
 					for (let i = 1; i < params.length; i++) {
-						let flags = processBitFlags(parseInt(params[i], 16))
+						let flags = this.processBitFlags(parseInt(params[i], 16))
 						if (flags == false) {
 							this.log('warn', 'Unexpected response: ' + flags)
 							return false
@@ -993,12 +998,15 @@ module.exports = {
 			case '*PN':
 				this.log('info', 'Ping received: ' + params[1])
 				break
+			case 'Dugan N ':
+			case 'Dugan M ':
+				break
+			case welcomeMessageM:
+			case welcomeMessageN:
+				this.log('info', cmd)
+				break
 			default:
-				if (cmd != welcomeMessage) {
-					this.log('warn', 'Unexpected response from unit: ' + cmd)
-				} else {
-					this.log('info', cmd)
-				}
+				this.log('warn', 'Unexpected response from unit: ' + cmd)
 		}
 	},
 }

@@ -1,7 +1,6 @@
 const { regexpCmd, regexpSafeString, paramSep } = require('./consts.js')
 module.exports = {
 	regexCmd(cmd) {
-		this.log('debug', 'regexCmd')
 		let command
 		let safeCommand
 		while ((command = regexpCmd.exec(cmd)) !== null) {
@@ -11,7 +10,6 @@ module.exports = {
 		return safeCommand
 	},
 	regexSafeString(dirtyString) {
-		this.log('debug', 'regexSafeString')
 		let str
 		let safeString
 		while ((str = regexpSafeString.exec(dirtyString)) !== null) {
@@ -46,11 +44,11 @@ module.exports = {
 	},
 	processBitFlags(val) {
 		if (isNaN(val)) {
-			//this.log('warn', 'processBitFlags has been passed a Nan: ' + val)
+			this.log('warn', 'processBitFlags has been passed a Nan: ' + val)
 			return false
 		}
 		if (val < 0 || val > 255) {
-			//this.log('warn', 'processBitFlags has been passed an out of range number: ' + val)
+			this.log('warn', 'processBitFlags has been passed an out of range number: ' + val)
 			return false
 		}
 		let flags = []
@@ -62,11 +60,11 @@ module.exports = {
 	},
 	process2BitFlags(val) {
 		if (isNaN(val)) {
-			this.log('warn', 'processBitFlags has been passed a Nan: ' + val)
+			this.log('warn', 'process2BitFlags has been passed a Nan: ' + val)
 			return false
 		}
 		if (val < 0 || val > 255) {
-			this.log('warn', 'processBitFlags has been passed an out of range number: ' + val)
+			this.log('warn', 'process2BitFlags has been passed an out of range number: ' + val)
 			return false
 		}
 		let flags = []
