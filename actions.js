@@ -51,7 +51,7 @@ module.exports = function (self) {
 				let chan = await self.parseVariablesInString(options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
-					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return false
 				}
 				if (options.query) {
@@ -65,7 +65,7 @@ module.exports = function (self) {
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
-					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return undefined
 				}
 				const chMode = self.channelsMode[chan]
@@ -79,7 +79,7 @@ module.exports = function (self) {
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
-					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + chan)
@@ -122,7 +122,7 @@ module.exports = function (self) {
 				let chan = await self.parseVariablesInString(options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
-					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return false
 				}
 				if (options.query) {
@@ -136,7 +136,7 @@ module.exports = function (self) {
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
-					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return undefined
 				}
 				const chPreset = self.channelsPreset[chan]
@@ -150,7 +150,7 @@ module.exports = function (self) {
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
-					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + chan)
@@ -193,7 +193,7 @@ module.exports = function (self) {
 				let chan = await self.parseVariablesInString(options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
-					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return false
 				}
 				if (options.query) {
@@ -209,7 +209,7 @@ module.exports = function (self) {
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
-					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return undefined
 				}
 				const chBypass = self.channelsBypass[chan]
@@ -223,7 +223,7 @@ module.exports = function (self) {
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
-					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + chan)
@@ -266,7 +266,7 @@ module.exports = function (self) {
 				let chan = await self.parseVariablesInString(options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
-					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return false
 				}
 				if (options.query) {
@@ -282,7 +282,7 @@ module.exports = function (self) {
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
-					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return undefined
 				}
 				const chOverride = self.channelsOverride[chan]
@@ -296,7 +296,7 @@ module.exports = function (self) {
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
-					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + chan)
@@ -363,7 +363,7 @@ module.exports = function (self) {
 				let weight = 0
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
-					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return false
 				}
 				if (options.useVar) {
@@ -386,7 +386,7 @@ module.exports = function (self) {
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
-					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return undefined
 				}
 				const chWeight = self.channelsWeight[chan]
@@ -400,7 +400,7 @@ module.exports = function (self) {
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
-					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + chan)
@@ -438,7 +438,7 @@ module.exports = function (self) {
 				let chan = await self.parseVariablesInString(options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
-					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return false
 				}
 				let weight = self.channelsWeight[options.channel] + options.weight
@@ -457,7 +457,7 @@ module.exports = function (self) {
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
-					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + chan)
@@ -500,7 +500,7 @@ module.exports = function (self) {
 				let chan = await self.parseVariablesInString(options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
-					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return false
 				}
 				if (options.query) {
@@ -516,7 +516,7 @@ module.exports = function (self) {
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
-					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return undefined
 				}
 				const chMusic = self.channelsMusic[chan]
@@ -530,7 +530,7 @@ module.exports = function (self) {
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
-					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + chan)
@@ -573,7 +573,7 @@ module.exports = function (self) {
 				let chan = await self.parseVariablesInString(options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
-					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return false
 				}
 				if (options.query) {
@@ -589,7 +589,7 @@ module.exports = function (self) {
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
-					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return undefined
 				}
 				const chNOM = self.channelsNom[chan]
@@ -603,7 +603,7 @@ module.exports = function (self) {
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
-					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + chan)
@@ -651,7 +651,7 @@ module.exports = function (self) {
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
-					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return undefined
 				}
 				const chGroup = self.channelsGroupAssign[chan]
@@ -665,7 +665,7 @@ module.exports = function (self) {
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
-					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + chan)
@@ -708,7 +708,7 @@ module.exports = function (self) {
 				let chan = await self.parseVariablesInString(options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
-					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return false
 				}
 				if (options.query) {
@@ -728,7 +728,7 @@ module.exports = function (self) {
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
-					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return undefined
 				}
 				const chName = self.channelsName[chan]
@@ -742,7 +742,7 @@ module.exports = function (self) {
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
-					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + chan)
@@ -1134,7 +1134,7 @@ module.exports = function (self) {
 				let depth = 0
 				group = Math.floor(group)
 				if (isNaN(group) || group < 1 || group > GroupCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + group)
+					self.log('warn', `an invalid varible has been passed: ${group}`)
 					return false
 				}
 				if (options.useVar) {
@@ -1157,7 +1157,7 @@ module.exports = function (self) {
 				let group = await self.parseVariablesInString(action.options.group)
 				group = Math.floor(group)
 				if (isNaN(group) || group < 1 || group > GroupCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + group)
+					self.log('warn', `an invalid varible has been passed: ${group}`)
 					return undefined
 				}
 				const grpAD = self.groupAutomixDepth[group]
@@ -1171,7 +1171,7 @@ module.exports = function (self) {
 				let group = await self.parseVariablesInString(action.options.group)
 				group = Math.floor(group)
 				if (isNaN(group) || group < 1 || group > GroupCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + group)
+					self.log('warn', `an invalid varible has been passed: ${group}`)
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + group)
@@ -1209,7 +1209,7 @@ module.exports = function (self) {
 				let group = await self.parseVariablesInString(options.group)
 				group = Math.floor(group)
 				if (isNaN(group) || group < 1 || group > GroupCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + group)
+					self.log('warn', `an invalid varible has been passed: ${group}`)
 					return false
 				}
 				let depth = self.groupAutomixDepth[options.group] + options.depth
@@ -1228,7 +1228,7 @@ module.exports = function (self) {
 				let group = await self.parseVariablesInString(action.options.group)
 				group = Math.floor(group)
 				if (isNaN(group) || group < 1 || group > GroupCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + group)
+					self.log('warn', `an invalid varible has been passed: ${group}`)
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + group)
@@ -1296,7 +1296,7 @@ module.exports = function (self) {
 				let group = await self.parseVariablesInString(options.group)
 				group = Math.floor(group)
 				if (isNaN(group) || group < 1 || group > GroupCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + group)
+					self.log('warn', `an invalid varible has been passed: ${group}`)
 					return false
 				}
 				if (options.useVar) {
@@ -1319,7 +1319,7 @@ module.exports = function (self) {
 				let group = await self.parseVariablesInString(action.options.group)
 				group = Math.floor(group)
 				if (isNaN(group) || group < 1 || group > GroupCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + group)
+					self.log('warn', `an invalid varible has been passed: ${group}`)
 					return undefined
 				}
 				const grpNL = self.groupNOMgainlimit[group]
@@ -1333,7 +1333,7 @@ module.exports = function (self) {
 				let group = await self.parseVariablesInString(action.options.group)
 				group = Math.floor(group)
 				if (isNaN(group) || group < 1 || group > GroupCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + group)
+					self.log('warn', `an invalid varible has been passed: ${group}`)
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + group)
@@ -1371,7 +1371,7 @@ module.exports = function (self) {
 				let group = await self.parseVariablesInString(options.group)
 				group = Math.floor(group)
 				if (isNaN(group) || group < 1 || group > GroupCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + group)
+					self.log('warn', `an invalid varible has been passed: ${group}`)
 					return false
 				}
 				let nom = self.groupNOMgainlimit[group] + options.nomgain
@@ -1390,7 +1390,7 @@ module.exports = function (self) {
 				let group = await self.parseVariablesInString(action.options.group)
 				group = Math.floor(group)
 				if (isNaN(group) || group < 1 || group > GroupCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + group)
+					self.log('warn', `an invalid varible has been passed: ${group}`)
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + group)
@@ -1458,7 +1458,7 @@ module.exports = function (self) {
 				let group = await self.parseVariablesInString(options.group)
 				group = Math.floor(group)
 				if (isNaN(group) || group < 1 || group > GroupCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + group)
+					self.log('warn', `an invalid varible has been passed: ${group}`)
 					return false
 				}
 				if (options.useVar) {
@@ -1481,7 +1481,7 @@ module.exports = function (self) {
 				let group = await self.parseVariablesInString(action.options.group)
 				group = Math.floor(group)
 				if (isNaN(group) || group < 1 || group > GroupCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + group)
+					self.log('warn', `an invalid varible has been passed: ${group}`)
 					return undefined
 				}
 				const grpMT = self.groupMusicThreshold[group]
@@ -1495,7 +1495,7 @@ module.exports = function (self) {
 				let group = await self.parseVariablesInString(action.options.group)
 				group = Math.floor(group)
 				if (isNaN(group) || group < 1 || group > GroupCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + group)
+					self.log('warn', `an invalid varible has been passed: ${group}`)
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + group)
@@ -1533,7 +1533,7 @@ module.exports = function (self) {
 				let group = await self.parseVariablesInString(options.group)
 				group = Math.floor(group)
 				if (isNaN(group) || group < 1 || group > GroupCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + group)
+					self.log('warn', `an invalid varible has been passed: ${group}`)
 					return false
 				}
 				let thres = self.groupMusicThreshold[group] + options.threshold
@@ -1552,7 +1552,7 @@ module.exports = function (self) {
 				let group = await self.parseVariablesInString(action.options.group)
 				group = Math.floor(group)
 				if (isNaN(group) || group < 1 || group > GroupCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + group)
+					self.log('warn', `an invalid varible has been passed: ${group}`)
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + group)
@@ -1595,13 +1595,13 @@ module.exports = function (self) {
 				let group = await self.parseVariablesInString(options.group)
 				group = Math.floor(group)
 				if (isNaN(group) || group < 1 || group > GroupCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + group)
+					self.log('warn', `an invalid varible has been passed: ${group}`)
 					return false
 				}
 				let input = await self.parseVariablesInString(options.input)
 				input = Math.floor(input)
 				if (isNaN(input) || input < 1 || input > 86) {
-					self.log('warn', 'an invalid varible has been passed: ' + input)
+					self.log('warn', `an invalid varible has been passed: ${input}`)
 					return false
 				}
 				if (options.query) {
@@ -1615,7 +1615,7 @@ module.exports = function (self) {
 				let group = await self.parseVariablesInString(action.options.group)
 				group = Math.floor(group)
 				if (isNaN(group) || group < 1 || group > GroupCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + group)
+					self.log('warn', `an invalid varible has been passed: ${group}`)
 					return undefined
 				}
 				const grpMTinput = self.groupMusicInput[group]
@@ -1629,7 +1629,7 @@ module.exports = function (self) {
 				let group = await self.parseVariablesInString(action.options.group)
 				group = Math.floor(group)
 				if (isNaN(group) || group < 1 || group > GroupCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + group)
+					self.log('warn', `an invalid varible has been passed: ${group}`)
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + group)
@@ -1672,7 +1672,7 @@ module.exports = function (self) {
 				let matrix = await self.parseVariablesInString(options.matrix)
 				matrix = Math.floor(matrix)
 				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + matrix)
+					self.log('warn', `an invalid varible has been passed: ${matrix}`)
 					return false
 				}
 				let muteState = (await self.matrixMute[matrix]) ^ 1
@@ -1689,7 +1689,7 @@ module.exports = function (self) {
 				let matrix = await self.parseVariablesInString(action.options.matrix)
 				matrix = Math.floor(matrix)
 				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + MatrixCount)
+					self.log('warn', `an invalid varible has been passed: ${matrix}`)
 					return undefined
 				}
 				const muteState = self.matrixMute[matrix]
@@ -1703,7 +1703,7 @@ module.exports = function (self) {
 				let matrix = await self.parseVariablesInString(action.options.matrix)
 				matrix = Math.floor(matrix)
 				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + MatrixCount)
+					self.log('warn', `an invalid varible has been passed: ${MatrixCount}`)
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + matrix)
@@ -1746,7 +1746,7 @@ module.exports = function (self) {
 				let matrix = await self.parseVariablesInString(options.matrix)
 				matrix = Math.floor(matrix)
 				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + matrix)
+					self.log('warn', `an invalid varible has been passed: ${matrix}`)
 					return false
 				}
 				let polState = (await self.matrixPolarity[matrix]) ^ 1
@@ -1763,7 +1763,7 @@ module.exports = function (self) {
 				let matrix = await self.parseVariablesInString(action.options.matrix)
 				matrix = Math.floor(matrix)
 				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + MatrixCount)
+					self.log('warn', `an invalid varible has been passed: ${MatrixCount}`)
 					return undefined
 				}
 				const polState = self.matrixPolarity[matrix]
@@ -1777,7 +1777,7 @@ module.exports = function (self) {
 				let matrix = await self.parseVariablesInString(action.options.matrix)
 				matrix = Math.floor(matrix)
 				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + MatrixCount)
+					self.log('warn', `an invalid varible has been passed: ${MatrixCount}`)
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + matrix)
@@ -1845,7 +1845,7 @@ module.exports = function (self) {
 				let matrix = await self.parseVariablesInString(options.matrix)
 				matrix = Math.floor(matrix)
 				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + matrix)
+					self.log('warn', `an invalid varible has been passed: ${matrix}`)
 					return false
 				}
 				if (options.useVar) {
@@ -1868,7 +1868,7 @@ module.exports = function (self) {
 				let matrix = await self.parseVariablesInString(action.options.matrix)
 				matrix = Math.floor(matrix)
 				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + MatrixCount)
+					self.log('warn', `an invalid varible has been passed: ${MatrixCount}`)
 					return undefined
 				}
 				const matrixGain = self.matrixGain[matrix]
@@ -1882,7 +1882,7 @@ module.exports = function (self) {
 				let matrix = await self.parseVariablesInString(action.options.matrix)
 				matrix = Math.floor(matrix)
 				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + MatrixCount)
+					self.log('warn', `an invalid varible has been passed: ${MatrixCount}`)
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + matrix)
@@ -1920,7 +1920,7 @@ module.exports = function (self) {
 				let matrix = await self.parseVariablesInString(options.matrix)
 				matrix = Math.floor(matrix)
 				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + matrix)
+					self.log('warn', `an invalid varible has been passed: ${matrix}`)
 					return false
 				}
 				let gain = self.matrixGain[matrix] + options.gain
@@ -1939,7 +1939,7 @@ module.exports = function (self) {
 				let matrix = await self.parseVariablesInString(action.options.matrix)
 				matrix = Math.floor(matrix)
 				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + MatrixCount)
+					self.log('warn', `an invalid varible has been passed: ${MatrixCount}`)
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + matrix)
@@ -1967,7 +1967,7 @@ module.exports = function (self) {
 					choices: self.matrixDestinations,
 					useVariables: true,
 					allowCustom: true,
-					tooltip: 'Varible must return an integer output number 0 - 64',
+					tooltip: 'Varible must return an integer output number 0 - 80',
 				},
 				{
 					id: 'query',
@@ -1982,13 +1982,13 @@ module.exports = function (self) {
 				let matrix = await self.parseVariablesInString(options.matrix)
 				matrix = Math.floor(matrix)
 				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + matrix)
+					self.log('warn', `an invalid varible has been passed: ${matrix}`)
 					return false
 				}
 				let output = await self.parseVariablesInString(options.output)
 				output = Math.floor(output)
 				if (isNaN(output) || output < 0 || output > MaxChannelCount + 16) {
-					self.log('warn', 'an invalid varible has been passed: ' + matrix)
+					self.log('warn', `an invalid varible has been passed: ${matrix}`)
 					return false
 				}
 				if (options.query) {
@@ -2002,7 +2002,7 @@ module.exports = function (self) {
 				let matrix = await self.parseVariablesInString(action.options.matrix)
 				matrix = Math.floor(matrix)
 				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + matrix)
+					self.log('warn', `an invalid varible has been passed: ${matrix}`)
 					return undefined
 				}
 				const matrixOutput = self.matrixOutput[matrix]
@@ -2016,7 +2016,7 @@ module.exports = function (self) {
 				let matrix = await self.parseVariablesInString(action.options.matrix)
 				matrix = Math.floor(matrix)
 				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + matrix)
+					self.log('warn', `an invalid varible has been passed: ${matrix}`)
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + matrix)
@@ -2094,13 +2094,13 @@ module.exports = function (self) {
 				let matrix = await self.parseVariablesInString(options.matrix)
 				matrix = Math.floor(matrix)
 				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + matrix)
+					self.log('warn', `an invalid varible has been passed: ${matrix}`)
 					return false
 				}
 				let chan = await self.parseVariablesInString(options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > MatrixSize) {
-					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return false
 				}
 				if (options.useVar) {
@@ -2123,13 +2123,13 @@ module.exports = function (self) {
 				let matrix = await self.parseVariablesInString(action.options.matrix)
 				matrix = Math.floor(matrix)
 				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + MatrixCount)
+					self.log('warn', `an invalid varible has been passed: ${MatrixCount}`)
 					return undefined
 				}
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > MatrixSize) {
-					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return undefined
 				}
 				const matrixXpoint = self.matrixXpoint[matrix][chan]
@@ -2143,13 +2143,13 @@ module.exports = function (self) {
 				let matrix = await self.parseVariablesInString(action.options.matrix)
 				matrix = Math.floor(matrix)
 				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + MatrixCount)
+					self.log('warn', `an invalid varible has been passed: ${MatrixCount}`)
 					return undefined
 				}
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > MatrixSize) {
-					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + matrix + paramSep + chan)
@@ -2197,13 +2197,13 @@ module.exports = function (self) {
 				let matrix = await self.parseVariablesInString(options.matrix)
 				matrix = Math.floor(matrix)
 				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + matrix)
+					self.log('warn', `an invalid varible has been passed: ${matrix}`)
 					return false
 				}
 				let chan = await self.parseVariablesInString(options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > MatrixSize) {
-					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return false
 				}
 				let gain = self.matrixXpoint[options.matrix][options.channel] + options.gain
@@ -2222,13 +2222,13 @@ module.exports = function (self) {
 				let matrix = await self.parseVariablesInString(action.options.matrix)
 				matrix = Math.floor(matrix)
 				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
-					self.log('warn', 'an invalid varible has been passed: ' + MatrixCount)
+					self.log('warn', `an invalid varible has been passed: ${MatrixCount}`)
 					return undefined
 				}
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > MatrixSize) {
-					self.log('warn', 'an invalid varible has been passed: ' + chan)
+					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return undefined
 				}
 				self.addCmdtoQueue(cmd + paramSep + matrix + paramSep + chan)
@@ -2442,7 +2442,7 @@ module.exports = function (self) {
 					choices: [
 						{ id: 0, label: 'Off' },
 						{ id: 1, label: 'On' },
-						{ id: 2, label: 'On with metering' },
+						//{ id: 2, label: 'On with metering' },
 					],
 				},
 				{
@@ -2509,7 +2509,7 @@ module.exports = function (self) {
 					id: 'clock',
 					type: 'dropdown',
 					label: 'Clock Source',
-					default: '0',
+					default: 0,
 					choices: self.clockSources,
 				},
 				{
@@ -2791,7 +2791,7 @@ module.exports = function (self) {
 					for (let i = 0; i < ip.length; i++) {
 						cleanIP[i] = parseInt(ip[i])
 						if (isNaN(cleanIP[i]) || cleanIP[i] < 0 || cleanIP[i] > 255) {
-							self.log('warn', 'Not a valid IP Address, byte: ' + (i + 1) + ' Value:' + cleanIP[i])
+							self.log('warn', `Not a valid IP Address, byte: ${i + 1} Value: ${cleanIP[i]}`)
 							return false
 						}
 					}

@@ -64,7 +64,7 @@ module.exports = {
 					let musicFlags = this.processBitFlags(i + 84)
 					let overrideFlags = this.processBitFlags(i + 92)
 					if (bypassFlags == false || nomFlags == false || musicFlags == false || overrideFlags == false) {
-						this.log('warn', 'Unexpected response')
+						this.log('warn', '*GP, Unexpected response - one of the bitflag fields returned false')
 						return false
 					}
 					for (let y = 0; y < bypassFlags.length; y++) {
