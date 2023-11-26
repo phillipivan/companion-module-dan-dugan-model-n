@@ -22,34 +22,27 @@ const {
 
 module.exports = {
 	async processBuffer(chunk) {
-		while (chunk[0] != '*' && chunk.length > 0) {
-			chunk = chunk.slice(1)
-		}
-		let strRep = chunk.toString()
-		let cmd = await this.regexCmd(strRep)
-		if (cmd) {
-			this.log('debug', 'Valid response found: ' + strRep)
-		} else {
-			//this.log('warn', 'No command found: ' + strRep)
-			return undefined
-		}
 		let buffer = new ArrayBuffer(chunk.length)
 		let vals = new Uint8Array(buffer)
 		//let weights = new Float32Array(buffer, 140, 64)
+		/*while (chunk[0] != '*' && chunk.length > 0) {
+			chunk = chunk.slice(1)
+		}*/
+		let strRep = chunk.toString()
+		this.log('debug', 'strRep: ' + strRep)
+		let cmd = await this.regexCmd(strRep)
+		if ((strRep.length > 0) & !cmd) {
+			this.log('warn', 'No command found: ' + strRep)
+			return undefined
+		} else if (strRep.length == 0) {
+			return undefined
+		}
 		let varObject = []
 		for (let i = 0; i < chunk.length; i++) {
 			vals[i] = chunk[i]
 		}
 		switch (cmd) {
 			case '*GP,':
-				//get channelparams
-				//binary response
-				//for (let i = 0; i < vals.length; i++) {
-				//	this.log('debug', 'Index: ' + i + ' value: ' + vals[i])
-				//}
-				//for (let i = 0; i < weights.length; i++) {
-				//	this.log('debug', 'Index: ' + i + 'Weight value: ' + weights[i])
-				//}
 				if (vals.length < 438) {
 					// observed 454 but that may be with 'Dugan N >'
 					this.log('warn', '*GP response detected. Expected length > 438 bytes. Buffer length: ' + vals.length)
@@ -122,6 +115,7 @@ module.exports = {
 					this.log('warn', '*GM response detected. Expected length >= 884 bytes. Buffer length: ' + vals.length)
 					return undefined
 				}
+				this.log('debug', '*GM found. Length: ' + vals.length)
 				for (let i = 1; i <= MatrixCount; i++) {
 					this.matrixGain[i] = this.calcXpointGain(vals[i + 879])
 					varObject['matrixOutFader' + vals[1]] = this.matrixGain[i]
@@ -141,6 +135,7 @@ module.exports = {
 					this.log('debug', '*GS response detected. Expected length >= 235 bytes. Buffer length: ' + vals.length)
 					return undefined
 				}
+				this.log('debug', '*GS found. Length: ' + vals.length)
 				for (let i = 1; i <= 8; i++) {
 					let signalFlags = this.processBitFlags(parseInt(vals[i + 3], 10))
 					let clipFlags = this.processBitFlags(parseInt(vals[i + 11], 10))
@@ -197,18 +192,24 @@ module.exports = {
 	},
 
 	async processCmds(cmd) {
-		let line = cmd.toString()
-		let cmds = line.split(cmdSep)
-		await cmds.forEach((element) => {
-			if (element.length > 3) {
-				this.processParams(element)
-			}
+		let string = cmd.toString()
+		let lines = string.split('\r\n')
+		await lines.forEach(async (line) => {
+			let cmds = line.split(cmdSep)
+			await cmds.forEach((element) => {
+				if (element.length > 3) {
+					this.processParams(element)
+				}
+			})
 		})
 		return true
 	},
 
 	async processParams(cmd) {
 		let str = cmd.toString()
+		while (str[0] != '*' && str.length > 0) {
+			str = str.slice(1)
+		}
 		let params = str.split(paramSep)
 		if (params[1] == errSyntax1 || params[1] == errSyntax2 || params[1] == errRange) {
 			this.log('warn', 'bad response: ' + str)
@@ -217,6 +218,7 @@ module.exports = {
 		switch (params[0]) {
 			case '*CM':
 				//channel mode
+				this.log('debug', 'CM response found: ' + str)
 				if (params.length == 3) {
 					this.channelsMode[Number(params[1])] = Number(params[2])
 					this.checkFeedbacks('channelMode')
@@ -226,6 +228,7 @@ module.exports = {
 				break
 			case '*CP':
 				//channel preset
+				this.log('debug', 'CP response found: ' + str)
 				if (params.length == 3) {
 					this.channelsPreset[Number(params[1])] = Number(params[2])
 					this.checkFeedbacks('channelPreset')
@@ -235,6 +238,7 @@ module.exports = {
 				break
 			case '*BP':
 				//channel bypass
+				this.log('debug', 'BP response found: ' + str)
 				if (params.length == 3) {
 					this.channelsBypass[Number(params[1])] = Number(params[2])
 					this.checkFeedbacks('channelBypass')
@@ -244,6 +248,7 @@ module.exports = {
 				break
 			case '*CO':
 				//channel override
+				this.log('debug', 'CO response found: ' + str)
 				if (params.length == 3) {
 					this.channelsOverride[Number(params[1])] = Number(params[2])
 					this.checkFeedbacks('channelOverride')
@@ -265,6 +270,7 @@ module.exports = {
 				break
 			case '*MR':
 				//music mode
+				this.log('debug', 'MR response found: ' + str)
 				if (params.length == 3) {
 					this.channelsMusic[Number(params[1])] = Number(params[2])
 					this.checkFeedbacks('channelMusic')
@@ -274,6 +280,7 @@ module.exports = {
 				break
 			case '*NE':
 				//NOM mode
+				this.log('debug', 'NE response found: ' + str)
 				if (params.length == 3) {
 					this.channelsNom[Number(params[1])] = Number(params[2])
 					this.checkFeedbacks('channelNOM')
@@ -283,6 +290,7 @@ module.exports = {
 				break
 			case '*GA':
 				//group assign
+				this.log('debug', 'GA response found: ' + str)
 				if (params.length == 3) {
 					this.log('info', 'Channel: ' + params[1] + ' assigned to: ' + params[2])
 					this.channelsGroupAssign[Number(params[1])] = Number(params[2])
@@ -293,6 +301,7 @@ module.exports = {
 				break
 			case '*CN':
 				//channel name
+				this.log('debug', 'CN response found: ' + str)
 				if (params.length == 3) {
 					this.channelsName[Number(params[1])] = params[2]
 					//then push to variable
@@ -305,6 +314,7 @@ module.exports = {
 				break
 			case '*SM':
 				//group mute
+				this.log('debug', 'SM response found: ' + str)
 				if (params.length == 2) {
 					this.groupMute[1] = Number(params[1]) & grpAval
 					this.groupMute[2] = Number(params[1]) & grpBval
@@ -316,6 +326,7 @@ module.exports = {
 				break
 			case '*SP':
 				//group preset
+				this.log('debug', 'SP response found: ' + str)
 				if (params.length == 2) {
 					this.groupPreset[1] = Number(params[1]) & grpAval
 					this.groupPreset[2] = Number(params[1]) & grpBval
@@ -327,6 +338,7 @@ module.exports = {
 				break
 			case '*SO':
 				//group override
+				this.log('debug', 'SO response found: ' + str)
 				if (params.length == 2) {
 					this.groupOverride[1] = Number(params[1]) & grpAval
 					this.groupOverride[2] = Number(params[1]) & grpBval
@@ -338,6 +350,7 @@ module.exports = {
 				break
 			case '*LH':
 				//last hold
+				this.log('debug', 'LH response found: ' + str)
 				if (params.length == 2) {
 					this.groupLastHold[1] = Number(params[1]) & grpAval
 					this.groupLastHold[2] = Number(params[1]) & grpBval
@@ -349,6 +362,7 @@ module.exports = {
 			case '*AD': //same as ME
 			case '*ME':
 				//automix depth
+				this.log('debug', 'AD or ME response found: ' + str)
 				if (params.length == 3) {
 					this.groupAutomixDepth[Number(params[1])] = Number(params[2])
 					let varObject = {}
@@ -360,6 +374,7 @@ module.exports = {
 				break
 			case '*NL':
 				//nom gain limit
+				this.log('debug', 'NL response found: ' + str)
 				if (params.length == 3) {
 					this.groupNOMgainlimit[Number(params[1])] = Number(params[2])
 					let varObject = {}
@@ -371,6 +386,7 @@ module.exports = {
 				break
 			case '*MT':
 				//music system threshold
+				this.log('debug', 'MT response found: ' + str)
 				if (params.length == 3) {
 					this.groupMusicThreshold[Number(params[1])] = Number(params[2])
 					let varObject = {}
@@ -382,6 +398,7 @@ module.exports = {
 				break
 			case '*MC':
 				//music system threshold input
+				this.log('debug', 'MC response found: ' + str)
 				if (params.length == 3) {
 					this.groupMusicInput[Number(params[1])] = Number(params[2])
 					this.checkFeedbacks('groupMusicInput')
@@ -391,6 +408,7 @@ module.exports = {
 				break
 			case '*MXM':
 				//matrix bus mute
+				this.log('debug', 'MXM response found: ' + str)
 				if (params.length == 3) {
 					this.matrixMute[Number(params[1])] = Number(params[2])
 					this.checkFeedbacks('matrixMuted')
@@ -400,6 +418,7 @@ module.exports = {
 				break
 			case '*MXP':
 				//matrix bus polarity
+				this.log('debug', 'MXP response found: ' + str)
 				if (params.length == 3) {
 					this.matrixPolarity[Number(params[1])] = Number(params[2])
 					this.checkFeedbacks('matrixPolarity')
@@ -409,6 +428,7 @@ module.exports = {
 				break
 			case '*MXV':
 				//matrix bus gain
+				this.log('debug', 'MXV response found: ' + str)
 				if (params.length == 3) {
 					this.matrixGain[Number(params[1])] = Number(params[2])
 					let varObject = {}
@@ -430,6 +450,7 @@ module.exports = {
 				break
 			case '*OM':
 				//matrix crosspoint
+				this.log('debug', 'OM response found: ' + str)
 				if (params.length == 4) {
 					this.matrixXpoint[Number(params[1])][Number(params[2])] = Number(params[3])
 					let varObject = {}
@@ -441,6 +462,7 @@ module.exports = {
 				break
 			case '*SNC':
 				//scene count
+				this.log('debug', 'SNC response found: ' + str)
 				if (params.length == 2) {
 					if (isNaN(Number(params[1]))) {
 						this.log('warn', 'Unexpected SNC response: ' + str)
@@ -456,6 +478,7 @@ module.exports = {
 				break
 			case '*SNA':
 				//active scene
+				this.log('debug', 'SNA response found: ' + str)
 				if (params.length == 4) {
 					let hasChanged = Number(params[3]) == 1 ? true : false
 					this.setVariableValues({
@@ -471,6 +494,7 @@ module.exports = {
 				break
 			case '*SNR':
 				//recall scene
+				this.log('debug', 'SNR response found: ' + str)
 				if (params.length == 2) {
 					let err = params[1].search('Error: scene')
 					if (err == -1) {
@@ -487,6 +511,7 @@ module.exports = {
 			case '*SNN':
 				//save scene
 				//save new scene
+				this.log('debug', 'SNS or SNN response found: ' + str)
 				if (params.length == 2) {
 					let err = params[1].search('Error: scene')
 					if (err == -1) {
@@ -502,6 +527,7 @@ module.exports = {
 				break
 			case '*SNE':
 				//rename scene
+				this.log('debug', 'SNE response found: ' + str)
 				if (params.length == 3) {
 					this.log('info', 'Scene: ' + params[1] + '. Renamed to: ' + params[2])
 					this.addCmdtoQueue('SNC')
@@ -512,6 +538,7 @@ module.exports = {
 				break
 			case '*SND':
 				//delete scene
+				this.log('debug', 'SND response found: ' + str)
 				if (params.length == 2) {
 					let err = params[1].search('Error: scene')
 					if (err == -1) {
@@ -536,6 +563,7 @@ module.exports = {
 				break
 			case '*SU':
 				//subscribe unsolicited
+				this.log('debug', 'SU response found: ' + str)
 				if (isNaN(params[1])) {
 					this.log('warn', 'SU has returned an unexpected value: ' + str)
 					return false
@@ -545,6 +573,7 @@ module.exports = {
 				break
 			case '*LG':
 				//link group
+				this.log('debug', 'LG response found: ' + str)
 				if (params.length == 2) {
 					this.setVariableValues({
 						linkGroup: Number(params[1]),
@@ -555,6 +584,7 @@ module.exports = {
 				break
 			case '*CS':
 				//clock sourse
+				this.log('debug', 'CS response found: ' + str)
 				if (params.length == 2) {
 					if (params[1] > 0) {
 						this.setVariableValues({
@@ -579,6 +609,7 @@ module.exports = {
 				break
 			case '*AM':
 				//adat mirror
+				this.log('debug', 'AM response found: ' + str)
 				if (params.length == 2) {
 					this.setVariableValues({
 						adatMirror: adatMirror[params[1]],
@@ -589,6 +620,7 @@ module.exports = {
 				break
 			case '*CFN':
 				//automix channels
+				this.log('debug', 'CFN response found: ' + str)
 				if (params.length == 2) {
 					this.setVariableValues({
 						channelCount: Number(params[1]),
@@ -615,6 +647,7 @@ module.exports = {
 				break
 			case '*CFS':
 				//input channel offset
+				this.log('debug', 'CFS response found: ' + str)
 				if (params.length == 2) {
 					this.setVariableValues({
 						inputOffset: Number(params[1]),
@@ -625,6 +658,7 @@ module.exports = {
 				break
 			case '*BM':
 				//blink mode
+				this.log('debug', 'BM response found: ' + str)
 				if (params.length == 2) {
 					let blink = params[1] == '1' ? true : false
 					this.setVariableValues({
@@ -636,6 +670,7 @@ module.exports = {
 				break
 			case '*DH':
 				//dhcp
+				this.log('debug', 'DH response found: ' + str)
 				if (params.length == 2) {
 					let dhcp = params[1] == '1' ? true : false
 					this.setVariableValues({
@@ -647,6 +682,7 @@ module.exports = {
 				break
 			case '*SC':
 				//system config
+				this.log('debug', 'SC response found: ' + str)
 				if (params.length == 13) {
 					let dhcp = params[11] == '1' ? true : false
 					this.setVariableValues({
@@ -696,6 +732,7 @@ module.exports = {
 				break
 			case '*VE':
 				//firmware versions
+				this.log('debug', 'VE response found: ' + str)
 				if (params.length == 5) {
 					this.setVariableValues({
 						firmwareVersion: params[1],
@@ -709,6 +746,7 @@ module.exports = {
 				break
 			case '*CC':
 				//client connections
+				this.log('debug', 'CC response found: ' + str)
 				if (params.length == 3) {
 					let udp = params[1].split(':')
 					let tcp = params[2].split(':')
@@ -725,6 +763,7 @@ module.exports = {
 				break
 			case '*HW':
 				//resource useage
+				this.log('debug', 'HW response found: ' + str)
 				if (params.length == 9) {
 					let heatBeat = params[1].split(':')
 					let lwip = params[2].split(':')
@@ -750,6 +789,7 @@ module.exports = {
 				break
 			case '*HR':
 				//switch headroom
+				this.log('debug', 'HR response found: ' + str)
 				this.setVariableValues({
 					switchHeadroom: Number(params[1]),
 				})
@@ -772,6 +812,7 @@ module.exports = {
 				break
 			case '*MM':
 				//master mode
+				this.log('debug', 'MM response found: ' + str)
 				if (params.length == 2) {
 					let mstSlv = Number(params[2]) == 1 ? true : false
 					this.setVariableValues({
@@ -783,6 +824,7 @@ module.exports = {
 				break
 			case '*NA':
 				//system name
+				this.log('debug', 'NA response found: ' + str)
 				if (params.length == 2) {
 					this.setVariableValues({
 						hostName: params[1],
@@ -793,6 +835,7 @@ module.exports = {
 				break
 			case '*IP':
 				//ip
+				this.log('debug', 'IP response found: ' + str)
 				if (params.length == 5) {
 					this.setVariableValues({
 						ipAddress: params[2] + '.' + params[3] + '.' + params[4] + '.' + params[5],
@@ -803,6 +846,7 @@ module.exports = {
 				break
 			case '*NM':
 				//netmask
+				this.log('debug', 'NM response found: ' + str)
 				if (params.length == 5) {
 					this.setVariableValues({
 						netMask: params[2] + '.' + params[3] + '.' + params[4] + '.' + params[5],
@@ -813,6 +857,7 @@ module.exports = {
 				break
 			case '*GW':
 				//gateway
+				this.log('debug', 'GW response found: ' + str)
 				if (params.length == 5) {
 					this.setVariableValues({
 						gateway: params[2] + '.' + params[3] + '.' + params[4] + '.' + params[5],
@@ -823,6 +868,7 @@ module.exports = {
 				break
 			case '*CNS':
 				//channel name list
+				this.log('debug', 'CNS response found: ' + str)
 				if (params.length >= 4) {
 					if (params.length == 3 + Number(params[2])) {
 						let varObject = {}
@@ -842,6 +888,7 @@ module.exports = {
 				break
 			case '*SNL':
 				//scene name list
+				this.log('debug', 'SNL response found: ' + str)
 				if (params.length > 4) {
 					this.sceneList = []
 					for (let i = 4; i < params.length; i++) {
@@ -858,6 +905,7 @@ module.exports = {
 				break
 			case '*GSA':
 				//automix gains for all
+				this.log('debug', 'GSA response found: ' + str)
 				if (params.length != MaxChannelCount + 1) {
 					this.log('warn', 'Unexpected GSA length: ' + params.length + ' response: ' + str)
 					return false
@@ -874,6 +922,7 @@ module.exports = {
 				break
 			case '*GSC':
 				//signal clip
+				this.log('debug', 'GSC response found: ' + str)
 				if (params.length != 9) {
 					this.log('warn', 'Unexpected GSC length: ' + str)
 					return false
@@ -896,6 +945,7 @@ module.exports = {
 			case '*GSS':
 			case '*GSP':
 				//signal presence GSS Model E2A, E3A, GSP for Model M & N
+				this.log('debug', 'GSS or GSP response found: ' + str)
 				if (params.length != 9) {
 					this.log('warn', 'Unexpected GSS/GSP length: ' + str)
 					return false
@@ -917,6 +967,7 @@ module.exports = {
 				break
 			case '*GSI':
 				//input peaks
+				this.log('debug', 'GSI response found: ' + str)
 				if (params.length != MaxChannelCount + 1) {
 					this.log('warn', 'Unexpected GSI length: ' + params.length + ' response: ' + str)
 					return false
@@ -933,6 +984,7 @@ module.exports = {
 				break
 			case '*GSO':
 				//output peaks
+				this.log('debug', 'GSO response found: ' + str)
 				if (params.length != MaxChannelCount + 1) {
 					this.log('warn', 'Unexpected GSO length: ' + params.length + ' response: ' + str)
 					return false
@@ -949,6 +1001,7 @@ module.exports = {
 				break
 			case '*GSM':
 				//music reference peaks
+				this.log('debug', 'GSM response found: ' + str)
 				if (params.length != GroupCount + 1) {
 					this.log('warn', 'Unexpected GSM length: ' + params.length + ' response: ' + str)
 					return false
@@ -965,6 +1018,7 @@ module.exports = {
 				break
 			case '*GSN':
 				//nom gain limits
+				this.log('debug', 'GSN response found: ' + str)
 				if (params.length != GroupCount + 1) {
 					this.log('warn', 'Unexpected GSN length: ' + params.length + ' response: ' + str)
 					return false
@@ -981,6 +1035,7 @@ module.exports = {
 				break
 			case '*GSX':
 				//matrix output meters
+				this.log('debug', 'GSX response found: ' + str)
 				if (params.length != MatrixCount + 1) {
 					this.log('warn', 'Unexpected GSX length: ' + params.length + ' response: ' + str)
 					return false
@@ -998,8 +1053,9 @@ module.exports = {
 			case '*PN':
 				this.log('info', 'Ping received: ' + params[1])
 				break
-			case 'Dugan N ':
-			case 'Dugan M ':
+			case 'Dugan N >':
+			case 'Dugan M >':
+			case '':
 				break
 			case welcomeMessageM:
 			case welcomeMessageN:

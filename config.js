@@ -47,7 +47,7 @@ module.exports = {
 				this.updateVariableDefinitions() // export variable definitions
 				//this.setVariableValues(variableDefaults)
 			}
-			this.config.subscription = this.config.subscription == undefined ? 1 : this.config.subscription
+			//this.config.subscription = this.config.subscription == undefined ? 1 : this.config.subscription
 			this.addCmdtoQueue('SU' + paramSep + this.config.subscription)
 		}
 	},

@@ -54,7 +54,7 @@ module.exports = {
 		cmdOnConnect.forEach((element) => {
 			this.addCmdtoQueue(element)
 		})
-		this.config.subscription = this.config.subscription == undefined ? 1 : this.config.subscription
+		//this.config.subscription = this.config.subscription == undefined ? 1 : this.config.subscription
 		this.addCmdtoQueue('SU' + paramSep + this.config.subscription)
 		this.getNames()
 		this.subscribeFeedbacks()
@@ -102,7 +102,7 @@ module.exports = {
 				this.queryOnConnect()
 			})
 			this.socket.on('data', (chunk) => {
-				let i = 0
+				/*let i = 0
 				let line = ''
 				let offset = 0
 				let receivebuffer = ''
@@ -113,6 +113,11 @@ module.exports = {
 					this.processBuffer(line)
 				}
 				receivebuffer = receivebuffer.slice(offset)
+				if (receivebuffer.length > 12) {
+					this.processBuffer(receivebuffer)
+					receivebuffer = null
+				}*/
+				this.processBuffer(chunk)
 			})
 		} else {
 			this.updateStatus(InstanceStatus.BadConfig)

@@ -7,6 +7,7 @@ module.exports = {
 			safeCommand = command[0]
 		}
 		safeCommand = safeCommand != undefined ? safeCommand : false
+		this.log('debug', 'regexCmd::safeCommand: ' + safeCommand)
 		return safeCommand
 	},
 	regexSafeString(dirtyString) {
@@ -83,11 +84,11 @@ module.exports = {
 		if (val < 0 || val > 2) {
 			return undefined
 		}
-		if (this.config.subscription >= val) {
+		if (this.config.subsscription >= val) {
 			return true
 		}
-		this.config.subscription = val
-		this.addCmdtoQueue('SU' + paramSep + val)
-		return val
+		//this.config.subscription = val
+		//this.addCmdtoQueue('SU' + paramSep + val)
+		//return val
 	},
 }

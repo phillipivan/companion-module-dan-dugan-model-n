@@ -1,4 +1,4 @@
-export const regexpCmd = new RegExp(/([*])([a-zA-Z]{0,3})([,])/g)
+export const regexpCmd = new RegExp(/^([*])([a-zA-Z]{0,3})([,])/g)
 export const regexpSafeString = new RegExp(/^[^,*;:]{1,16}/g)
 export const msgDelay = [60, 70, 80, 100] //Dugan advice is 50ms minimum, but have often crashed unit at that rate
 export const duganModels = [
