@@ -1,5 +1,14 @@
 const { InstanceStatus, TCPHelper } = require('@companion-module/base')
-const { EndSession, msgDelay, EOM, cmdOnConnect, cmdOnPollInterval, paramSep } = require('./consts.js')
+const {
+	EndSession,
+	msgDelay,
+	EOM,
+	cmdOnConnect,
+	cmdOnPollInterval,
+	paramSep,
+	meterInterval,
+	meterCommands,
+} = require('./consts.js')
 
 module.exports = {
 	async addCmdtoQueue(cmd) {
@@ -47,22 +56,24 @@ module.exports = {
 			}
 			await this.addCmdtoQueue(`CNS${paramSep}${startCh}${paramSep}${count}`)
 		}
+		return true
 	},
 
 	//queries made on initial connection.
-	queryOnConnect() {
+	async queryOnConnect() {
 		cmdOnConnect.forEach((element) => {
 			this.addCmdtoQueue(element)
 		})
-		//this.config.subscription = this.config.subscription == undefined ? 1 : this.config.subscription
+		this.config.subscription = this.config.subscription == undefined ? 1 : this.config.subscription
 		this.addCmdtoQueue(`SU${paramSep}${this.config.subscription}`)
-		this.getNames()
-		this.subscribeFeedbacks()
+		await this.getNames()
+		await this.subscribeFeedbacks()
+		await this.subscribeActions()
 		if (this.config.model == 11 || this.config.model == 12) {
 			this.addCmdtoQueue('GM') //only query matrix params if connected to model M or N
 		}
 		for (let i = 1; i <= this.config.channels; i++) {
-			this.addCmdtoQueue(`SU${paramSep}${i}`)
+			await this.addCmdtoQueue(`CW${paramSep}${i}`)
 		}
 		return true
 	},
@@ -76,6 +87,16 @@ module.exports = {
 		this.keepAliveTimer = setTimeout(() => {
 			this.pollStatus()
 		}, this.config.keepAlive * 1000)
+	},
+
+	checkMeters() {
+		//this.log('debug', 'pollStatus')
+		meterCommands.forEach((element) => {
+			this.addCmdtoQueue(element)
+		})
+		this.meterTimer = setTimeout(() => {
+			this.checkMeters()
+		}, meterInterval)
 	},
 
 	initTCP() {
@@ -94,15 +115,19 @@ module.exports = {
 			this.socket.on('error', (err) => {
 				this.log('error', `Network error: ${err.message}`)
 				clearTimeout(this.keepAliveTimer)
+				clearTimeout(this.meterTimer)
 			})
 			this.socket.on('connect', () => {
-				this.log('info', `Connected`)
+				this.log('info', 'Connected')
+				this.queryOnConnect()
 				if (this.config.keepAlive > 0) {
 					this.keepAliveTimer = setTimeout(() => {
 						this.pollStatus()
 					}, this.config.keepAlive * 1000)
 				}
-				this.queryOnConnect()
+				this.meterTimer = setTimeout(() => {
+					this.checkMeters()
+				}, meterInterval)
 			})
 			this.socket.on('data', (chunk) => {
 				/*let i = 0

@@ -18,7 +18,6 @@ const {
 	welcomeMessageN,
 	MaxChannelCount,
 } = require('./consts.js')
-//const { processBitFlags } = require('./util.js')
 
 module.exports = {
 	async processBuffer(chunk) {
@@ -29,10 +28,8 @@ module.exports = {
 			chunk = chunk.slice(1)
 		}*/
 		let strRep = chunk.toString()
-		this.log('debug', 'strRep: ' + strRep)
 		let cmd = await this.regexCmd(strRep)
 		if ((strRep.length > 0) & !cmd) {
-			this.log('warn', 'No command found: ' + strRep)
 			return undefined
 		} else if (strRep.length == 0) {
 			return undefined
@@ -258,6 +255,7 @@ module.exports = {
 				break
 			case '*CW':
 				//channel weight
+				this.log('debug', 'CW response found: ' + str)
 				if (params.length == 3) {
 					this.channelsWeight[Number(params[1])] = Number(params[2])
 					//then push to variable

@@ -1,4 +1,4 @@
-const { regexpCmd, regexpSafeString, paramSep } = require('./consts.js')
+const { regexpCmd, regexpSafeString /** , paramSep*/ } = require('./consts.js')
 module.exports = {
 	regexCmd(cmd) {
 		let command
@@ -7,7 +7,6 @@ module.exports = {
 			safeCommand = command[0]
 		}
 		safeCommand = safeCommand != undefined ? safeCommand : false
-		this.log('debug', 'regexCmd::safeCommand: ' + safeCommand)
 		return safeCommand
 	},
 	regexSafeString(dirtyString) {
