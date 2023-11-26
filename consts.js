@@ -33,7 +33,7 @@ export const paramSep = ',' //seperator between parameters
 export const cmdSep = ';' //seperator between responses when multiple sent in 1 message
 // eslint-disable-next-line prettier/prettier
 export const cmdOnConnect = ['SC', 'VE', 'BM', 'HW', 'HR', 'SNC', 'SNA', 'LG', 'CS', 'AM', 'CC', 'SF', 'MM', 'CFS', 'BM'] //queries to be made on initial connection
-export const cmdOnPollInterval = ['PN', 'SNC'] //queries to be made each poll interval
+export const cmdOnPollInterval = ['SNA', 'SNC'] //queries to be made each poll interval
 export const errSyntax1 = 'Error: syntax'
 export const errSyntax2 = 'ERROR: syntax'
 export const errRange = 'Error: Channel number out of range'

@@ -135,6 +135,9 @@ module.exports = {
 				],
 				default: 1,
 				width: 4,
+				isVisible: () => {
+					return false
+				},
 			},
 		]
 	},

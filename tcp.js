@@ -8,7 +8,7 @@ module.exports = {
 			await this.cmdQueue.push(cmd)
 			return true
 		}
-		this.log('warn', 'Invalid command: ' + cmd)
+		this.log('warn', `Invalid command: ${cmd}`)
 		return false
 	},
 
@@ -25,11 +25,11 @@ module.exports = {
 		//this.log('debug', 'sendCommand')
 		if (cmd !== undefined) {
 			if (this.socket !== undefined && this.socket.isConnected) {
-				this.log('info', 'Sending Command: ' + cmd)
+				this.log('info', `Sending Command: ${cmd}`)
 				this.socket.send(cmd + EOM)
 				return true
 			} else {
-				this.log('warn', 'Socket not connected, tried to send: ' + cmd)
+				this.log('warn', `Socket not connected, tried to send: ${cmd}`)
 			}
 		} else {
 			this.log('warn', 'Command undefined')
@@ -45,7 +45,7 @@ module.exports = {
 			if (startCh + count - 1 > this.config.channels) {
 				count = this.config.channels - startCh + 1
 			}
-			await this.addCmdtoQueue('CNS' + paramSep + startCh + paramSep + count)
+			await this.addCmdtoQueue(`CNS${paramSep}${startCh}${paramSep}${count}`)
 		}
 	},
 
@@ -55,11 +55,14 @@ module.exports = {
 			this.addCmdtoQueue(element)
 		})
 		//this.config.subscription = this.config.subscription == undefined ? 1 : this.config.subscription
-		this.addCmdtoQueue('SU' + paramSep + this.config.subscription)
+		this.addCmdtoQueue(`SU${paramSep}${this.config.subscription}`)
 		this.getNames()
 		this.subscribeFeedbacks()
 		if (this.config.model == 11 || this.config.model == 12) {
 			this.addCmdtoQueue('GM') //only query matrix params if connected to model M or N
+		}
+		for (let i = 1; i <= this.config.channels; i++) {
+			this.addCmdtoQueue(`SU${paramSep}${i}`)
 		}
 		return true
 	},

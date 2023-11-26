@@ -42,7 +42,7 @@ class DUGAN_AUTOMIXER extends InstanceBase {
 	}
 	// When module gets deleted
 	async destroy() {
-		this.log('debug', 'destroy. ID: ' + this.id)
+		this.log('debug', `destroy. ID: ${this.id}`)
 		clearTimeout(this.keepAliveTimer)
 		clearTimeout(this.cmdTimer)
 		if (this.socket) {
@@ -58,25 +58,25 @@ class DUGAN_AUTOMIXER extends InstanceBase {
 	setIterativeVariables() {
 		let varList = []
 		for (let i = 1; i <= MaxChannelCount; i++) {
-			varList['channelName' + i] = this.channelsName[i]
-			varList['channelWeight' + i] = this.channelsWeight[i]
-			varList['channelAmixGain' + i] = this.channelsAmixGain[i]
-			varList['channelInputLevel' + i] = this.channelsInputPeak[i]
-			varList['channelOutputLevel' + i] = this.channelsOutputPeak[i]
+			varList[`channelName${i}`] = this.channelsName[i]
+			varList[`channelWeight${i}`] = this.channelsWeight[i]
+			varList[`channelAmixGain${i}`] = this.channelsAmixGain[i]
+			varList[`channelInputLevel${i}`] = this.channelsInputPeak[i]
+			varList[`channelOutputLevel${i}`] = this.channelsOutputPeak[i]
 		}
 		for (let i = 1; i <= MatrixCount; i++) {
-			varList['matrixOutFader' + i] = this.matrixOutput[i]
-			varList['matrixOutLevel' + i] = this.matrixOutputPeak[i]
+			varList[`matrixOutFader${i}`] = this.matrixOutput[i]
+			varList[`matrixOutLevel${i}`] = this.matrixOutputPeak[i]
 			for (let x = 1; x <= MatrixSize; x++) {
-				varList['matrix' + i + 'Xpoint' + x] = this.matrixXpoint[i][x]
+				varList[`matrix${i}Xpoint${x}`] = this.matrixXpoint[i][x]
 			}
 		}
 		for (let i = 1; i <= GroupCount; i++) {
-			varList['groupNOM' + i] = this.groupNOMgainlimit[i]
-			varList['groupNOMpeak' + i] = this.groupNOMpeak[i]
-			varList['groupAD' + i] = this.groupAutomixDepth[i]
-			varList['groupMST' + i] = this.groupMusicThreshold[i]
-			varList['groupMSTgain' + i] = this.groupMusicPeak[i]
+			varList[`groupNOM${i}`] = this.groupNOMgainlimit[i]
+			varList[`groupNOMpeak${i}`] = this.groupNOMpeak[i]
+			varList[`groupAD${i}`] = this.groupAutomixDepth[i]
+			varList[`groupMST${i}`] = this.groupMusicThreshold[i]
+			varList[`groupMSTgain${i}`] = this.groupMusicPeak[i]
 		}
 		this.setVariableValues(varList)
 	}
@@ -100,41 +100,41 @@ class DUGAN_AUTOMIXER extends InstanceBase {
 			this.config.channels = duganChannels[this.config.model]
 		}
 		for (let i = 1; i <= this.config.channels; i++) {
-			this.matrixSources.push({ id: i, label: 'Automix Channel ' + i })
-			this.channelNames.push({ id: i, label: 'Automix Channel ' + i })
+			this.matrixSources.push({ id: i, label: `Automix Channel ${i}` })
+			this.channelNames.push({ id: i, label: `Automix Channel ${i}` })
 		}
 		if (this.config.model == 11) {
 			for (let i = 1; i <= 32; i++) {
-				this.musicInputs.push({ id: i, label: 'MADI Input ' + i })
+				this.musicInputs.push({ id: i, label: `MADI Input ${i}` })
 			}
 			for (let i = 1; i <= MaxChannelCount; i++) {
-				this.matrixSources.push({ id: i + MaxChannelCount, label: 'MADI Input ' + i })
-				this.matrixDestinations.push({ id: i, label: 'MADI Output ' + i })
+				this.matrixSources.push({ id: i + MaxChannelCount, label: `MADI Input ${i}` })
+				this.matrixDestinations.push({ id: i, label: `MADI Output ${i}` })
 			}
 			this.clockSources.push({ id: 0, label: 'Madi' })
 			for (let i = 1; i <= MaxChannelCount - this.config.channels + 1; i++) {
-				this.offsetChannelList.push({ id: i, label: 'Madi Input ' + i })
+				this.offsetChannelList.push({ id: i, label: `Madi Input ${i}` })
 			}
 		} else {
 			for (let i = 1; i <= 32; i++) {
 				this.musicInputs.push({ id: i, label: 'Dante Input ' + i })
 			}
 			for (let i = 1; i <= MaxChannelCount; i++) {
-				this.matrixSources.push({ id: i + MaxChannelCount, label: 'Dante Input ' + i })
-				this.matrixDestinations.push({ id: i, label: 'Dante Output ' + i })
+				this.matrixSources.push({ id: i + MaxChannelCount, label: `Dante Input ${i}` })
+				this.matrixDestinations.push({ id: i, label: `Dante Output ${i}` })
 			}
 			this.clockSources.push({ id: 0, label: 'Dante' })
 			for (let i = 1; i <= MaxChannelCount - this.config.channels + 1; i++) {
-				this.offsetChannelList.push({ id: i, label: 'Dante Input ' + i })
+				this.offsetChannelList.push({ id: i, label: `Dante Input ${i}` })
 			}
 		}
 		this.clockSources.push({ id: 1, label: 'Word Clock' })
 		this.clockSources.push({ id: 2, label: 'Internal' })
 		this.clockSources.push({ id: 3, label: 'ADAT' })
 		for (let i = 1; i <= 8; i++) {
-			this.musicInputs.push({ id: i + MaxChannelCount, label: 'ADAT Input' + i })
-			this.matrixSources.push({ id: i + MaxChannelCount * 2, label: 'ADAT Input ' + i })
-			this.matrixDestinations.push({ id: i + MaxChannelCount, label: 'ADAT Output ' + i })
+			this.musicInputs.push({ id: i + MaxChannelCount, label: `ADAT Input ${i}` })
+			this.matrixSources.push({ id: i + MaxChannelCount * 2, label: `ADAT Input ${i}` })
+			this.matrixDestinations.push({ id: i + MaxChannelCount, label: `ADAT Output ${i}` })
 		}
 		for (let i = 81; i <= 86; i++) {
 			this.musicInputs.push({ id: i, label: 'Mix Bus ' + (i - 80) })
@@ -146,7 +146,7 @@ class DUGAN_AUTOMIXER extends InstanceBase {
 		this.matrixOutputPeak = []
 		this.matrixOutput = []
 		for (let i = 1; i <= this.matrixCount; i++) {
-			this.matrixNames.push({ id: i, label: 'Matrix Bus ' + i })
+			this.matrixNames.push({ id: i, label: `Matrix Bus ${i}` })
 		}
 		for (let i = 0; i <= this.matrixCount; i++) {
 			this.matrixGain[i] = 0
@@ -206,7 +206,7 @@ class DUGAN_AUTOMIXER extends InstanceBase {
 			this.channelsWeight[i] = 0
 			this.channelsNom[i] = 0
 			this.channelsMusic[i] = 0
-			this.channelsName[i] = 'Channel ' + i
+			this.channelsName[i] = `Channel ${i}`
 			this.channelsGroupAssign[i] = 1
 			this.channelsAmixGain[i] = -127.5
 			this.channelsPresence[i] = false
