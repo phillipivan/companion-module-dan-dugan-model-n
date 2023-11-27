@@ -1,4 +1,4 @@
-const { regexpCmd, regexpSafeString /** , paramSep*/ } = require('./consts.js')
+const { regexpCmd, regexpSafeString, paramSep } = require('./consts.js')
 module.exports = {
 	regexCmd(cmd) {
 		let command
@@ -86,8 +86,8 @@ module.exports = {
 		if (this.config.subsscription >= val) {
 			return true
 		}
-		//this.config.subscription = val
-		//this.addCmdtoQueue('SU' + paramSep + val)
-		//return val
+		this.config.subscription = val
+		this.addCmdtoQueue('SU' + paramSep + val)
+		return val
 	},
 }

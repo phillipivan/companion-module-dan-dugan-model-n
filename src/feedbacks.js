@@ -423,7 +423,7 @@ module.exports = async function (self) {
 				if (self.config.model != 11 && self.config.model != 12) {
 					self.addCmdtoQueue('GSS')
 				}
-				self.checkSubscriptionLevel(2)
+				self.checkSubscriptionLevel(1) // should be 2 if SU behaved properly
 			},
 		},
 		channelInputPeak: {
@@ -481,7 +481,7 @@ module.exports = async function (self) {
 				if (self.config.model != 11 && self.config.model != 12) {
 					self.addCmdtoQueue('GSI')
 				}
-				self.checkSubscriptionLevel(2)
+				self.checkSubscriptionLevel(1) // should be 2 if SU behaved properly
 			},
 		},
 		channelOutputPeak: {
@@ -539,7 +539,7 @@ module.exports = async function (self) {
 				if (self.config.model != 11 && self.config.model != 12) {
 					self.addCmdtoQueue('GSO')
 				}
-				self.checkSubscriptionLevel(2)
+				self.checkSubscriptionLevel(1) // should be 2 if SU behaved properly
 			},
 		},
 		channelAmixGain: {
@@ -597,7 +597,7 @@ module.exports = async function (self) {
 				if (self.config.model != 11 && self.config.model != 12) {
 					self.addCmdtoQueue('GSA')
 				}
-				self.checkSubscriptionLevel(2)
+				self.checkSubscriptionLevel(1) // should be 2 if SU behaved properly
 			},
 		},
 		groupMute: {
@@ -829,7 +829,7 @@ module.exports = async function (self) {
 				if (self.config.model != 11 && self.config.model != 12) {
 					self.addCmdtoQueue('GSM')
 				}
-				self.checkSubscriptionLevel(2)
+				self.checkSubscriptionLevel(1) // should be 2 if SU behaved properly
 			},
 		},
 		groupMusicInput: {
