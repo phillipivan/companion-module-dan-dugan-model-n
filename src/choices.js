@@ -128,7 +128,7 @@ module.exports = {
 		{ id: 'GW', label: 'Gateway' },
 	],
 	query_meters: [
-		{ id: 'GS', label: 'Channel Status' },
+		//{ id: 'GS', label: 'Channel Status' },
 		{ id: 'GSA', label: 'Automix Gains' },
 		{ id: 'GSC', label: 'Signal Clip' },
 		{ id: 'GSS', label: 'Signal Presence' },
@@ -159,6 +159,6 @@ module.exports = {
 	config_subscribe: [
 		{ id: 0, label: 'Off' },
 		{ id: 1, label: 'On' },
-		{ id: 2, label: 'On with Metering' },
+		//{ id: 2, label: 'On with Metering' },
 	],
 }

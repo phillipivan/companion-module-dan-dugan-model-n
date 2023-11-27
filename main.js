@@ -1,14 +1,14 @@
 const { InstanceBase, runEntrypoint, InstanceStatus } = require('@companion-module/base')
-const UpgradeScripts = require('./upgrades.js')
-const UpdateActions = require('./actions.js')
-const UpdateFeedbacks = require('./feedbacks.js')
-const UpdateVariableDefinitions = require('./variables.js')
-const config = require('./config')
-const choices = require('./choices')
-const variableDefaults = require('./variable-defaults.js')
-const util = require('./util')
-const tcp = require('./tcp')
-const processCmd = require('./processcmd')
+const UpgradeScripts = require('./src/upgrades.js')
+const UpdateActions = require('./src/actions.js')
+const UpdateFeedbacks = require('./src/feedbacks.js')
+const UpdateVariableDefinitions = require('./src/variables.js')
+const config = require('./src/config.js')
+const choices = require('./src/choices.js')
+const variableDefaults = require('./src/variable-defaults.js')
+const util = require('./src/util.js')
+const tcp = require('./src/tcp.js')
+const processCmd = require('./src/processcmd.js')
 const {
 	MaxChannelCount,
 	GroupCount,
@@ -17,7 +17,7 @@ const {
 	EndSession,
 	duganChannels,
 	msgDelay,
-} = require('./consts.js')
+} = require('./src/consts.js')
 
 class DUGAN_AUTOMIXER extends InstanceBase {
 	constructor(internal) {
