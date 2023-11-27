@@ -47,13 +47,14 @@ module.exports = {
 				this.updateVariableDefinitions() // export variable definitions
 				//this.setVariableValues(variableDefaults)
 			}
-			clearTimeout(this.meterTimer)
-			if (this.config.meterRate > 0) {
-				this.meterTimer = setTimeout(() => {
-					this.checkMeters()
-				}, this.config.meterRate)
-			}
-			this.addCmdtoQueue('SU' + paramSep + this.config.subscription)
+		}
+		this.addCmdtoQueue('SU' + paramSep + this.config.subscription)
+		clearTimeout(this.meterTimer)
+		this.log('info', `meter rate: ${this.config.meterRate}`)
+		if (this.config.meterRate > 200) {
+			this.meterTimer = setTimeout(() => {
+				this.checkMeters()
+			}, this.config.meterRate)
 		}
 	},
 	// Return config fields for web config
@@ -139,6 +140,18 @@ module.exports = {
 				isVisible: () => {
 					return false
 				},
+			},
+			{
+				type: 'number',
+				id: 'isTalkingThreshold',
+				label: 'Talking Threshold',
+				default: -6,
+				width: 2,
+				min: -40,
+				max: 0,
+				range: true,
+				regex: Regex.NUMBER,
+				tooltip: 'Automix gain threshold for Is Talking function',
 			},
 		]
 	},

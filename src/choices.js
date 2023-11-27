@@ -158,8 +158,6 @@ module.exports = {
 	],
 	config_meterInterval: [
 		{ id: 0, label: 'Off' },
-		{ id: 250, label: '250ms' },
-		{ id: 500, label: '500ms' },
 		{ id: 1000, label: '1 Seconds' },
 		{ id: 2000, label: '2 Seconds' },
 		{ id: 4000, label: '4 Seconds' },

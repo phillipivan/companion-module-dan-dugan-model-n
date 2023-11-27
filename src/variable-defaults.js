@@ -35,6 +35,8 @@ const variableDefaults = {
     sceneActive: 'unknown',
     sceneActiveIndex: 'unknown',
     sceneActiveChanged: false,
+    isTalkingChannel: 0,
+    isTalkingName: '',
 };
 
 module.exports = variableDefaults;

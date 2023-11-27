@@ -37,6 +37,8 @@ module.exports = async function (self) {
 		{ variableId: 'sceneActive', name: 'Active Scene' },
 		{ variableId: 'sceneActiveIndex', name: 'Active Scene Index' },
 		{ variableId: 'sceneActiveChanged', name: 'Active Scene Changed' },
+		{ variableId: 'isTalkingChannel', name: 'Is Talking Channel' },
+		{ variableId: 'isTalkingName', name: 'Is Talking Name' },
 	]
 	for (let i = 1; i <= MaxChannelCount; i++) {
 		varList.push(

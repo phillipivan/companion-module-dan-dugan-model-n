@@ -6,7 +6,7 @@ Most functions will work with the Dugan-MY16 .
 - [Dugan Auto Mixer Product Page](https://www.dandugan.com/products/)
 
 ## Configuration
-Enter the IP address of the control port of the Automixer. The unit will accept connections on TCP:23 or TCP:9776 (and UDP:9776, not supported at present). This model defaults to TCP:23 for easiest integration with firewalls and complex networks. Poll interval determines how frequenctly channel parameters are checked, set to zero to turn off. Enter the number of automix channels the unit is configured as for correct initialisation, once the module connects if the unit reports a different number of configured channels the module will log the discrepancy and adapt. The messaging rate can be left at fast most of the time. If you find commands are getting lost or responses are missing, especially over a WAN you may try slowing it down. Unsolicited message subscription determines if the dugan will inform companion about changes from other clients, in general this should be left on. The feedbacks will force subscriptions on if it is off.
+Enter the IP address of the control port of the Automixer. The unit will accept connections on TCP:23 or TCP:9776 (and UDP:9776, not supported at present). This model defaults to TCP:23 for easiest integration with firewalls and complex networks. Poll interval determines how frequenctly channel parameters are checked, set to zero to turn off. Enter the number of automix channels the unit is configured as for correct initialisation, once the module connects if the unit reports a different number of configured channels the module will log the discrepancy and adapt. The messaging rate can be left at fast most of the time. If you find commands are getting lost or responses are missing, especially over a WAN you may try slowing it down. Unsolicited message subscription determines if the dugan will inform companion about changes from other clients, in general this should be left on. The feedbacks will force subscriptions on if it is off. The Is Talking threshold sets the operational threshold for a simple function to identify the current active talker. The function returns the channel with the least gain reduction at any time, as long as they are at or above the set threshold, otherwise nothing is returned.
 
 ## Actions
 - **Channel - Bypass** Query / Change Channel Bypass
@@ -63,7 +63,7 @@ Enter the IP address of the control port of the Automixer. The unit will accept 
 - **System - Name** Query / Change unit name. Accepts variables
 - **System - Subscribe Unsolicited** Query / Change unsolicited messages
 
-## Varibles
+## Variables
 - **Channel - Name** String
 - **Channel - Weight** Number (dB)
 - **Channel - Input Level** Number (dB)
@@ -75,6 +75,9 @@ Enter the IP address of the control port of the Automixer. The unit will accept 
 - **Group - Music System Gain Reduction**  Number (dB)
 - **Group - NOM Gain Limit** Number
 - **Group - NOM Gain Reduction** Number(dB)
+
+- **Is Talking - Channel** Number
+- **Is Talking - Name** String
 
 - **Matrix - Fader** Number(dB)
 - **Matrix - Output Level** Number(dB)
@@ -117,9 +120,9 @@ All feedbacks are boolean. Using any feedbacks will force the subscription level
 ## Support for other models
 At present only the Model M & N are explicitly supported. With that said, the dugan units share a common api.
 The Model M & N represent a complete set of API commands. All other units (MY-16, Model-E3A, etc) support a subset of of these commands. The core channel controls are supported by all units.
-Until such time as the other models are directly supported, set the the channel count to the appropriate value, and dont use the functions not supported by your unit. Bulk state reporting varies between units, so stateful commands rather than explit commands may be problematic.
+It is advised to set the the channel count to the appropriate value, turn the metering off, and dont use the functions not supported by your unit. This functionality is untested.
 
 ## Version History
 
-### Version 0.1.0
+### Version 0.8.0
 - W.I.P.

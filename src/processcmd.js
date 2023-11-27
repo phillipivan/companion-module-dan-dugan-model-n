@@ -176,6 +176,7 @@ module.exports = {
 					'groupNOMgain',
 					'groupMusicPeak'
 				)
+				this.checkIsTalking()
 				break
 			default:
 				await this.processCmds(strRep)
@@ -896,6 +897,7 @@ module.exports = {
 					}
 					this.setVariableValues(varObject)
 					this.checkFeedbacks('channelAmixGain')
+					this.checkIsTalking()
 				}
 				break
 			case '*GSC':

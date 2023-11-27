@@ -91,4 +91,19 @@ module.exports = {
 		this.addCmdtoQueue(`SU${paramSep}${val}`)
 		return val
 	},
+	checkIsTalking() {
+		let varObject = []
+		let talker = 1
+		for (let i = 1; i <= this.config.channels; i++) {
+			talker = this.channelsAmixGain[i] > this.channelsAmixGain[talker] ? i : talker
+		}
+		if (this.channelsAmixGain[talker] >= this.config.isTalkingThreshold) {
+			varObject[`isTalkingChannel`] = talker
+			varObject[`isTalkingName`] = this.channelsName[talker]
+		} else {
+			varObject[`isTalkingChannel`] = 0
+			varObject[`isTalkingName`] = ''
+		}
+		this.setVariableValues(varObject)
+	},
 }

@@ -3,7 +3,6 @@ const { EndSession, msgDelay, EOM, cmdOnConnect, cmdOnPollInterval, paramSep, me
 
 module.exports = {
 	async addCmdtoQueue(cmd) {
-		//this.log('debug', 'addCmdtoQueue: ' + cmd)
 		if (cmd !== undefined && cmd.length >= 1) {
 			await this.cmdQueue.push(cmd)
 			return true
@@ -22,10 +21,9 @@ module.exports = {
 	},
 
 	async sendCommand(cmd) {
-		//this.log('debug', 'sendCommand')
 		if (cmd !== undefined) {
 			if (this.socket !== undefined && this.socket.isConnected) {
-				this.log('info', `Sending Command: ${cmd}`)
+				this.log('debug', `Sending Command: ${cmd}`)
 				this.socket.send(cmd + EOM)
 				return true
 			} else {
@@ -70,7 +68,6 @@ module.exports = {
 	},
 
 	pollStatus() {
-		//this.log('debug', 'pollStatus')
 		cmdOnPollInterval.forEach((element) => {
 			this.addCmdtoQueue(element)
 		})
@@ -81,17 +78,17 @@ module.exports = {
 	},
 
 	checkMeters() {
-		//this.log('debug', 'pollStatus')
 		meterCommands.forEach((element) => {
 			this.addCmdtoQueue(element)
 		})
-		this.meterTimer = setTimeout(() => {
-			this.checkMeters()
-		}, this.config.meterRate)
+		if (this.config.meterRate > 200) {
+			this.meterTimer = setTimeout(() => {
+				this.checkMeters()
+			}, this.config.meterRate)
+		}
 	},
 
 	initTCP() {
-		//this.log('debug', 'initTCP')
 		if (this.socket !== undefined) {
 			this.addCmdtoQueue(EndSession)
 			this.socket.destroy()
@@ -116,7 +113,7 @@ module.exports = {
 						this.pollStatus()
 					}, this.config.keepAlive * 1000)
 				}
-				if (this.config.meterRate > 0) {
+				if (this.config.meterRate > 200) {
 					this.meterTimer = setTimeout(() => {
 						this.checkMeters()
 					}, this.config.meterRate)
