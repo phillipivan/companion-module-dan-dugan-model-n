@@ -161,11 +161,7 @@ module.exports = async function (self) {
 					type: 'dropdown',
 					label: 'Mode',
 					default: 1,
-					choices: [
-						{ id: 0, label: 'Manual' },
-						{ id: 1, label: 'Auto' },
-						{ id: 2, label: 'Mute' },
-					],
+					choices: self.channel_modes,
 				},
 			],
 			callback: ({ options }) => {
@@ -201,11 +197,7 @@ module.exports = async function (self) {
 					type: 'dropdown',
 					label: 'Preset',
 					default: 1,
-					choices: [
-						{ id: 0, label: 'Manual' },
-						{ id: 1, label: 'Auto' },
-						{ id: 2, label: 'Mute' },
-					],
+					choices: self.channel_modes,
 				},
 			],
 			callback: ({ options }) => {

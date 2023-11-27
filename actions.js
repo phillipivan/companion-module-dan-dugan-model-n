@@ -33,11 +33,7 @@ module.exports = function (self) {
 					type: 'dropdown',
 					label: 'Mode',
 					default: 1,
-					choices: [
-						{ id: 0, label: 'Manual' },
-						{ id: 1, label: 'Auto' },
-						{ id: 2, label: 'Mute' },
-					],
+					choices: self.channel_modes,
 				},
 				{
 					id: 'query',
@@ -104,11 +100,7 @@ module.exports = function (self) {
 					type: 'dropdown',
 					label: 'Preset',
 					default: 1,
-					choices: [
-						{ id: 0, label: 'Manual' },
-						{ id: 1, label: 'Auto' },
-						{ id: 2, label: 'Mute' },
-					],
+					choices: self.channel_modes,
 				},
 				{
 					id: 'query',
@@ -175,11 +167,7 @@ module.exports = function (self) {
 					type: 'dropdown',
 					label: 'Bypass',
 					default: 1,
-					choices: [
-						{ id: 0, label: 'On' },
-						{ id: 1, label: 'Bypass' },
-						{ id: toggle, label: 'Toggle' },
-					],
+					choices: self.channel_bypass,
 				},
 				{
 					id: 'query',
@@ -248,11 +236,7 @@ module.exports = function (self) {
 					type: 'dropdown',
 					label: 'Override',
 					default: 0,
-					choices: [
-						{ id: 0, label: 'Normal' },
-						{ id: 1, label: 'Override' },
-						{ id: toggle, label: 'Toggle' },
-					],
+					choices: self.channel_override,
 				},
 				{
 					id: 'query',
@@ -482,11 +466,7 @@ module.exports = function (self) {
 					type: 'dropdown',
 					label: 'Music Mode',
 					default: 1,
-					choices: [
-						{ id: 0, label: 'Off' },
-						{ id: 1, label: 'On' },
-						{ id: toggle, label: 'Toggle' },
-					],
+					choices: self.channel_offOnToggle,
 				},
 				{
 					id: 'query',
@@ -555,11 +535,7 @@ module.exports = function (self) {
 					type: 'dropdown',
 					label: 'NOM Mode',
 					default: 1,
-					choices: [
-						{ id: 0, label: 'Off' },
-						{ id: 1, label: 'On' },
-						{ id: toggle, label: 'Toggle' },
-					],
+					choices: self.channel_offOnToggle,
 				},
 				{
 					id: 'query',
@@ -757,36 +733,21 @@ module.exports = function (self) {
 					type: 'dropdown',
 					label: 'Group A Mute',
 					default: 0,
-					choices: [
-						{ id: 0, label: 'On' },
-						{ id: grpAval, label: 'Mute' },
-						{ id: toggle, label: 'Toggle' },
-						{ id: noChange, label: 'No Change' },
-					],
+					choices: self.groupA_mute,
 				},
 				{
 					id: 'groupB',
 					type: 'dropdown',
 					label: 'Group B Mute',
 					default: 0,
-					choices: [
-						{ id: 0, label: 'On' },
-						{ id: grpBval, label: 'Mute' },
-						{ id: toggle, label: 'Toggle' },
-						{ id: noChange, label: 'No Change' },
-					],
+					choices: self.groupB_mute,
 				},
 				{
 					id: 'groupC',
 					type: 'dropdown',
 					label: 'Group C Mute',
 					default: 0,
-					choices: [
-						{ id: 0, label: 'On' },
-						{ id: grpCval, label: 'Mute' },
-						{ id: toggle, label: 'Toggle' },
-						{ id: noChange, label: 'No Change' },
-					],
+					choices: self.groupC_mute,
 				},
 				{
 					id: 'query',
@@ -838,36 +799,21 @@ module.exports = function (self) {
 					type: 'dropdown',
 					label: 'Group A Preset',
 					default: 0,
-					choices: [
-						{ id: 0, label: 'Off' },
-						{ id: grpAval, label: 'Preset' },
-						{ id: toggle, label: 'Toggle' },
-						{ id: noChange, label: 'No Change' },
-					],
+					choices: self.groupA_preset,
 				},
 				{
 					id: 'groupB',
 					type: 'dropdown',
 					label: 'Group B Preset',
 					default: 0,
-					choices: [
-						{ id: 0, label: 'Off' },
-						{ id: grpBval, label: 'Preset' },
-						{ id: toggle, label: 'Toggle' },
-						{ id: noChange, label: 'No Change' },
-					],
+					choices: self.groupB_preset,
 				},
 				{
 					id: 'groupC',
 					type: 'dropdown',
 					label: 'Group C Preset',
 					default: 0,
-					choices: [
-						{ id: 0, label: 'Off' },
-						{ id: grpCval, label: 'Preset' },
-						{ id: toggle, label: 'Toggle' },
-						{ id: noChange, label: 'No Change' },
-					],
+					choices: self.groupC_preset,
 				},
 				{
 					id: 'query',
@@ -919,36 +865,21 @@ module.exports = function (self) {
 					type: 'dropdown',
 					label: 'Group A Override',
 					default: 0,
-					choices: [
-						{ id: 0, label: 'Off' },
-						{ id: grpAval, label: 'Override' },
-						{ id: toggle, label: 'Toggle' },
-						{ id: noChange, label: 'No Change' },
-					],
+					choices: self.groupA_override,
 				},
 				{
 					id: 'groupB',
 					type: 'dropdown',
 					label: 'Group B Override',
 					default: 0,
-					choices: [
-						{ id: 0, label: 'Off' },
-						{ id: grpBval, label: 'Override' },
-						{ id: toggle, label: 'Toggle' },
-						{ id: noChange, label: 'No Change' },
-					],
+					choices: self.groupB_override,
 				},
 				{
 					id: 'groupC',
 					type: 'dropdown',
 					label: 'Group C Override',
 					default: 0,
-					choices: [
-						{ id: 0, label: 'Off' },
-						{ id: grpCval, label: 'Override' },
-						{ id: toggle, label: 'Toggle' },
-						{ id: noChange, label: 'No Change' },
-					],
+					choices: self.groupC_override,
 				},
 				{
 					id: 'query',
@@ -1000,36 +931,21 @@ module.exports = function (self) {
 					type: 'dropdown',
 					label: 'Group A Last Hold',
 					default: 0,
-					choices: [
-						{ id: 0, label: 'Off' },
-						{ id: grpAval, label: 'Last Hold' },
-						{ id: toggle, label: 'Toggle' },
-						{ id: noChange, label: 'No Change' },
-					],
+					choices: self.groupA_lasthold,
 				},
 				{
 					id: 'groupB',
 					type: 'dropdown',
 					label: 'Group B Last Hold',
 					default: 0,
-					choices: [
-						{ id: 0, label: 'Off' },
-						{ id: grpBval, label: 'Last Hold' },
-						{ id: toggle, label: 'Toggle' },
-						{ id: noChange, label: 'No Change' },
-					],
+					choices: self.groupB_lasthold,
 				},
 				{
 					id: 'groupC',
 					type: 'dropdown',
 					label: 'Group C Last Hold',
 					default: 0,
-					choices: [
-						{ id: 0, label: 'Off' },
-						{ id: grpCval, label: 'Last Hold' },
-						{ id: toggle, label: 'Toggle' },
-						{ id: noChange, label: 'No Change' },
-					],
+					choices: self.groupC_lasthold,
 				},
 				{
 					id: 'query',
@@ -2420,10 +2336,7 @@ module.exports = function (self) {
 					type: 'dropdown',
 					label: 'Channel or Matrix',
 					default: 'FP',
-					choices: [
-						{ id: 'FP', label: 'Channel Defaults' },
-						{ id: 'RM', label: 'Matrix Defaults' },
-					],
+					choices: self.system_defaults,
 				},
 			],
 			callback: ({ options }) => {
@@ -2439,11 +2352,7 @@ module.exports = function (self) {
 					type: 'dropdown',
 					label: 'Subscribe',
 					default: 1,
-					choices: [
-						{ id: 0, label: 'Off' },
-						{ id: 1, label: 'On' },
-						//{ id: 2, label: 'On with metering' },
-					],
+					choices: self.system_subscribe,
 				},
 				{
 					id: 'query',
@@ -2541,10 +2450,7 @@ module.exports = function (self) {
 					type: 'dropdown',
 					label: 'ADAT mirror',
 					default: 1,
-					choices: [
-						{ id: 1, label: '8 Channels' },
-						{ id: 2, label: '16 Channels' },
-					],
+					choices: self.system_adatMirror,
 				},
 				{
 					id: 'query',
@@ -2642,10 +2548,7 @@ module.exports = function (self) {
 					type: 'dropdown',
 					label: 'Blink Mode',
 					default: 1,
-					choices: [
-						{ id: 0, label: 'Off' },
-						{ id: 1, label: 'On' },
-					],
+					choices: self.system_blinkmode,
 				},
 				{
 					id: 'query',
@@ -2675,10 +2578,7 @@ module.exports = function (self) {
 					type: 'dropdown',
 					label: 'DHCP. Requires reboot to take effect',
 					default: 1,
-					choices: [
-						{ id: 0, label: 'Off' },
-						{ id: 1, label: 'On' },
-					],
+					choices: self.system_dhcp,
 				},
 				{
 					id: 'query',
@@ -2708,15 +2608,7 @@ module.exports = function (self) {
 					type: 'dropdown',
 					label: 'Mode',
 					default: 'SC',
-					choices: [
-						{ id: 'SC', label: 'System Configuration' },
-						{ id: 'VE', label: 'Firmware Versions' },
-						{ id: 'CC', label: 'Client Connections' },
-						{ id: 'HW', label: 'Resource Useage' },
-						{ id: 'HR', label: 'Switch Headroom' },
-						{ id: 'SF', label: 'Sample Rate' },
-						{ id: 'MM', label: 'Master' },
-					],
+					choices: self.system_query,
 				},
 			],
 			callback: ({ options }) => {
@@ -2768,11 +2660,7 @@ module.exports = function (self) {
 					type: 'dropdown',
 					label: 'Mode',
 					default: 'IP',
-					choices: [
-						{ id: 'IP', label: 'IP Address' },
-						{ id: 'NM', label: 'Subnet Mask' },
-						{ id: 'GW', label: 'Gateway' },
-					],
+					choices: self.system_network,
 				},
 				{
 					id: 'IP',
@@ -2813,17 +2701,7 @@ module.exports = function (self) {
 					type: 'dropdown',
 					label: 'Meter Type',
 					default: 'GS',
-					choices: [
-						{ id: 'GS', label: 'Channel Status' },
-						{ id: 'GSA', label: 'Automix Gains' },
-						{ id: 'GSC', label: 'Signal Clip' },
-						{ id: 'GSS', label: 'Signal Presence' },
-						{ id: 'GSI', label: 'Input Peaks' },
-						{ id: 'GSO', label: 'Output Peaks' },
-						{ id: 'GSM', label: 'Music Reference Peaks' },
-						{ id: 'GSN', label: 'NOM Gain Limits' },
-						{ id: 'GSX', label: 'Matrix Output Meters' },
-					],
+					choices: self.query_meters,
 				},
 			],
 			callback: ({ options }) => {
@@ -2839,10 +2717,7 @@ module.exports = function (self) {
 					type: 'dropdown',
 					label: 'Channels or Matrix',
 					default: 'GP',
-					choices: [
-						{ id: 'GP', label: 'Channels Parameters' },
-						{ id: 'GM', label: 'Matrix Crosspoints' },
-					],
+					choices: self.system_bulkconfig,
 				},
 			],
 			callback: ({ options }) => {
@@ -2858,10 +2733,7 @@ module.exports = function (self) {
 					type: 'dropdown',
 					label: 'Channel or Scenes',
 					default: 'CNS',
-					choices: [
-						{ id: 'CNS', label: 'Channels' },
-						{ id: 'SNL', label: 'Scenes' },
-					],
+					choices: self.query_namelistmode,
 				},
 				{
 					id: 'first',

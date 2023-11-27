@@ -1,5 +1,5 @@
 const { Regex } = require('@companion-module/base')
-const { duganModels, duganChannels, automixChannels, EndSession, paramSep } = require('./consts.js')
+const { duganChannels, automixChannels, EndSession, paramSep } = require('./consts.js')
 module.exports = {
 	async configUpdated(config) {
 		let oldConfig = this.config
@@ -96,10 +96,7 @@ module.exports = {
 				type: 'dropdown',
 				id: 'model',
 				label: 'Dugan Model',
-				choices: [
-					{ id: 11, label: duganModels[11] },
-					{ id: 12, label: duganModels[12] },
-				],
+				choices: this.confg_duganModels,
 				default: 11,
 				width: 4,
 			},
@@ -115,12 +112,7 @@ module.exports = {
 				type: 'dropdown',
 				id: 'rate',
 				label: 'Messaging rate',
-				choices: [
-					{ id: 0, label: 'Fast' },
-					{ id: 1, label: 'Medium' },
-					{ id: 2, label: 'Slow' },
-					{ id: 3, label: 'Very Slow' },
-				],
+				choices: this.config_messagingrate,
 				default: 1,
 				width: 4,
 			},
@@ -128,11 +120,7 @@ module.exports = {
 				type: 'dropdown',
 				id: 'subscription',
 				label: 'Unsocilicted Message Subscription',
-				choices: [
-					{ id: 0, label: 'Off' },
-					{ id: 1, label: 'On' },
-					{ id: 2, label: 'On with Metering' },
-				],
+				choices: this.config_subscribe,
 				default: 1,
 				width: 4,
 				isVisible: () => {

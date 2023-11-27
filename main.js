@@ -4,6 +4,7 @@ const UpdateActions = require('./actions.js')
 const UpdateFeedbacks = require('./feedbacks.js')
 const UpdateVariableDefinitions = require('./variables.js')
 const config = require('./config')
+const choices = require('./choices')
 const variableDefaults = require('./variable-defaults.js')
 const util = require('./util')
 const tcp = require('./tcp')
@@ -21,10 +22,11 @@ const {
 class DUGAN_AUTOMIXER extends InstanceBase {
 	constructor(internal) {
 		super(internal)
-		Object.assign(this, { ...config, ...util, ...tcp, ...processCmd })
+		Object.assign(this, { ...config, ...util, ...tcp, ...processCmd, ...choices })
 		this.keepAliveTimer = {}
 		this.cmdTimer = {}
 		this.cmdQueue = []
+		this.meterTimer = {}
 	}
 	async init(config) {
 		this.updateStatus('Starting')
@@ -45,6 +47,10 @@ class DUGAN_AUTOMIXER extends InstanceBase {
 		this.log('debug', `destroy. ID: ${this.id}`)
 		clearTimeout(this.keepAliveTimer)
 		clearTimeout(this.cmdTimer)
+		clearTimeout(this.meterTimer)
+		this.keepAliveTimer = null
+		this.cmdTimer = null
+		this.meterTimer = null
 		if (this.socket) {
 			await this.sendCommand(EndSession)
 			this.socket.destroy()
