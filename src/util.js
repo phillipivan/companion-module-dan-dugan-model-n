@@ -20,11 +20,11 @@ module.exports = {
 	},
 	calcGain(val) {
 		if (isNaN(val)) {
-			this.log('warn', 'calcGain has been passed a Nan: ' + val)
+			this.log('warn', `calcGain has been passed a Nan: ${val}`)
 			return false
 		}
 		if (val < 0 || val > 255) {
-			this.log('warn', 'calcGain has been passed an out of range number: ' + val)
+			this.log('warn', `calcGain has been passed an out of range number:  ${val}`)
 			return false
 		}
 		let gain = 0 - val / 2 //common gain algo for many dugan functions
@@ -32,11 +32,11 @@ module.exports = {
 	},
 	calcXpointGain(val) {
 		if (isNaN(val)) {
-			this.log('warn', 'calcXpointGain has been passed a Nan: ' + val)
+			this.log('warn', `calcXpointGain has been passed a Nan:  ${val}`)
 			return false
 		}
 		if (val < 0 || val > 255) {
-			this.log('warn', 'calcXpointGain has been passed an out of range number: ' + val)
+			this.log('warn', `calcXpointGain has been passed an out of range number:  ${val}`)
 			return false
 		}
 		let gain = (val - 192) / 2 //common gain algo for dugan matrix crosspoints
@@ -44,11 +44,11 @@ module.exports = {
 	},
 	processBitFlags(val) {
 		if (isNaN(val)) {
-			this.log('warn', 'processBitFlags has been passed a Nan: ' + val)
+			this.log('warn', `processBitFlags has been passed a Nan:  ${val}`)
 			return false
 		}
 		if (val < 0 || val > 255) {
-			this.log('warn', 'processBitFlags has been passed an out of range number: ' + val)
+			this.log('warn', `processBitFlags has been passed an out of range number:  ${val}`)
 			return false
 		}
 		let flags = []
@@ -60,11 +60,11 @@ module.exports = {
 	},
 	process2BitFlags(val) {
 		if (isNaN(val)) {
-			this.log('warn', 'process2BitFlags has been passed a Nan: ' + val)
+			this.log('warn', `process2BitFlags has been passed a Nan:  ${val}`)
 			return false
 		}
 		if (val < 0 || val > 255) {
-			this.log('warn', 'process2BitFlags has been passed an out of range number: ' + val)
+			this.log('warn', `process2BitFlags has been passed an out of range number:  ${val}`)
 			return false
 		}
 		let flags = []
@@ -83,11 +83,11 @@ module.exports = {
 		if (val < 0 || val > 2) {
 			return undefined
 		}
-		if (this.config.subsscription >= val) {
+		if (this.config.subscription >= val) {
 			return true
 		}
 		this.config.subscription = val
-		this.addCmdtoQueue('SU' + paramSep + val)
+		this.addCmdtoQueue(`SU${paramSep}${val}`)
 		return val
 	},
 }
