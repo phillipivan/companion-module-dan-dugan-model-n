@@ -1,14 +1,5 @@
 const { InstanceStatus, TCPHelper } = require('@companion-module/base')
-const {
-	EndSession,
-	msgDelay,
-	EOM,
-	cmdOnConnect,
-	cmdOnPollInterval,
-	paramSep,
-	meterInterval,
-	meterCommands,
-} = require('./consts.js')
+const { EndSession, msgDelay, EOM, cmdOnConnect, cmdOnPollInterval, paramSep, meterCommands } = require('./consts.js')
 
 module.exports = {
 	async addCmdtoQueue(cmd) {
@@ -96,7 +87,7 @@ module.exports = {
 		})
 		this.meterTimer = setTimeout(() => {
 			this.checkMeters()
-		}, meterInterval)
+		}, this.config.meterRate)
 	},
 
 	initTCP() {
@@ -125,26 +116,13 @@ module.exports = {
 						this.pollStatus()
 					}, this.config.keepAlive * 1000)
 				}
-				this.meterTimer = setTimeout(() => {
-					this.checkMeters()
-				}, meterInterval)
+				if (this.config.meterRate > 0) {
+					this.meterTimer = setTimeout(() => {
+						this.checkMeters()
+					}, this.config.meterRate)
+				}
 			})
 			this.socket.on('data', (chunk) => {
-				/*let i = 0
-				let line = ''
-				let offset = 0
-				let receivebuffer = ''
-				receivebuffer += chunk
-				while ((i = receivebuffer.indexOf('\r\n', offset)) !== -1) {
-					line = receivebuffer.slice(offset, i - offset)
-					offset = i + 2
-					this.processBuffer(line)
-				}
-				receivebuffer = receivebuffer.slice(offset)
-				if (receivebuffer.length > 12) {
-					this.processBuffer(receivebuffer)
-					receivebuffer = null
-				}*/
 				this.processBuffer(chunk)
 			})
 		} else {

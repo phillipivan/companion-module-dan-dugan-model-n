@@ -47,7 +47,12 @@ module.exports = {
 				this.updateVariableDefinitions() // export variable definitions
 				//this.setVariableValues(variableDefaults)
 			}
-			//this.config.subscription = this.config.subscription == undefined ? 1 : this.config.subscription
+			clearTimeout(this.meterTimer)
+			if (this.config.meterRate > 0) {
+				this.meterTimer = setTimeout(() => {
+					this.checkMeters()
+				}, this.config.meterRate)
+			}
 			this.addCmdtoQueue('SU' + paramSep + this.config.subscription)
 		}
 	},
@@ -87,16 +92,24 @@ module.exports = {
 				label: 'Poll Interval',
 				default: 60,
 				width: 2,
-				mix: 0,
+				min: 0,
 				max: 180,
 				regex: Regex.NUMBER,
 				tooltip: 'Seconds, set to 0 to turn off',
 			},
 			{
 				type: 'dropdown',
+				id: 'meterRate',
+				label: 'Meter rate',
+				choices: this.config_meterInterval,
+				default: 1000,
+				width: 4,
+			},
+			{
+				type: 'dropdown',
 				id: 'model',
 				label: 'Dugan Model',
-				choices: this.confg_duganModels,
+				choices: this.config_duganModels,
 				default: 11,
 				width: 4,
 			},
@@ -118,7 +131,7 @@ module.exports = {
 			},
 			{
 				type: 'dropdown',
-				id: 'subscription',
+				id: 'subscription', // SU Level 2 behaving badly over TCP, thus hidden
 				label: 'Unsocilicted Message Subscription',
 				choices: this.config_subscribe,
 				default: 1,

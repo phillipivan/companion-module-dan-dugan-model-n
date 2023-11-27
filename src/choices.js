@@ -146,7 +146,7 @@ module.exports = {
 		{ id: 'GP', label: 'Channels Parameters' },
 		{ id: 'GM', label: 'Matrix Crosspoints' },
 	],
-	confg_duganModels: [
+	config_duganModels: [
 		{ id: 11, label: duganModels[11] },
 		{ id: 12, label: duganModels[12] },
 	],
@@ -155,6 +155,14 @@ module.exports = {
 		{ id: 1, label: 'Medium' },
 		{ id: 2, label: 'Slow' },
 		{ id: 3, label: 'Very Slow' },
+	],
+	config_meterInterval: [
+		{ id: 0, label: 'Off' },
+		{ id: 250, label: '250ms' },
+		{ id: 500, label: '500ms' },
+		{ id: 1000, label: '1 Seconds' },
+		{ id: 2000, label: '2 Seconds' },
+		{ id: 4000, label: '4 Seconds' },
 	],
 	config_subscribe: [
 		{ id: 0, label: 'Off' },
