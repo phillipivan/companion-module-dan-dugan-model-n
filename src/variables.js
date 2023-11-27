@@ -40,29 +40,29 @@ module.exports = async function (self) {
 	]
 	for (let i = 1; i <= MaxChannelCount; i++) {
 		varList.push(
-			{ variableId: 'channelName' + i, name: 'Channel ' + i + ' Name' },
-			{ variableId: 'channelWeight' + i, name: 'Channel ' + i + ' Weight' },
-			{ variableId: 'channelAmixGain' + i, name: 'Channel ' + i + ' Gain Reduction' },
-			{ variableId: 'channelInputLevel' + i, name: 'Channel ' + i + ' Input Level' },
-			{ variableId: 'channelOutputLevel' + i, name: 'Channel ' + i + ' Output Level' }
+			{ variableId: 'channelName' + i, name: `Channel ${i} Name` },
+			{ variableId: 'channelWeight' + i, name: `Channel ${i} Weight` },
+			{ variableId: 'channelAmixGain' + i, name: `Channel ${i} Gain Reduction` },
+			{ variableId: 'channelInputLevel' + i, name: `Channel ${i} Input Level` },
+			{ variableId: 'channelOutputLevel' + i, name: `Channel ${i} Output Level` }
 		)
 	}
 	for (let i = 1; i <= MatrixCount; i++) {
 		varList.push(
-			{ variableId: 'matrixOutFader' + i, name: 'Matrix ' + i + ' Fader' },
-			{ variableId: 'matrixOutLevel' + i, name: 'Matrix ' + i + ' Output Level' }
+			{ variableId: 'matrixOutFader' + i, name: `Matrix ${i} Fader` },
+			{ variableId: 'matrixOutLevel' + i, name: `Matrix ${i} Output Level` }
 		)
 		for (let x = 1; x <= MatrixSize; x++) {
-			varList.push({ variableId: 'matrix' + i + 'Xpoint' + x, name: 'Matrix ' + i + ' Crosspoint ' + x })
+			varList.push({ variableId: `matrix${i}Xpoint${x}`, name: `Matrix ${i} Crosspoint ${x}` })
 		}
 	}
 	for (let i = 1; i <= GroupCount; i++) {
 		varList.push(
-			{ variableId: 'groupNOM' + i, name: 'Group ' + i + ' NOM Limit' },
-			{ variableId: 'groupNOMpeak' + i, name: 'Group ' + i + ' NOM Peak' },
-			{ variableId: 'groupAD' + i, name: 'Group ' + i + ' Automix Depth' },
-			{ variableId: 'groupMST' + i, name: 'Group ' + i + ' Music System Threshold' },
-			{ variableId: 'groupMSTgain' + i, name: 'Group ' + i + ' Music System Gain' }
+			{ variableId: `groupNOM${i}`, name: `Group ${i} NOM Limit` },
+			{ variableId: `groupNOMpeak${i}`, name: `Group ${i} NOM Peak` },
+			{ variableId: `groupAD${i}`, name: `Group ${i} Automix Depth` },
+			{ variableId: `groupMST${i}`, name: `Group ${i} Music System Threshold` },
+			{ variableId: `groupMSTgain${i}`, name: `Group ${i} Music System Gain` }
 		)
 	}
 	self.setVariableDefinitions(varList)
