@@ -20,35 +20,35 @@ module.exports = {
 	},
 	calcGain(val) {
 		if (isNaN(val)) {
-			this.log('warn', `calcGain has been passed a Nan: ${val}`)
+			this.log('debug', `calcGain has been passed a Nan: ${val}`)
 			return false
 		}
 		if (val < 0 || val > 255) {
-			this.log('warn', `calcGain has been passed an out of range number:  ${val}`)
+			this.log('debug', `calcGain has been passed an out of range number:  ${val}`)
 			return false
 		}
-		let gain = 0 - val / 2 //common gain algo for many dugan functions
+		let gain = 0 - val / 2 //gain algo for many dugan functions
 		return gain
 	},
 	calcXpointGain(val) {
 		if (isNaN(val)) {
-			this.log('warn', `calcXpointGain has been passed a Nan:  ${val}`)
+			this.log('debug', `calcXpointGain has been passed a Nan:  ${val}`)
 			return false
 		}
 		if (val < 0 || val > 255) {
-			this.log('warn', `calcXpointGain has been passed an out of range number:  ${val}`)
+			this.log('debug', `calcXpointGain has been passed an out of range number:  ${val}`)
 			return false
 		}
-		let gain = (val - 192) / 2 //common gain algo for dugan matrix crosspoints
+		let gain = (val - 192) / 2 //gain algo for dugan matrix crosspoints
 		return gain
 	},
 	processBitFlags(val) {
 		if (isNaN(val)) {
-			this.log('warn', `processBitFlags has been passed a Nan:  ${val}`)
+			this.log('debug', `processBitFlags has been passed a Nan:  ${val}`)
 			return false
 		}
 		if (val < 0 || val > 255) {
-			this.log('warn', `processBitFlags has been passed an out of range number:  ${val}`)
+			this.log('debug', `processBitFlags has been passed an out of range number:  ${val}`)
 			return false
 		}
 		let flags = []
@@ -60,11 +60,11 @@ module.exports = {
 	},
 	process2BitFlags(val) {
 		if (isNaN(val)) {
-			this.log('warn', `process2BitFlags has been passed a Nan:  ${val}`)
+			this.log('debug', `process2BitFlags has been passed a Nan:  ${val}`)
 			return false
 		}
 		if (val < 0 || val > 255) {
-			this.log('warn', `process2BitFlags has been passed an out of range number:  ${val}`)
+			this.log('debug', `process2BitFlags has been passed an out of range number:  ${val}`)
 			return false
 		}
 		let flags = []
@@ -78,6 +78,7 @@ module.exports = {
 	},
 	checkSubscriptionLevel(val) {
 		if (isNaN(val)) {
+			this.log('debug', `checkSubscriptionLevel has been passed a Nan:  ${val}`)
 			return undefined
 		}
 		if (val < 0 || val > 2) {
