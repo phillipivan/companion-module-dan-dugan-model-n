@@ -128,9 +128,9 @@ module.exports = {
 		{ id: 'GW', label: 'Gateway' },
 	],
 	query_meters: [
-		//{ id: 'GS', label: 'Channel Status' },
+		{ id: 'GS', label: 'Channel Status' },
 		{ id: 'GSA', label: 'Automix Gains' },
-		{ id: 'GSC', label: 'Signal Clip' },
+		//{ id: 'GSC', label: 'Signal Clip' }, Dugan responds with *GSS, which makes it hard to parse.
 		{ id: 'GSS', label: 'Signal Presence' },
 		{ id: 'GSI', label: 'Input Peaks' },
 		{ id: 'GSO', label: 'Output Peaks' },
@@ -158,6 +158,8 @@ module.exports = {
 	],
 	config_meterInterval: [
 		{ id: 0, label: 'Off' },
+		{ id: 250, label: '250 ms' },
+		{ id: 500, label: '500 ms' },
 		{ id: 1000, label: '1 Seconds' },
 		{ id: 2000, label: '2 Seconds' },
 		{ id: 4000, label: '4 Seconds' },

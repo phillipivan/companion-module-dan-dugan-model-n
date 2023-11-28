@@ -27,6 +27,7 @@ class DUGAN_AUTOMIXER extends InstanceBase {
 		this.cmdTimer = {}
 		this.cmdQueue = []
 		this.meterTimer = {}
+		this.clearToTx = true
 	}
 	async init(config) {
 		this.updateStatus('Starting')

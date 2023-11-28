@@ -50,8 +50,8 @@ module.exports = {
 		}
 		this.addCmdtoQueue('SU' + paramSep + this.config.subscription)
 		clearTimeout(this.meterTimer)
-		this.log('info', `meter rate: ${this.config.meterRate}`)
-		if (this.config.meterRate > 200) {
+		this.log('info', `meter rate: ${this.config.meterRate}ms`)
+		if (this.config.meterRate >= 100) {
 			this.meterTimer = setTimeout(() => {
 				this.checkMeters()
 			}, this.config.meterRate)
@@ -138,7 +138,7 @@ module.exports = {
 				default: 1,
 				width: 4,
 				isVisible: () => {
-					return false
+					return true
 				},
 			},
 			{
@@ -147,7 +147,7 @@ module.exports = {
 				label: 'Talking Threshold',
 				default: -6,
 				width: 2,
-				min: -40,
+				min: -24,
 				max: 0,
 				range: true,
 				regex: Regex.NUMBER,

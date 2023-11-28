@@ -12,7 +12,8 @@ module.exports = {
 	},
 
 	async processCmdQueue() {
-		if (this.cmdQueue.length > 0) {
+		if (this.cmdQueue.length > 0 && this.clearToTx) {
+			//dont send command if still waiting for response from last command
 			this.sendCommand(await this.cmdQueue.splice(0, 1))
 		}
 		this.cmdTimer = setTimeout(() => {
@@ -24,6 +25,7 @@ module.exports = {
 		if (cmd !== undefined) {
 			if (this.socket !== undefined && this.socket.isConnected) {
 				this.log('debug', `Sending Command: ${cmd}`)
+				this.clearToTx = false
 				this.socket.send(cmd + EOM)
 				return true
 			} else {
@@ -84,7 +86,7 @@ module.exports = {
 		meterCommands.forEach((element) => {
 			this.addCmdtoQueue(element)
 		})
-		if (this.config.meterRate > 200) {
+		if (this.config.meterRate >= 100) {
 			this.meterTimer = setTimeout(() => {
 				this.checkMeters()
 			}, this.config.meterRate)
@@ -106,24 +108,27 @@ module.exports = {
 			})
 			this.socket.on('error', (err) => {
 				this.log('error', `Network error: ${err.message}`)
+				this.clearToTx = true
 				clearTimeout(this.keepAliveTimer)
 				clearTimeout(this.meterTimer)
 			})
 			this.socket.on('connect', () => {
 				this.log('info', 'Connected')
+				this.clearToTx = true
 				this.queryOnConnect()
 				if (this.config.keepAlive > 0) {
 					this.keepAliveTimer = setTimeout(() => {
 						this.pollStatus()
 					}, this.config.keepAlive * 1000)
 				}
-				if (this.config.meterRate > 200) {
+				if (this.config.meterRate >= 100) {
 					this.meterTimer = setTimeout(() => {
 						this.checkMeters()
 					}, this.config.meterRate)
 				}
 			})
 			this.socket.on('data', (chunk) => {
+				this.clearToTx = true
 				this.processBuffer(chunk)
 			})
 		} else {
