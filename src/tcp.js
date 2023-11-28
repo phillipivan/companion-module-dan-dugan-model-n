@@ -52,6 +52,8 @@ module.exports = {
 
 	//queries made on initial connection.
 	async queryOnConnect() {
+		clearTimeout(this.keepAliveTimer)
+		clearTimeout(this.meterTimer)
 		cmdOnConnect.forEach((element) => {
 			this.addCmdtoQueue(element)
 		})
@@ -65,6 +67,16 @@ module.exports = {
 		}
 		for (let i = 1; i <= this.config.channels; i++) {
 			await this.addCmdtoQueue(`CW${paramSep}${i}`)
+		}
+		if (this.config.keepAlive > 0) {
+			this.keepAliveTimer = setTimeout(() => {
+				this.pollStatus()
+			}, this.config.keepAlive * 1000)
+		}
+		if (this.config.meterRate >= 100) {
+			this.meterTimer = setTimeout(() => {
+				this.checkMeters()
+			}, this.config.meterRate)
 		}
 		return true
 	},
@@ -116,16 +128,6 @@ module.exports = {
 				this.log('info', 'Connected')
 				this.clearToTx = true
 				this.queryOnConnect()
-				if (this.config.keepAlive > 0) {
-					this.keepAliveTimer = setTimeout(() => {
-						this.pollStatus()
-					}, this.config.keepAlive * 1000)
-				}
-				if (this.config.meterRate >= 100) {
-					this.meterTimer = setTimeout(() => {
-						this.checkMeters()
-					}, this.config.meterRate)
-				}
 			})
 			this.socket.on('data', (chunk) => {
 				this.clearToTx = true

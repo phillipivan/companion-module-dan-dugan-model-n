@@ -140,6 +140,7 @@ module.exports = {
 				isVisible: () => {
 					return true
 				},
+				tooltip: 'This will be forced on if using feedbacks',
 			},
 			{
 				type: 'number',
