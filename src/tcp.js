@@ -78,6 +78,9 @@ module.exports = {
 	},
 
 	checkMeters() {
+		if (this.config.model == 4 || this.config.model == 5 || this.config.model == 6 || this.config.model == 9) {
+			return false //units do not support these metering commands
+		}
 		meterCommands.forEach((element) => {
 			this.addCmdtoQueue(element)
 		})
@@ -86,6 +89,7 @@ module.exports = {
 				this.checkMeters()
 			}, this.config.meterRate)
 		}
+		return true
 	},
 
 	initTCP() {

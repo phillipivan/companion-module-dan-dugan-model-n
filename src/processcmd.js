@@ -21,18 +21,23 @@ const {
 
 module.exports = {
 	async processBuffer(chunk) {
+		let index = 0
+		let varObject = []
 		let buffer = new ArrayBuffer(chunk.length)
 		let vals = new Uint8Array(buffer)
 		let strRep = chunk.toString()
+		while (strRep[0] != '*' && strRep.length > 0) {
+			strRep = strRep.slice(1)
+			index += 1
+		}
 		let cmd = await this.regexCmd(strRep)
 		if ((strRep.length > 0) & !cmd) {
 			return undefined
 		} else if (strRep.length == 0) {
 			return undefined
 		}
-		let varObject = []
-		for (let i = 0; i < chunk.length; i++) {
-			vals[i] = chunk[i]
+		for (let i = index; i < chunk.length; i++) {
+			vals[i - index] = chunk[i]
 		}
 		switch (cmd) {
 			case '*GP,':
