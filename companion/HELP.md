@@ -1,12 +1,14 @@
 ## Dan Dugan Sound Design Model Automixer
 
 This module will control the Model M or N automixer. There are 64 Madi or Dante inputs & outputs, and 16 adat inputs and outputs.
-Most functions will work with the Dugan-MY16 .
+Many functions will work with the Dugan-MY16 and other units.
 
 - [Dugan Auto Mixer Product Page](https://www.dandugan.com/products/)
 
 ## Configuration
-Enter the IP address of the control port of the Automixer. The unit will accept connections on TCP:23 or TCP:9776 (and UDP:9776, not supported at present). This model defaults to TCP:23 for easiest integration with firewalls and complex networks. Poll interval determines how frequenctly channel parameters are checked, set to zero to turn off. Enter the number of automix channels the unit is configured as for correct initialisation, once the module connects if the unit reports a different number of configured channels the module will log the discrepancy and adapt. The messaging rate can be left at fast most of the time. If you find commands are getting lost or responses are missing, especially over a WAN you may try slowing it down. Unsolicited message subscription determines if the dugan will inform companion about changes from other clients, in general this should be left on. The feedbacks will force subscriptions on if it is off. The Is Talking threshold sets the operational threshold for a simple function to identify the current active talker. The function returns the channel with the least gain reduction at any time, as long as they are at or above the set threshold, otherwise nothing is returned.
+Enter the IP address of the control NIC of the Automixer. The unit will accept connections on TCP:23 or TCP:9776 (and UDP:9776, not supported at present). This model defaults to TCP:23 for easiest integration with firewalls and complex networks. 
+Poll interval determines how frequenctly channel & scene names are checked, set to zero to turn off. 
+Enter the number of automix channels the unit is configured to for correct initialisation. Once connected if the unit reports a different number of configured channels the module will log the discrepancy and adapt. The messaging rate can be left at fast most of the time. If you find commands are getting lost or responses are missing, especially over a WAN you may try slowing it down. Similarly the metering rate determines how fast the level and gain meters are polled - this will only work with the Model M & N. Unsolicited message subscription determines if the dugan will inform companion about changes from other clients; in general this should be left on. Use of feedbacks will force subscriptions on if it is off. The Is Talking threshold sets the operational threshold for a simple function to identify the current active talker. The function returns the channel with the least gain reduction at any time, as long as they are at or above the set threshold, otherwise nothing is returned.
 
 ## Actions
 - **Channel - Bypass** Query / Change Channel Bypass
