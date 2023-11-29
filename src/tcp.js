@@ -24,7 +24,7 @@ module.exports = {
 	async sendCommand(cmd) {
 		if (cmd !== undefined) {
 			if (this.socket !== undefined && this.socket.isConnected) {
-				this.log('debug', `Sending Command: ${cmd}`)
+				//this.log('debug', `Sending Command: ${cmd}`)
 				this.clearToTx = false
 				this.socket.send(cmd + EOM)
 				return true

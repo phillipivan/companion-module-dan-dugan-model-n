@@ -103,7 +103,7 @@ All feedbacks are boolean. Using any feedbacks will force the subscription level
 - **Channel - Signal Presence**
 
 - **Group - Last Hold**
-- **Group - Music System Gain Reducction**
+- **Group - Music System Gain Reduction**
 - **Group - Music System Threshold Input**
 - **Group - Mute**
 - **Group - NOM Gain Limit**
@@ -115,7 +115,7 @@ All feedbacks are boolean. Using any feedbacks will force the subscription level
 - **Matrix - Output Level**
 - **Matrix - Output Route**
 
-- **Scene - Has Changed** Goes true when any parameter is changed from the saved state of the recalled scene
+- **Scene - Has Changed** True when any parameter is changed from the saved state of the recalled scene
 
 ## Support for other models
 At present only the Model M & N are explicitly supported. With that said, the dugan units share a common api.
