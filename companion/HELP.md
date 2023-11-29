@@ -124,5 +124,5 @@ It is advised to set the the channel count to the appropriate value, turn the me
 
 ## Version History
 
-### Version 0.8.0
-- W.I.P.
+### Version 1.0.0
+- Initial release
