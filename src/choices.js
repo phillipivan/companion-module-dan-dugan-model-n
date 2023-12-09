@@ -1,4 +1,4 @@
-const { grpAval, grpBval, grpCval, toggle, noChange, duganModels } = require('./consts.js')
+const { grpAval, grpBval, grpCval, toggle, noChange, duganModels, cmd } = require('./consts.js')
 module.exports = {
 	channel_modes: [
 		{ id: 0, label: 'Manual' },
@@ -93,8 +93,8 @@ module.exports = {
 		{ id: noChange, label: 'No Change' },
 	],
 	system_defaults: [
-		{ id: 'FP', label: 'Channel Defaults' },
-		{ id: 'RM', label: 'Matrix Defaults' },
+		{ id: cmd.scene.defaults, label: 'Channel Defaults' },
+		{ id: cmd.matrix.defaults, label: 'Matrix Defaults' },
 	],
 	system_subscribe: [
 		{ id: 0, label: 'Off' },
@@ -114,37 +114,37 @@ module.exports = {
 		{ id: 1, label: 'On' },
 	],
 	system_query: [
-		{ id: 'SC', label: 'System Configuration' },
-		{ id: 'VE', label: 'Firmware Versions' },
-		{ id: 'CC', label: 'Client Connections' },
-		{ id: 'HW', label: 'Resource Useage' },
-		{ id: 'HR', label: 'Switch Headroom' },
-		{ id: 'SF', label: 'Sample Rate' },
-		{ id: 'MM', label: 'Master' },
+		{ id: cmd.system.config, label: 'System Configuration' },
+		{ id: cmd.system.firmware, label: 'Firmware Versions' },
+		{ id: cmd.system.connections, label: 'Client Connections' },
+		{ id: cmd.system.resourceUseage, label: 'Resource Useage' },
+		{ id: cmd.system.switchHeadroom, label: 'Switch Headroom' },
+		{ id: cmd.system.sampleRate, label: 'Sample Rate' },
+		{ id: cmd.system.master, label: 'Master' },
 	],
 	system_network: [
-		{ id: 'IP', label: 'IP Address' },
-		{ id: 'NM', label: 'Subnet Mask' },
-		{ id: 'GW', label: 'Gateway' },
+		{ id: cmd.system.ip, label: 'IP Address' },
+		{ id: cmd.system.netmask, label: 'Subnet Mask' },
+		{ id: cmd.system.gateway, label: 'Gateway' },
 	],
 	query_meters: [
-		{ id: 'GS', label: 'Channel Status' },
-		{ id: 'GSA', label: 'Automix Gains' },
-		//{ id: 'GSC', label: 'Signal Clip' }, Dugan responds with *GSS, which makes it hard to parse.
-		{ id: 'GSS', label: 'Signal Presence' },
-		{ id: 'GSI', label: 'Input Peaks' },
-		{ id: 'GSO', label: 'Output Peaks' },
-		{ id: 'GSM', label: 'Music Reference Peaks' },
-		{ id: 'GSN', label: 'NOM Gain Limits' },
-		{ id: 'GSX', label: 'Matrix Output Meters' },
+		{ id: cmd.metering.channelStatus, label: 'Channel Status' },
+		{ id: cmd.metering.automixGain, label: 'Automix Gains' },
+		//{ id: cmd.metering.signalClip, label: 'Signal Clip' }, Dugan responds with *GSS, which makes it hard to parse.
+		{ id: cmd.metering.signalPresense, label: 'Signal Presence' },
+		{ id: cmd.metering.inputPeaks, label: 'Input Peaks' },
+		{ id: cmd.metering.outputPeaks, label: 'Output Peaks' },
+		{ id: cmd.metering.musicRef, label: 'Music Reference Peaks' },
+		{ id: cmd.metering.nomGain, label: 'NOM Gain Limits' },
+		{ id: cmd.metering.matrixOutput, label: 'Matrix Output Meters' },
 	],
 	query_namelistmode: [
-		{ id: 'CNS', label: 'Channels' },
-		{ id: 'SNL', label: 'Scenes' },
+		{ id: cmd.channel.nameList, label: 'Channels' },
+		{ id: cmd.scene.nameList, label: 'Scenes' },
 	],
 	system_bulkconfig: [
-		{ id: 'GP', label: 'Channels Parameters' },
-		{ id: 'GM', label: 'Matrix Crosspoints' },
+		{ id: cmd.channel.bulkParams, label: 'Channels Parameters' },
+		{ id: cmd.matrix.bulkParams, label: 'Matrix Crosspoints' },
 	],
 	config_duganModels: [
 		{ id: 11, label: duganModels[11] },

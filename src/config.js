@@ -1,5 +1,5 @@
 const { Regex } = require('@companion-module/base')
-const { duganChannels, automixChannels, EndSession, paramSep } = require('./consts.js')
+const { duganChannels, automixChannels, cmd, paramSep } = require('./consts.js')
 module.exports = {
 	async configUpdated(config) {
 		let oldConfig = this.config
@@ -33,7 +33,7 @@ module.exports = {
 			if (this.socket) {
 				this.log('debug', 'deleting socket')
 				clearTimeout(this.keepAliveTimer)
-				this.sendCommand(EndSession)
+				this.sendCommand(cmd.system.endSession)
 				this.socket.destroy()
 				delete this.socket
 			}
@@ -48,7 +48,7 @@ module.exports = {
 				//this.setVariableValues(variableDefaults)
 			}
 		}
-		this.addCmdtoQueue('SU' + paramSep + this.config.subscription)
+		this.addCmdtoQueue(cmd.system.subscribe + paramSep + this.config.subscription)
 		clearTimeout(this.meterTimer)
 		this.log('info', `meter rate: ${this.config.meterRate}ms`)
 		if (this.config.meterRate >= 100) {

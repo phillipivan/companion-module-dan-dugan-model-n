@@ -1,23 +1,15 @@
 const { InstanceBase, runEntrypoint, InstanceStatus } = require('@companion-module/base')
-const UpgradeScripts = require('./src/upgrades.js')
-const UpdateActions = require('./src/actions.js')
-const UpdateFeedbacks = require('./src/feedbacks.js')
-const UpdateVariableDefinitions = require('./src/variables.js')
-const config = require('./src/config.js')
-const choices = require('./src/choices.js')
-const variableDefaults = require('./src/variable-defaults.js')
-const util = require('./src/util.js')
-const tcp = require('./src/tcp.js')
-const processCmd = require('./src/processcmd.js')
-const {
-	MaxChannelCount,
-	GroupCount,
-	MatrixCount,
-	MatrixSize,
-	EndSession,
-	duganChannels,
-	msgDelay,
-} = require('./src/consts.js')
+const UpgradeScripts = require('./upgrades.js')
+const UpdateActions = require('./actions.js')
+const UpdateFeedbacks = require('./feedbacks.js')
+const UpdateVariableDefinitions = require('./variables.js')
+const config = require('./config.js')
+const choices = require('./choices.js')
+const variableDefaults = require('./variable-defaults.js')
+const util = require('./util.js')
+const tcp = require('./tcp.js')
+const processCmd = require('./processcmd.js')
+const { MaxChannelCount, GroupCount, MatrixCount, MatrixSize, cmd, duganChannels, msgDelay } = require('./consts.js')
 
 class DUGAN_AUTOMIXER extends InstanceBase {
 	constructor(internal) {
@@ -53,7 +45,7 @@ class DUGAN_AUTOMIXER extends InstanceBase {
 		this.cmdTimer = null
 		this.meterTimer = null
 		if (this.socket) {
-			await this.sendCommand(EndSession)
+			await this.sendCommand(cmd.system.endSession)
 			this.socket.destroy()
 		} else if (this.udp) {
 			this.udp.destroy()
