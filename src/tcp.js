@@ -1,5 +1,5 @@
 const { InstanceStatus, TCPHelper } = require('@companion-module/base')
-const { EndSession, msgDelay, EOM, cmdOnConnect, cmdOnPollInterval, paramSep, meterCommands } = require('./consts.js')
+const { msgDelay, EOM, cmdOnConnect, cmdOnPollInterval, paramSep, meterCommands, cmd } = require('./consts.js')
 
 module.exports = {
 	async addCmdtoQueue(cmd) {
@@ -51,7 +51,7 @@ module.exports = {
 			if (startCh + count - 1 > this.config.channels) {
 				count = this.config.channels - startCh + 1
 			}
-			await this.addCmdtoQueue(`CNS${paramSep}${startCh}${paramSep}${count}`)
+			await this.addCmdtoQueue(`${cmd.channel.nameList}${paramSep}${startCh}${paramSep}${count}`)
 		}
 		return true
 	},
@@ -64,15 +64,15 @@ module.exports = {
 			this.addCmdtoQueue(element)
 		})
 		this.config.subscription = this.config.subscription == undefined ? 1 : this.config.subscription
-		this.addCmdtoQueue(`SU${paramSep}${this.config.subscription}`)
+		this.addCmdtoQueue(`${cmd.system.subscribe}${paramSep}${this.config.subscription}`)
 		await this.getNames()
 		await this.subscribeFeedbacks()
 		await this.subscribeActions()
 		if (this.config.model == 11 || this.config.model == 12) {
-			this.addCmdtoQueue('GM') //only query matrix params if connected to model M or N
+			this.addCmdtoQueue(cmd.matrix.bulkParams) //only query matrix params if connected to model M or N
 		}
 		for (let i = 1; i <= this.config.channels; i++) {
-			await this.addCmdtoQueue(`CW${paramSep}${i}`)
+			await this.addCmdtoQueue(`${cmd.channel.weight}${paramSep}${i}`)
 		}
 		if (this.config.keepAlive > 0) {
 			this.keepAliveTimer = setTimeout(() => {
@@ -114,7 +114,7 @@ module.exports = {
 
 	initTCP() {
 		if (this.socket !== undefined) {
-			this.addCmdtoQueue(EndSession)
+			this.addCmdtoQueue(cmd.system.endSession)
 			this.socket.destroy()
 			delete this.socket
 		}

@@ -1,5 +1,5 @@
 const { combineRgb, Regex } = require('@companion-module/base')
-const { paramSep } = require('./consts')
+const { paramSep, cmd } = require('./consts')
 
 module.exports = async function (self) {
 	self.setFeedbackDefinitions({
@@ -13,14 +13,10 @@ module.exports = async function (self) {
 			},
 			options: [],
 			callback: () => {
-				if (self.sceneChanged == 1) {
-					return true
-				} else {
-					return false
-				}
+				return self.sceneChanged == 1
 			},
 			subscribe: () => {
-				self.addCmdtoQueue('SNA')
+				self.addCmdtoQueue(cmd.scene.active)
 				self.checkSubscriptionLevel(1)
 			},
 		},
@@ -66,18 +62,14 @@ module.exports = async function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				if (
+				return (
 					self.matrixOutputPeak[options.matrix] <= options.lessThan &&
 					self.matrixOutputPeak[options.matrix] >= options.greaterThan
-				) {
-					return true
-				} else {
-					return false
-				}
+				)
 			},
 			subscribe: () => {
 				if (self.config.model != 11 && self.config.model != 12) {
-					self.addCmdtoQueue('GSX')
+					self.addCmdtoQueue(cmd.metering.matrixOutput)
 				}
 				self.checkSubscriptionLevel(1)
 			},
@@ -100,14 +92,10 @@ module.exports = async function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				if (self.matrixMute[options.matrix] == 1) {
-					return true
-				} else {
-					return false
-				}
+				return self.matrixMute[options.matrix] == 1
 			},
 			subscribe: ({ options }) => {
-				self.addCmdtoQueue('MXM' + paramSep + options.matrix)
+				self.addCmdtoQueue(cmd.matrix.mute + paramSep + options.matrix)
 				self.checkSubscriptionLevel(1)
 			},
 		},
@@ -136,7 +124,7 @@ module.exports = async function (self) {
 				}
 			},
 			subscribe: ({ options }) => {
-				self.addCmdtoQueue('MXP' + paramSep + options.matrix)
+				self.addCmdtoQueue(cmd.matrix.polarity + paramSep + options.matrix)
 				self.checkSubscriptionLevel(1)
 			},
 		},
@@ -165,14 +153,10 @@ module.exports = async function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				if (self.channelsMode[options.channel] == options.mode) {
-					return true
-				} else {
-					return false
-				}
+				return self.channelsMode[options.channel] == options.mode
 			},
 			subscribe: ({ options }) => {
-				self.addCmdtoQueue('CM' + paramSep + options.channel)
+				self.addCmdtoQueue(cmd.channel.mode + paramSep + options.channel)
 				self.checkSubscriptionLevel(1)
 			},
 		},
@@ -201,14 +185,10 @@ module.exports = async function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				if (self.channelsPreset[options.channel] == options.preset) {
-					return true
-				} else {
-					return false
-				}
+				return self.channelsPreset[options.channel] == options.preset
 			},
 			subscribe: ({ options }) => {
-				self.addCmdtoQueue('CP' + paramSep + options.channel)
+				self.addCmdtoQueue(cmd.channel.preset + paramSep + options.channel)
 				self.checkSubscriptionLevel(1)
 			},
 		},
@@ -230,14 +210,10 @@ module.exports = async function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				if (self.channelsBypass[options.channel] == 1) {
-					return true
-				} else {
-					return false
-				}
+				return self.channelsBypass[options.channel] == 1
 			},
 			subscribe: ({ options }) => {
-				self.addCmdtoQueue('BP' + paramSep + options.channel)
+				self.addCmdtoQueue(cmd.channel.bypass + paramSep + options.channel)
 				self.checkSubscriptionLevel(1)
 			},
 		},
@@ -259,14 +235,10 @@ module.exports = async function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				if (self.channelsOverride[options.channel] == 1) {
-					return true
-				} else {
-					return false
-				}
+				return self.channelsOverride[options.channel] == 1
 			},
 			subscribe: ({ options }) => {
-				self.addCmdtoQueue('CO' + paramSep + options.channel)
+				self.addCmdtoQueue(cmd.channel.override + paramSep + options.channel)
 				self.checkSubscriptionLevel(1)
 			},
 		},
@@ -288,14 +260,10 @@ module.exports = async function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				if (self.channelsMusic[options.channel] == 1) {
-					return true
-				} else {
-					return false
-				}
+				return self.channelsMusic[options.channel] == 1
 			},
 			subscribe: ({ options }) => {
-				self.addCmdtoQueue('MR' + paramSep + options.channel)
+				self.addCmdtoQueue(cmd.channel.music + paramSep + options.channel)
 				self.checkSubscriptionLevel(1)
 			},
 		},
@@ -317,14 +285,10 @@ module.exports = async function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				if (self.channelsNom[options.channel] == 1) {
-					return true
-				} else {
-					return false
-				}
+				return self.channelsNom[options.channel] == 1
 			},
 			subscribe: ({ options }) => {
-				self.addCmdtoQueue('NE' + paramSep + options.channel)
+				self.addCmdtoQueue(cmd.channel.nom + paramSep + options.channel)
 				self.checkSubscriptionLevel(1)
 			},
 		},
@@ -353,14 +317,10 @@ module.exports = async function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				if (self.channelsGroupAssign[options.channel] == options.group) {
-					return true
-				} else {
-					return false
-				}
+				return self.channelsGroupAssign[options.channel] == options.group
 			},
 			subscribe: ({ options }) => {
-				self.addCmdtoQueue('GA' + paramSep + options.channel)
+				self.addCmdtoQueue(cmd.channel.group + paramSep + options.channel)
 				self.checkSubscriptionLevel(1)
 			},
 		},
@@ -382,15 +342,11 @@ module.exports = async function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				if (self.channelsClip[options.channel]) {
-					return true
-				} else {
-					return false
-				}
+				return self.channelsClip[options.channel]
 			},
 			subscribe: () => {
 				if (self.config.model != 11 && self.config.model != 12) {
-					self.addCmdtoQueue('GSC')
+					self.addCmdtoQueue(cmd.metering.signalClip)
 				}
 				self.checkSubscriptionLevel(2)
 			},
@@ -413,15 +369,11 @@ module.exports = async function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				if (self.channelsPresence[options.channel]) {
-					return true
-				} else {
-					return false
-				}
+				return self.channelsPresence[options.channel]
 			},
 			subscribe: () => {
 				if (self.config.model != 11 && self.config.model != 12) {
-					self.addCmdtoQueue('GSS')
+					self.addCmdtoQueue(cmd.metering.signalPresense)
 				}
 				self.checkSubscriptionLevel(1) // should be 2 if SU behaved properly
 			},
@@ -468,18 +420,14 @@ module.exports = async function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				if (
+				return (
 					self.channelsInputPeak[options.channel] <= options.lessThan &&
 					self.channelsInputPeak[options.channel] >= options.greaterThan
-				) {
-					return true
-				} else {
-					return false
-				}
+				)
 			},
 			subscribe: () => {
 				if (self.config.model != 11 && self.config.model != 12) {
-					self.addCmdtoQueue('GSI')
+					self.addCmdtoQueue(cmd.metering.inputPeaks)
 				}
 				self.checkSubscriptionLevel(1) // should be 2 if SU behaved properly
 			},
@@ -526,18 +474,14 @@ module.exports = async function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				if (
+				return (
 					self.channelsOutputPeak[options.channel] <= options.lessThan &&
 					self.channelsOutputPeak[options.channel] >= options.greaterThan
-				) {
-					return true
-				} else {
-					return false
-				}
+				)
 			},
 			subscribe: () => {
 				if (self.config.model != 11 && self.config.model != 12) {
-					self.addCmdtoQueue('GSO')
+					self.addCmdtoQueue(cmd.metering.outputPeaks)
 				}
 				self.checkSubscriptionLevel(1) // should be 2 if SU behaved properly
 			},
@@ -584,18 +528,14 @@ module.exports = async function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				if (
+				return (
 					self.channelsAmixGain[options.channel] <= options.lessThan &&
 					self.channelsAmixGain[options.channel] >= options.greaterThan
-				) {
-					return true
-				} else {
-					return false
-				}
+				)
 			},
 			subscribe: () => {
 				if (self.config.model != 11 && self.config.model != 12) {
-					self.addCmdtoQueue('GSA')
+					self.addCmdtoQueue(cmd.metering.automixGain)
 				}
 				self.checkSubscriptionLevel(1) // should be 2 if SU behaved properly
 			},
@@ -625,7 +565,7 @@ module.exports = async function (self) {
 				}
 			},
 			subscribe: () => {
-				self.addCmdtoQueue('SM')
+				self.addCmdtoQueue(cmd.group.mute)
 				self.checkSubscriptionLevel(1)
 			},
 		},
@@ -654,7 +594,7 @@ module.exports = async function (self) {
 				}
 			},
 			subscribe: () => {
-				self.addCmdtoQueue('SP')
+				self.addCmdtoQueue(cmd.group.preset)
 				self.checkSubscriptionLevel(1)
 			},
 		},
@@ -683,7 +623,7 @@ module.exports = async function (self) {
 				}
 			},
 			subscribe: () => {
-				self.addCmdtoQueue('SO')
+				self.addCmdtoQueue(cmd.group.override)
 				self.checkSubscriptionLevel(1)
 			},
 		},
@@ -712,7 +652,7 @@ module.exports = async function (self) {
 				}
 			},
 			subscribe: () => {
-				self.addCmdtoQueue('LH')
+				self.addCmdtoQueue(cmd.group.lastHold)
 				self.checkSubscriptionLevel(1)
 			},
 		},
@@ -758,18 +698,14 @@ module.exports = async function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				if (
+				return (
 					self.groupNOMpeak[options.group] <= options.lessThan &&
 					self.groupNOMpeak[options.group] >= options.greaterThan
-				) {
-					return true
-				} else {
-					return false
-				}
+				)
 			},
 			subscribe: () => {
 				if (self.config.model != 11 && self.config.model != 12) {
-					self.addCmdtoQueue('GSN')
+					self.addCmdtoQueue(cmd.metering.nomGain)
 				}
 				self.checkSubscriptionLevel(2)
 			},
@@ -816,18 +752,14 @@ module.exports = async function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				if (
+				return (
 					self.groupMusicPeak[options.group] <= options.lessThan &&
 					self.groupMusicPeak[options.group] >= options.greaterThan
-				) {
-					return true
-				} else {
-					return false
-				}
+				)
 			},
 			subscribe: () => {
 				if (self.config.model != 11 && self.config.model != 12) {
-					self.addCmdtoQueue('GSM')
+					self.addCmdtoQueue(cmd.metering.musicRef)
 				}
 				self.checkSubscriptionLevel(1) // should be 2 if SU behaved properly
 			},
@@ -857,19 +789,14 @@ module.exports = async function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				if (self.groupMusicInput[options.group] == options.input) {
-					return true
-				} else {
-					return false
-				}
+				return self.groupMusicInput[options.group] == options.input
 			},
 			subscribe: ({ options }) => {
-				self.addCmdtoQueue('MC' + paramSep + options.group)
+				self.addCmdtoQueue(cmd.group.musicInput + paramSep + options.group)
 				self.checkSubscriptionLevel(1)
 			},
 			learn: async (feedback) => {
-				let cmd = 'MC'
-				self.addCmdtoQueue(cmd + paramSep + feedback.options.group)
+				self.addCmdtoQueue(cmd.group.musicInput + paramSep + feedback.options.group)
 				const grpMTinput = self.groupMusicInput[feedback.options.group]
 				return {
 					...feedback.options,
@@ -902,19 +829,14 @@ module.exports = async function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				if (self.matrixOutput[options.matrix] == options.output) {
-					return true
-				} else {
-					return false
-				}
+				return self.matrixOutput[options.matrix] == options.output
 			},
 			subscribe: ({ options }) => {
-				self.addCmdtoQueue('MXO' + paramSep + options.matrix)
+				self.addCmdtoQueue(cmd.matrix.output + paramSep + options.matrix)
 				self.checkSubscriptionLevel(1)
 			},
 			learn: async (feedback) => {
-				let cmd = 'MXO'
-				self.addCmdtoQueue(cmd + paramSep + feedback.options.matrix)
+				self.addCmdtoQueue(cmd.matrix.output + paramSep + feedback.options.matrix)
 				const matrixOutput = self.matrixOutput[feedback.options.matrix]
 				return {
 					...feedback.options,

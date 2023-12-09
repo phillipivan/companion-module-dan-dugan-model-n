@@ -10,6 +10,7 @@ const {
 	MatrixSize,
 	GroupCount,
 	MaxChannelCount,
+	cmd,
 } = require('./consts.js')
 
 module.exports = function (self) {
@@ -43,7 +44,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: async ({ options }) => {
-				let cmd = 'CM'
+				let cmdTx = cmd.channel.mode
 				let chan = await self.parseVariablesInString(options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
@@ -51,11 +52,11 @@ module.exports = function (self) {
 					return false
 				}
 				if (options.query) {
-					cmd += paramSep + chan
+					cmdTx += paramSep + chan
 				} else {
-					cmd += paramSep + chan + paramSep + options.mode
+					cmdTx += paramSep + chan + paramSep + options.mode
 				}
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmdTx)
 			},
 			learn: async (action) => {
 				let chan = await self.parseVariablesInString(action.options.channel)
@@ -71,14 +72,14 @@ module.exports = function (self) {
 				}
 			},
 			subscribe: async (action) => {
-				let cmd = 'CM'
+				let cmdTx = cmd.channel.mode
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
 					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return undefined
 				}
-				self.addCmdtoQueue(cmd + paramSep + chan)
+				self.addCmdtoQueue(cmdTx + paramSep + chan)
 			},
 		},
 		channel_preset: {
@@ -110,7 +111,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: async ({ options }) => {
-				let cmd = 'CP'
+				let cmdTx = cmd.channel.preset
 				let chan = await self.parseVariablesInString(options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
@@ -118,11 +119,11 @@ module.exports = function (self) {
 					return false
 				}
 				if (options.query) {
-					cmd += paramSep + chan
+					cmdTx += paramSep + chan
 				} else {
-					cmd += paramSep + chan + paramSep + options.preset
+					cmdTx += paramSep + chan + paramSep + options.preset
 				}
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmdTx)
 			},
 			learn: async (action) => {
 				let chan = await self.parseVariablesInString(action.options.channel)
@@ -138,14 +139,14 @@ module.exports = function (self) {
 				}
 			},
 			subscribe: async (action) => {
-				let cmd = 'CP'
+				let cmdTx = cmd.channel.preset
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
 					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return undefined
 				}
-				self.addCmdtoQueue(cmd + paramSep + chan)
+				self.addCmdtoQueue(cmdTx + paramSep + chan)
 			},
 		},
 		channel_bypass: {
@@ -177,7 +178,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: async ({ options }) => {
-				let cmd = 'BP'
+				let cmdTx = cmd.channel.bypass
 				let chan = await self.parseVariablesInString(options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
@@ -185,13 +186,13 @@ module.exports = function (self) {
 					return false
 				}
 				if (options.query) {
-					cmd += paramSep + chan
+					cmdTx += paramSep + chan
 				} else if (options.bypass == toggle) {
-					cmd += paramSep + chan + paramSep + (self.channelsBypass[Number(chan)] ^ 1)
+					cmdTx += paramSep + chan + paramSep + (self.channelsBypass[Number(chan)] ^ 1)
 				} else {
-					cmd += paramSep + chan + paramSep + options.bypass
+					cmdTx += paramSep + chan + paramSep + options.bypass
 				}
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmdTx)
 			},
 			learn: async (action) => {
 				let chan = await self.parseVariablesInString(action.options.channel)
@@ -207,14 +208,14 @@ module.exports = function (self) {
 				}
 			},
 			subscribe: async (action) => {
-				let cmd = 'BP'
+				let cmdTx = cmd.channel.bypass
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
 					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return undefined
 				}
-				self.addCmdtoQueue(cmd + paramSep + chan)
+				self.addCmdtoQueue(cmdTx + paramSep + chan)
 			},
 		},
 		channel_override: {
@@ -246,7 +247,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: async ({ options }) => {
-				let cmd = 'CO'
+				let cmdTx = cmd.channel.override
 				let chan = await self.parseVariablesInString(options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
@@ -254,13 +255,13 @@ module.exports = function (self) {
 					return false
 				}
 				if (options.query) {
-					cmd += paramSep + chan
+					cmdTx += paramSep + chan
 				} else if (options.override == toggle) {
-					cmd += paramSep + chan + paramSep + (self.channelsOverride[Number(chan)] ^ 1)
+					cmdTx += paramSep + chan + paramSep + (self.channelsOverride[Number(chan)] ^ 1)
 				} else {
-					cmd += paramSep + chan + paramSep + options.override
+					cmdTx += paramSep + chan + paramSep + options.override
 				}
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmdTx)
 			},
 			learn: async (action) => {
 				let chan = await self.parseVariablesInString(action.options.channel)
@@ -276,14 +277,14 @@ module.exports = function (self) {
 				}
 			},
 			subscribe: async (action) => {
-				let cmd = 'CO'
+				let cmdTx = cmd.channel.override
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
 					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return undefined
 				}
-				self.addCmdtoQueue(cmd + paramSep + chan)
+				self.addCmdtoQueue(cmdTx + paramSep + chan)
 			},
 		},
 		channel_weight: {
@@ -340,7 +341,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: async ({ options }) => {
-				let cmd = 'CW'
+				let cmdTx = cmd.channel.weight
 				let weightVar = Number(await self.parseVariablesInString(options.weightVar))
 				weightVar = weightVar.toFixed(2)
 				let chan = await self.parseVariablesInString(options.channel)
@@ -360,11 +361,11 @@ module.exports = function (self) {
 					weight = options.weight
 				}
 				if (options.query) {
-					cmd += paramSep + chan
+					cmdTx += paramSep + chan
 				} else {
-					cmd += paramSep + chan + paramSep + weight
+					cmdTx += paramSep + chan + paramSep + weight
 				}
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmdTx)
 			},
 			learn: async (action) => {
 				let chan = await self.parseVariablesInString(action.options.channel)
@@ -380,14 +381,14 @@ module.exports = function (self) {
 				}
 			},
 			subscribe: async (action) => {
-				let cmd = 'CW'
+				let cmdTx = cmd.channel.weight
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
 					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return undefined
 				}
-				self.addCmdtoQueue(cmd + paramSep + chan)
+				self.addCmdtoQueue(cmdTx + paramSep + chan)
 			},
 		},
 		channel_weight_rel: {
@@ -418,7 +419,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: async ({ options }) => {
-				let cmd = 'CW'
+				let cmdTx = cmd.channel.weight
 				let chan = await self.parseVariablesInString(options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
@@ -433,18 +434,18 @@ module.exports = function (self) {
 				if (weightRound > 15) {
 					weightRound = 15
 				}
-				cmd += paramSep + chan + paramSep + weightRound
-				self.addCmdtoQueue(cmd)
+				cmdTx += paramSep + chan + paramSep + weightRound
+				self.addCmdtoQueue(cmdTx)
 			},
 			subscribe: async (action) => {
-				let cmd = 'CW'
+				let cmdTx = cmd.channel.weight
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
 					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return undefined
 				}
-				self.addCmdtoQueue(cmd + paramSep + chan)
+				self.addCmdtoQueue(cmdTx + paramSep + chan)
 			},
 		},
 		channel_music_mode: {
@@ -476,7 +477,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: async ({ options }) => {
-				let cmd = 'MR'
+				let cmdTx = cmd.channel.music
 				let chan = await self.parseVariablesInString(options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
@@ -484,13 +485,13 @@ module.exports = function (self) {
 					return false
 				}
 				if (options.query) {
-					cmd += paramSep + chan
+					cmdTx += paramSep + chan
 				} else if (options.music == toggle) {
-					cmd += paramSep + chan + paramSep + (self.channelsMusic[Number(chan)] ^ 1)
+					cmdTx += paramSep + chan + paramSep + (self.channelsMusic[Number(chan)] ^ 1)
 				} else {
-					cmd += paramSep + chan + paramSep + options.music
+					cmdTx += paramSep + chan + paramSep + options.music
 				}
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmdTx)
 			},
 			learn: async (action) => {
 				let chan = await self.parseVariablesInString(action.options.channel)
@@ -506,14 +507,14 @@ module.exports = function (self) {
 				}
 			},
 			subscribe: async (action) => {
-				let cmd = 'MR'
+				let cmdTx = cmd.channel.music
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
 					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return undefined
 				}
-				self.addCmdtoQueue(cmd + paramSep + chan)
+				self.addCmdtoQueue(cmdTx + paramSep + chan)
 			},
 		},
 		channel_NOM_mode: {
@@ -545,7 +546,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: async ({ options }) => {
-				let cmd = 'NE'
+				let cmdTx = cmd.channel.nom
 				let chan = await self.parseVariablesInString(options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
@@ -553,13 +554,13 @@ module.exports = function (self) {
 					return false
 				}
 				if (options.query) {
-					cmd += paramSep + chan
+					cmdTx += paramSep + chan
 				} else if (options.nom == toggle) {
-					cmd += paramSep + chan + paramSep + (self.channelsNom[Number(chan)] ^ 1)
+					cmdTx += paramSep + chan + paramSep + (self.channelsNom[Number(chan)] ^ 1)
 				} else {
-					cmd += paramSep + chan + paramSep + options.nom
+					cmdTx += paramSep + chan + paramSep + options.nom
 				}
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmdTx)
 			},
 			learn: async (action) => {
 				let chan = await self.parseVariablesInString(action.options.channel)
@@ -575,14 +576,14 @@ module.exports = function (self) {
 				}
 			},
 			subscribe: async (action) => {
-				let cmd = 'NE'
+				let cmdTx = cmd.channel.nom
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
 					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return undefined
 				}
-				self.addCmdtoQueue(cmd + paramSep + chan)
+				self.addCmdtoQueue(cmdTx + paramSep + chan)
 			},
 		},
 		channel_group_assign: {
@@ -615,13 +616,13 @@ module.exports = function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				let cmd = 'GA'
+				let cmdTx = cmd.channel.group
 				if (options.query) {
-					cmd += paramSep + options.channel
+					cmdTx += paramSep + options.channel
 				} else {
-					cmd += paramSep + options.channel + paramSep + options.group
+					cmdTx += paramSep + options.channel + paramSep + options.group
 				}
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmdTx)
 			},
 			learn: async (action) => {
 				let chan = await self.parseVariablesInString(action.options.channel)
@@ -637,14 +638,14 @@ module.exports = function (self) {
 				}
 			},
 			subscribe: async (action) => {
-				let cmd = 'GA'
+				let cmdTx = cmd.channel.group
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
 					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return undefined
 				}
-				self.addCmdtoQueue(cmd + paramSep + chan)
+				self.addCmdtoQueue(cmdTx + paramSep + chan)
 			},
 		},
 		channel_name: {
@@ -680,7 +681,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: async ({ options }) => {
-				let cmd = 'CN'
+				let cmdTx = cmd.channel.name
 				let chan = await self.parseVariablesInString(options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
@@ -688,17 +689,17 @@ module.exports = function (self) {
 					return false
 				}
 				if (options.query) {
-					cmd += paramSep + chan
+					cmdTx += paramSep + chan
 				} else {
 					let safeChanName = await self.regexSafeString(await self.parseVariablesInString(options.name))
 					if (safeChanName != undefined && safeChanName.length >= 1) {
-						cmd += paramSep + chan + paramSep + safeChanName
+						cmdTx += paramSep + chan + paramSep + safeChanName
 					} else {
 						self.log('warn', 'Not a valid channel name')
 						return false
 					}
 				}
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmdTx)
 			},
 			learn: async (action) => {
 				let chan = await self.parseVariablesInString(action.options.channel)
@@ -714,14 +715,14 @@ module.exports = function (self) {
 				}
 			},
 			subscribe: async (action) => {
-				let cmd = 'CN'
+				let cmdTx = cmd.channel.name
 				let chan = await self.parseVariablesInString(action.options.channel)
 				chan = Math.floor(chan)
 				if (isNaN(chan) || chan < 1 || chan > self.config.channels) {
 					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return undefined
 				}
-				self.addCmdtoQueue(cmd + paramSep + chan)
+				self.addCmdtoQueue(cmdTx + paramSep + chan)
 			},
 		},
 		group_mute: {
@@ -758,7 +759,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				let cmd = 'SM'
+				let cmdTx = cmd.group.mute
 				if (!options.query) {
 					let groupMute = 0
 					if (options.groupA < toggle) groupMute += options.groupA
@@ -770,9 +771,9 @@ module.exports = function (self) {
 					if (options.groupA == noChange) groupMute += self.groupMute[1]
 					if (options.groupB == noChange) groupMute += self.groupMute[2]
 					if (options.groupC == noChange) groupMute += self.groupMute[3]
-					cmd += paramSep + groupMute
+					cmdTx += paramSep + groupMute
 				}
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmdTx)
 			},
 			learn: (action) => {
 				const grpA = self.groupMute[1]
@@ -786,8 +787,7 @@ module.exports = function (self) {
 				}
 			},
 			subscribe: () => {
-				let cmd = 'SM'
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmd.group.mute)
 			},
 		},
 		group_preset: {
@@ -824,7 +824,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				let cmd = 'SP'
+				let cmdTx = cmd.group.preset
 				if (!options.query) {
 					let groupPreset = 0
 					if (options.groupA < toggle) groupPreset += options.groupA
@@ -836,9 +836,9 @@ module.exports = function (self) {
 					if (options.groupA == noChange) groupPreset += self.groupPreset[1]
 					if (options.groupB == noChange) groupPreset += self.groupPreset[2]
 					if (options.groupC == noChange) groupPreset += self.groupPreset[3]
-					cmd += paramSep + groupPreset
+					cmdTx += paramSep + groupPreset
 				}
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmdTx)
 			},
 			learn: (action) => {
 				const grpA = self.groupPreset[1]
@@ -852,8 +852,7 @@ module.exports = function (self) {
 				}
 			},
 			subscribe: () => {
-				let cmd = 'SP'
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmd.group.preset)
 			},
 		},
 		group_override: {
@@ -890,7 +889,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				let cmd = 'SO'
+				let cmdTx = cmd.group.override
 				if (!options.query) {
 					let groupOverride = 0
 					if (options.groupA < toggle) groupOverride += options.groupA
@@ -902,9 +901,9 @@ module.exports = function (self) {
 					if (options.groupA == noChange) groupOverride += self.groupOverride[1]
 					if (options.groupB == noChange) groupOverride += self.groupOverride[2]
 					if (options.groupC == noChange) groupOverride += self.groupOverride[3]
-					cmd += paramSep + groupOverride
+					cmdTx += paramSep + groupOverride
 				}
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmdTx)
 			},
 			learn: (action) => {
 				const grpA = self.groupOverride[1]
@@ -918,8 +917,7 @@ module.exports = function (self) {
 				}
 			},
 			subscribe: () => {
-				let cmd = 'SO'
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmd.group.override)
 			},
 		},
 		group_lasthold: {
@@ -956,7 +954,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				let cmd = 'LH'
+				let cmdTx = cmd.group.lastHold
 				if (!options.query) {
 					let groupLasthold = 0
 					if (options.groupA < toggle) groupLasthold += options.groupA
@@ -968,9 +966,9 @@ module.exports = function (self) {
 					if (options.groupA == noChange) groupLasthold += self.groupLastHold[1]
 					if (options.groupB == noChange) groupLasthold += self.groupLastHold[2]
 					if (options.groupC == noChange) groupLasthold += self.groupLastHold[3]
-					cmd += paramSep + groupLasthold
+					cmdTx += paramSep + groupLasthold
 				}
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmdTx)
 			},
 			learn: (action) => {
 				const grpA = self.groupLastHold[1]
@@ -984,8 +982,7 @@ module.exports = function (self) {
 				}
 			},
 			subscribe: () => {
-				let cmd = 'LH'
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmd.group.lastHold)
 			},
 		},
 		group_automixdepth: {
@@ -1043,7 +1040,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: async ({ options }) => {
-				let cmd = 'ME' //AD commands also works
+				let cmdTx = cmd.group.automixDepth //AD commands also works
 				let group = await self.parseVariablesInString(options.group)
 				let depthVar = Number(await self.parseVariablesInString(options.depthVar))
 				depthVar = depthVar.toFixed(2)
@@ -1063,11 +1060,11 @@ module.exports = function (self) {
 					depth = options.depth
 				}
 				if (options.query) {
-					cmd += paramSep + group
+					cmdTx += paramSep + group
 				} else {
-					cmd += paramSep + group + paramSep + depth
+					cmdTx += paramSep + group + paramSep + depth
 				}
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmdTx)
 			},
 			learn: async (action) => {
 				let group = await self.parseVariablesInString(action.options.group)
@@ -1083,14 +1080,14 @@ module.exports = function (self) {
 				}
 			},
 			subscribe: async (action) => {
-				let cmd = 'ME' //AD commands also works
+				let cmdTx = cmd.group.automixDepth //AD commands also works
 				let group = await self.parseVariablesInString(action.options.group)
 				group = Math.floor(group)
 				if (isNaN(group) || group < 1 || group > GroupCount) {
 					self.log('warn', `an invalid varible has been passed: ${group}`)
 					return undefined
 				}
-				self.addCmdtoQueue(cmd + paramSep + group)
+				self.addCmdtoQueue(cmdTx + paramSep + group)
 			},
 		},
 		group_automixdepth_rel: {
@@ -1121,7 +1118,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: async ({ options }) => {
-				let cmd = 'ME' //AD commands also works
+				let cmdTx = cmd.group.automixDepth //AD commands also works
 				let group = await self.parseVariablesInString(options.group)
 				group = Math.floor(group)
 				if (isNaN(group) || group < 1 || group > GroupCount) {
@@ -1136,18 +1133,18 @@ module.exports = function (self) {
 					depth = 0
 				}
 				let depthRound = depth.toFixed(2)
-				cmd += paramSep + group + paramSep + depthRound
-				self.addCmdtoQueue(cmd)
+				cmdTx += paramSep + group + paramSep + depthRound
+				self.addCmdtoQueue(cmdTx)
 			},
 			subscribe: async (action) => {
-				let cmd = 'ME' //AD commands also works
+				let cmdTx = cmd.group.automixDepth //AD commands also works
 				let group = await self.parseVariablesInString(action.options.group)
 				group = Math.floor(group)
 				if (isNaN(group) || group < 1 || group > GroupCount) {
 					self.log('warn', `an invalid varible has been passed: ${group}`)
 					return undefined
 				}
-				self.addCmdtoQueue(cmd + paramSep + group)
+				self.addCmdtoQueue(cmdTx + paramSep + group)
 			},
 		},
 		group_NOMgainlimit: {
@@ -1205,7 +1202,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: async ({ options }) => {
-				let cmd = 'NL'
+				let cmdTx = cmd.group.nomGainLimit
 				let nomVar = Number(await self.parseVariablesInString(options.nomVar))
 				nomVar = nomVar.toFixed(2)
 				let nom = 0
@@ -1225,11 +1222,11 @@ module.exports = function (self) {
 					nom = options.nomgain
 				}
 				if (options.query) {
-					cmd += paramSep + group
+					cmdTx += paramSep + group
 				} else {
-					cmd += paramSep + group + paramSep + nom
+					cmdTx += paramSep + group + paramSep + nom
 				}
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmdTx)
 			},
 			learn: async (action) => {
 				let group = await self.parseVariablesInString(action.options.group)
@@ -1245,14 +1242,14 @@ module.exports = function (self) {
 				}
 			},
 			subscribe: async (action) => {
-				let cmd = 'NL'
+				let cmdTx = cmd.group.nomGainLimit
 				let group = await self.parseVariablesInString(action.options.group)
 				group = Math.floor(group)
 				if (isNaN(group) || group < 1 || group > GroupCount) {
 					self.log('warn', `an invalid varible has been passed: ${group}`)
 					return undefined
 				}
-				self.addCmdtoQueue(cmd + paramSep + group)
+				self.addCmdtoQueue(cmdTx + paramSep + group)
 			},
 		},
 		group_NOMgainlimit_rel: {
@@ -1283,7 +1280,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: async ({ options }) => {
-				let cmd = 'NL'
+				let cmdTx = cmd.group.nomGainLimit
 				let group = await self.parseVariablesInString(options.group)
 				group = Math.floor(group)
 				if (isNaN(group) || group < 1 || group > GroupCount) {
@@ -1298,18 +1295,18 @@ module.exports = function (self) {
 					nom = 10
 				}
 				let nomRound = nom.toFixed(2)
-				cmd += paramSep + group + paramSep + nomRound
-				self.addCmdtoQueue(cmd)
+				cmdTx += paramSep + group + paramSep + nomRound
+				self.addCmdtoQueue(cmdTx)
 			},
 			subscribe: async (action) => {
-				let cmd = 'NL'
+				let cmdTx = cmd.group.nomGainLimit
 				let group = await self.parseVariablesInString(action.options.group)
 				group = Math.floor(group)
 				if (isNaN(group) || group < 1 || group > GroupCount) {
 					self.log('warn', `an invalid varible has been passed: ${group}`)
 					return undefined
 				}
-				self.addCmdtoQueue(cmd + paramSep + group)
+				self.addCmdtoQueue(cmdTx + paramSep + group)
 			},
 		},
 		group_musicthreshold: {
@@ -1367,7 +1364,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: async ({ options }) => {
-				let cmd = 'MT'
+				let cmdTx = cmd.group.musicThreshold
 				let threshVar = Number(await self.parseVariablesInString(options.thresholdVar))
 				threshVar = threshVar.toFixed(2)
 				let threshold = 0
@@ -1387,11 +1384,11 @@ module.exports = function (self) {
 					threshold = options.threshold
 				}
 				if (options.query) {
-					cmd += paramSep + group
+					cmdTx += paramSep + group
 				} else {
-					cmd += paramSep + group + paramSep + threshold
+					cmdTx += paramSep + group + paramSep + threshold
 				}
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmdTx)
 			},
 			learn: async (action) => {
 				let group = await self.parseVariablesInString(action.options.group)
@@ -1407,14 +1404,14 @@ module.exports = function (self) {
 				}
 			},
 			subscribe: async (action) => {
-				let cmd = 'MT'
+				let cmdTx = cmd.group.musicThreshold
 				let group = await self.parseVariablesInString(action.options.group)
 				group = Math.floor(group)
 				if (isNaN(group) || group < 1 || group > GroupCount) {
 					self.log('warn', `an invalid varible has been passed: ${group}`)
 					return undefined
 				}
-				self.addCmdtoQueue(cmd + paramSep + group)
+				self.addCmdtoQueue(cmdTx + paramSep + group)
 			},
 		},
 		group_musicthreshold_rel: {
@@ -1445,7 +1442,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: async ({ options }) => {
-				let cmd = 'MT'
+				let cmdTx = cmd.group.musicThreshold
 				let group = await self.parseVariablesInString(options.group)
 				group = Math.floor(group)
 				if (isNaN(group) || group < 1 || group > GroupCount) {
@@ -1460,18 +1457,18 @@ module.exports = function (self) {
 					thres = 20
 				}
 				let thresRound = thres.toFixed(2)
-				cmd += paramSep + group + paramSep + thresRound
-				self.addCmdtoQueue(cmd)
+				cmdTx += paramSep + group + paramSep + thresRound
+				self.addCmdtoQueue(cmdTx)
 			},
 			subscribe: async (action) => {
-				let cmd = 'MT'
+				let cmdTx = cmd.group.musicThreshold
 				let group = await self.parseVariablesInString(action.options.group)
 				group = Math.floor(group)
 				if (isNaN(group) || group < 1 || group > GroupCount) {
 					self.log('warn', `an invalid varible has been passed: ${group}`)
 					return undefined
 				}
-				self.addCmdtoQueue(cmd + paramSep + group)
+				self.addCmdtoQueue(cmdTx + paramSep + group)
 			},
 		},
 		group_musicinput: {
@@ -1507,7 +1504,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: async ({ options }) => {
-				let cmd = 'MC'
+				let cmdTx = cmd.group.musicInput
 				let group = await self.parseVariablesInString(options.group)
 				group = Math.floor(group)
 				if (isNaN(group) || group < 1 || group > GroupCount) {
@@ -1521,11 +1518,11 @@ module.exports = function (self) {
 					return false
 				}
 				if (options.query) {
-					cmd += paramSep + group
+					cmdTx += paramSep + group
 				} else {
-					cmd += paramSep + group + paramSep + input
+					cmdTx += paramSep + group + paramSep + input
 				}
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmdTx)
 			},
 			learn: async (action) => {
 				let group = await self.parseVariablesInString(action.options.group)
@@ -1541,14 +1538,14 @@ module.exports = function (self) {
 				}
 			},
 			subscribe: async (action) => {
-				let cmd = 'MC'
+				let cmdTx = cmd.group.musicInput
 				let group = await self.parseVariablesInString(action.options.group)
 				group = Math.floor(group)
 				if (isNaN(group) || group < 1 || group > GroupCount) {
 					self.log('warn', `an invalid varible has been passed: ${group}`)
 					return undefined
 				}
-				self.addCmdtoQueue(cmd + paramSep + group)
+				self.addCmdtoQueue(cmdTx + paramSep + group)
 			},
 		},
 		matrix_mute: {
@@ -1584,7 +1581,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: async ({ options }) => {
-				let cmd = 'MXM'
+				let cmdTx = cmd.matrix.mute
 				let matrix = await self.parseVariablesInString(options.matrix)
 				matrix = Math.floor(matrix)
 				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
@@ -1593,13 +1590,13 @@ module.exports = function (self) {
 				}
 				let muteState = (await self.matrixMute[matrix]) ^ 1
 				if (options.query) {
-					cmd += paramSep + matrix
+					cmdTx += paramSep + matrix
 				} else if (options.mute == toggle) {
-					cmd += paramSep + matrix + paramSep + muteState
+					cmdTx += paramSep + matrix + paramSep + muteState
 				} else {
-					cmd += paramSep + matrix + paramSep + options.mute
+					cmdTx += paramSep + matrix + paramSep + options.mute
 				}
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmdTx)
 			},
 			learn: async (action) => {
 				let matrix = await self.parseVariablesInString(action.options.matrix)
@@ -1615,14 +1612,14 @@ module.exports = function (self) {
 				}
 			},
 			subscribe: async (action) => {
-				let cmd = 'MXM'
+				let cmdTx = cmd.matrix.mute
 				let matrix = await self.parseVariablesInString(action.options.matrix)
 				matrix = Math.floor(matrix)
 				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
 					self.log('warn', `an invalid varible has been passed: ${MatrixCount}`)
 					return undefined
 				}
-				self.addCmdtoQueue(cmd + paramSep + matrix)
+				self.addCmdtoQueue(cmdTx + paramSep + matrix)
 			},
 		},
 		matrix_polarity: {
@@ -1658,7 +1655,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: async ({ options }) => {
-				let cmd = 'MXP'
+				let cmdTx = cmd.matrix.polarity
 				let matrix = await self.parseVariablesInString(options.matrix)
 				matrix = Math.floor(matrix)
 				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
@@ -1667,13 +1664,13 @@ module.exports = function (self) {
 				}
 				let polState = (await self.matrixPolarity[matrix]) ^ 1
 				if (options.query) {
-					cmd += paramSep + matrix
+					cmdTx += paramSep + matrix
 				} else if (options.polarity == toggle) {
-					cmd += paramSep + matrix + paramSep + polState
+					cmdTx += paramSep + matrix + paramSep + polState
 				} else {
-					cmd += paramSep + matrix + paramSep + options.polarity
+					cmdTx += paramSep + matrix + paramSep + options.polarity
 				}
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmdTx)
 			},
 			learn: async (action) => {
 				let matrix = await self.parseVariablesInString(action.options.matrix)
@@ -1689,14 +1686,14 @@ module.exports = function (self) {
 				}
 			},
 			subscribe: async (action) => {
-				let cmd = 'MXP'
+				let cmdTx = cmd.matrix.polarity
 				let matrix = await self.parseVariablesInString(action.options.matrix)
 				matrix = Math.floor(matrix)
 				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
 					self.log('warn', `an invalid varible has been passed: ${MatrixCount}`)
 					return undefined
 				}
-				self.addCmdtoQueue(cmd + paramSep + matrix)
+				self.addCmdtoQueue(cmdTx + paramSep + matrix)
 			},
 		},
 		matrix_gain: {
@@ -1754,7 +1751,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: async ({ options }) => {
-				let cmd = 'MXV'
+				let cmdTx = cmd.matrix.gain
 				let gainVar = Number(await self.parseVariablesInString(options.gainVar))
 				gainVar = gainVar.toFixed(2)
 				let gain = 0
@@ -1774,11 +1771,11 @@ module.exports = function (self) {
 					gain = options.gain
 				}
 				if (options.query) {
-					cmd += paramSep + matrix
+					cmdTx += paramSep + matrix
 				} else {
-					cmd += paramSep + matrix + paramSep + gain
+					cmdTx += paramSep + matrix + paramSep + gain
 				}
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmdTx)
 			},
 			learn: async (action) => {
 				let matrix = await self.parseVariablesInString(action.options.matrix)
@@ -1794,14 +1791,14 @@ module.exports = function (self) {
 				}
 			},
 			subscribe: async (action) => {
-				let cmd = 'MXV'
+				let cmdTx = cmd.matrix.gain
 				let matrix = await self.parseVariablesInString(action.options.matrix)
 				matrix = Math.floor(matrix)
 				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
 					self.log('warn', `an invalid varible has been passed: ${MatrixCount}`)
 					return undefined
 				}
-				self.addCmdtoQueue(cmd + paramSep + matrix)
+				self.addCmdtoQueue(cmdTx + paramSep + matrix)
 			},
 		},
 		matrix_gain_rel: {
@@ -1832,7 +1829,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: async ({ options }) => {
-				let cmd = 'MXV'
+				let cmdTx = cmd.matrix.gain
 				let matrix = await self.parseVariablesInString(options.matrix)
 				matrix = Math.floor(matrix)
 				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
@@ -1847,18 +1844,18 @@ module.exports = function (self) {
 					gain = 15
 				}
 				let gainRound = gain.toFixed(2)
-				cmd += paramSep + matrix + paramSep + gainRound
-				self.addCmdtoQueue(cmd)
+				cmdTx += paramSep + matrix + paramSep + gainRound
+				self.addCmdtoQueue(cmdTx)
 			},
 			subscribe: async (action) => {
-				let cmd = 'MXV'
+				let cmdTx = cmd.matrix.gain
 				let matrix = await self.parseVariablesInString(action.options.matrix)
 				matrix = Math.floor(matrix)
 				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
 					self.log('warn', `an invalid varible has been passed: ${MatrixCount}`)
 					return undefined
 				}
-				self.addCmdtoQueue(cmd + paramSep + matrix)
+				self.addCmdtoQueue(cmdTx + paramSep + matrix)
 			},
 		},
 		matrix_output: {
@@ -1894,7 +1891,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: async ({ options }) => {
-				let cmd = 'MXO'
+				let cmdTx = cmd.matrix.output
 				let matrix = await self.parseVariablesInString(options.matrix)
 				matrix = Math.floor(matrix)
 				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
@@ -1908,11 +1905,11 @@ module.exports = function (self) {
 					return false
 				}
 				if (options.query) {
-					cmd += paramSep + matrix
+					cmdTx += paramSep + matrix
 				} else {
-					cmd += paramSep + matrix + paramSep + output
+					cmdTx += paramSep + matrix + paramSep + output
 				}
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmdTx)
 			},
 			learn: async (action) => {
 				let matrix = await self.parseVariablesInString(action.options.matrix)
@@ -1928,14 +1925,14 @@ module.exports = function (self) {
 				}
 			},
 			subscribe: async (action) => {
-				let cmd = 'MXO'
+				let cmdTx = cmd.matrix.output
 				let matrix = await self.parseVariablesInString(action.options.matrix)
 				matrix = Math.floor(matrix)
 				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
 					self.log('warn', `an invalid varible has been passed: ${matrix}`)
 					return undefined
 				}
-				self.addCmdtoQueue(cmd + paramSep + matrix)
+				self.addCmdtoQueue(cmdTx + paramSep + matrix)
 			},
 		},
 		matrix_crosspoint: {
@@ -2003,7 +2000,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: async ({ options }) => {
-				let cmd = 'OM'
+				let cmdTx = cmd.matrix.crosspoint
 				let gainVar = Number(await self.parseVariablesInString(options.gainVar))
 				gainVar = gainVar.toFixed(2)
 				let gain = 0
@@ -2029,11 +2026,11 @@ module.exports = function (self) {
 					gain = options.gain
 				}
 				if (options.query) {
-					cmd += paramSep + matrix + paramSep + chan
+					cmdTx += paramSep + matrix + paramSep + chan
 				} else {
-					cmd += paramSep + matrix + paramSep + chan + paramSep + gain
+					cmdTx += paramSep + matrix + paramSep + chan + paramSep + gain
 				}
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmdTx)
 			},
 			learn: async (action) => {
 				let matrix = await self.parseVariablesInString(action.options.matrix)
@@ -2055,7 +2052,7 @@ module.exports = function (self) {
 				}
 			},
 			subscribe: async (action) => {
-				let cmd = 'OM'
+				let cmdTx = cmd.matrix.crosspoint
 				let matrix = await self.parseVariablesInString(action.options.matrix)
 				matrix = Math.floor(matrix)
 				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
@@ -2068,7 +2065,7 @@ module.exports = function (self) {
 					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return undefined
 				}
-				self.addCmdtoQueue(cmd + paramSep + matrix + paramSep + chan)
+				self.addCmdtoQueue(cmdTx + paramSep + matrix + paramSep + chan)
 			},
 		},
 		matrix_crosspoint_rel: {
@@ -2109,7 +2106,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: async ({ options }) => {
-				let cmd = 'OM'
+				let cmdTx = cmd.matrix.crosspoint
 				let matrix = await self.parseVariablesInString(options.matrix)
 				matrix = Math.floor(matrix)
 				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
@@ -2130,11 +2127,11 @@ module.exports = function (self) {
 					gain = 0
 				}
 				let gainRound = gain.toFixed(2)
-				cmd += paramSep + matrix + paramSep + chan + paramSep + gainRound
-				self.addCmdtoQueue(cmd)
+				cmdTx += paramSep + matrix + paramSep + chan + paramSep + gainRound
+				self.addCmdtoQueue(cmdTx)
 			},
 			subscribe: async (action) => {
-				let cmd = 'OM'
+				let cmdTx = cmd.matrix.crosspoint
 				let matrix = await self.parseVariablesInString(action.options.matrix)
 				matrix = Math.floor(matrix)
 				if (isNaN(matrix) || matrix < 1 || matrix > MatrixCount) {
@@ -2147,7 +2144,7 @@ module.exports = function (self) {
 					self.log('warn', `an invalid varible has been passed: ${chan}`)
 					return undefined
 				}
-				self.addCmdtoQueue(cmd + paramSep + matrix + paramSep + chan)
+				self.addCmdtoQueue(cmdTx + paramSep + matrix + paramSep + chan)
 			},
 		},
 		sc_count: {
@@ -2162,8 +2159,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: () => {
-				let cmd = 'SNC'
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmd.scene.count)
 			},
 		},
 		sc_active: {
@@ -2178,8 +2174,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: () => {
-				let cmd = 'SNA'
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmd.scene.active)
 			},
 		},
 		sc_recall: {
@@ -2200,11 +2195,11 @@ module.exports = function (self) {
 				},
 			],
 			callback: async ({ options }) => {
-				let cmd = 'SNR'
+				let cmdTx = cmd.scene.recall
 				let safeSceneName = await self.regexSafeString(await self.parseVariablesInString(options.name))
 				if (safeSceneName != undefined && safeSceneName.length >= 1) {
-					cmd += paramSep + safeSceneName
-					self.addCmdtoQueue(cmd)
+					cmdTx += paramSep + safeSceneName
+					self.addCmdtoQueue(cmdTx)
 				} else {
 					self.log('warn', 'Not a valid scene name')
 				}
@@ -2228,11 +2223,11 @@ module.exports = function (self) {
 				},
 			],
 			callback: async ({ options }) => {
-				let cmd = 'SNS'
+				let cmdTx = cmd.scene.save
 				let safeSceneName = await self.regexSafeString(await self.parseVariablesInString(options.name))
 				if (safeSceneName != undefined && safeSceneName.length >= 1) {
-					cmd += paramSep + safeSceneName
-					self.addCmdtoQueue(cmd)
+					cmdTx += paramSep + safeSceneName
+					self.addCmdtoQueue(cmdTx)
 				} else {
 					self.log('warn', 'Not a valid scene name')
 				}
@@ -2250,8 +2245,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: async () => {
-				let cmd = 'SNN'
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmd.scene.saveNew)
 			},
 		},
 		sc_rename: {
@@ -2282,7 +2276,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: async ({ options }) => {
-				let cmd = 'SNE'
+				let cmdTx = cmd.scene.rename
 				let safeSceneNameCurrent = await self.regexSafeString(await self.parseVariablesInString(options.currentname))
 				let safeSceneNameNew = await self.regexSafeString(await self.parseVariablesInString(options.newname))
 
@@ -2292,8 +2286,8 @@ module.exports = function (self) {
 					safeSceneNameNew != undefined &&
 					safeSceneNameNew.length >= 1
 				) {
-					cmd += paramSep + safeSceneNameCurrent + paramSep + safeSceneNameNew
-					self.addCmdtoQueue(cmd)
+					cmdTx += paramSep + safeSceneNameCurrent + paramSep + safeSceneNameNew
+					self.addCmdtoQueue(cmdTx)
 				} else {
 					self.log('warn', 'Not a valid scene name')
 				}
@@ -2317,11 +2311,11 @@ module.exports = function (self) {
 				},
 			],
 			callback: async ({ options }) => {
-				let cmd = 'SND'
+				let cmdTx = cmd.scene.delete
 				let safeSceneName = await self.regexSafeString(await self.parseVariablesInString(options.name))
 				if (safeSceneName != undefined && safeSceneName.length >= 1) {
-					cmd += paramSep + safeSceneName
-					self.addCmdtoQueue(cmd)
+					cmdTx += paramSep + safeSceneName
+					self.addCmdtoQueue(cmdTx)
 				} else {
 					self.log('warn', 'Not a valid scene name')
 				}
@@ -2362,15 +2356,14 @@ module.exports = function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				let cmd = 'SU'
+				let cmdTx = cmd.system.subscribe
 				if (!options.query) {
-					cmd += paramSep + options.subscribe
+					cmdTx += paramSep + options.subscribe
 				}
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmdTx)
 			},
 			subscribe: () => {
-				let cmd = 'SU'
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmd.system.subscribe)
 			},
 		},
 		system_linkgroup: {
@@ -2399,15 +2392,14 @@ module.exports = function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				let cmd = 'LG'
+				let cmdTx = cmd.system.linkGroup
 				if (!options.query) {
-					cmd += paramSep + options.linkgroup
+					cmdTx += paramSep + options.linkgroup
 				}
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmdTx)
 			},
 			subscribe: () => {
-				let cmd = 'LG'
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmd.system.linkGroup)
 			},
 		},
 		system_clocksource: {
@@ -2430,15 +2422,14 @@ module.exports = function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				let cmd = 'CS'
+				let cmdTx = cmd.system.clock
 				if (!options.query) {
-					cmd += paramSep + options.clock
+					cmdTx += paramSep + options.clock
 				}
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmdTx)
 			},
 			subscribe: () => {
-				let cmd = 'CS'
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmd.system.clock)
 			},
 		},
 		system_ADATmirror: {
@@ -2460,15 +2451,14 @@ module.exports = function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				let cmd = 'AM'
+				let cmdTx = cmd.system.adatMirror
 				if (!options.query) {
-					cmd += paramSep + options.mirror
+					cmdTx += paramSep + options.mirror
 				}
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmdTx)
 			},
 			subscribe: () => {
-				let cmd = 'AM'
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmd.system.adatMirror)
 			},
 		},
 		system_automixchannels: {
@@ -2497,15 +2487,14 @@ module.exports = function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				let cmd = 'CFN'
+				let cmdTx = cmd.system.automixChannels
 				if (!options.query) {
-					cmd += paramSep + options.channels
+					cmdTx += paramSep + options.channels
 				}
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmdTx)
 			},
 			subscribe: () => {
-				let cmd = 'CFN'
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmd.system.automixChannels)
 			},
 		},
 		system_channeloffset: {
@@ -2528,15 +2517,14 @@ module.exports = function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				let cmd = 'CFS'
+				let cmdTx = cmd.system.channelOffset
 				if (!options.query) {
-					cmd += paramSep + options.offset
+					cmdTx += paramSep + options.offset
 				}
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmdTx)
 			},
 			subscribe: () => {
-				let cmd = 'CFS'
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmd.system.channelOffset)
 			},
 		},
 		system_blinkmode: {
@@ -2558,15 +2546,14 @@ module.exports = function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				let cmd = 'BM'
+				let cmdTx = cmd.system.blinkMode
 				if (!options.query) {
-					cmd += paramSep + options.blink
+					cmdTx += paramSep + options.blink
 				}
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmdTx)
 			},
 			subscribe: () => {
-				let cmd = 'BM'
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmd.system.blinkMode)
 			},
 		},
 		system_DHCP: {
@@ -2588,15 +2575,14 @@ module.exports = function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				let cmd = 'DH'
+				let cmdTx = cmd.system.dhcp
 				if (!options.query) {
-					cmd += paramSep + options.dhcp
+					cmdTx += paramSep + options.dhcp
 				}
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmdTx)
 			},
 			subscribe: () => {
-				let cmd = 'DH'
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmd.system.dhcp)
 			},
 		},
 		query_system: {
@@ -2607,7 +2593,7 @@ module.exports = function (self) {
 					id: 'mode',
 					type: 'dropdown',
 					label: 'Mode',
-					default: 'SC',
+					default: cmd.system.config,
 					choices: self.system_query,
 				},
 			],
@@ -2638,17 +2624,17 @@ module.exports = function (self) {
 				},
 			],
 			callback: async ({ options }) => {
-				let cmd = 'NA'
+				let cmdTx = cmd.system.name
 				if (!options.query) {
 					let safeName = await self.regexSafeString(await self.parseVariablesInString(options.name))
 					if (safeName != undefined && safeName.length >= 1) {
-						cmd += paramSep + safeName
+						cmdTx += paramSep + safeName
 					} else {
 						self.log('warn', 'Not a valid name')
 						return false
 					}
 				}
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmdTx)
 			},
 		},
 		system_network: {
@@ -2659,7 +2645,7 @@ module.exports = function (self) {
 					id: 'mode',
 					type: 'dropdown',
 					label: 'Mode',
-					default: 'IP',
+					default: cmd.system.ip,
 					choices: self.system_network,
 				},
 				{
@@ -2672,7 +2658,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: ({ options }) => {
-				let cmd = options.mode
+				let cmdTx = options.mode
 				if (!options.query) {
 					let ip = options.IP.split('.')
 					let cleanIP = []
@@ -2687,9 +2673,9 @@ module.exports = function (self) {
 						self.log('warn', 'Not a valid IP Address, unexpected length')
 						return false
 					}
-					cmd += paramSep + cleanIP[0] + paramSep + cleanIP[1] + paramSep + cleanIP[2] + paramSep + cleanIP[3]
+					cmdTx += paramSep + cleanIP[0] + paramSep + cleanIP[1] + paramSep + cleanIP[2] + paramSep + cleanIP[3]
 				}
-				self.addCmdtoQueue(cmd)
+				self.addCmdtoQueue(cmdTx)
 			},
 		},
 		query_meters: {
@@ -2700,7 +2686,7 @@ module.exports = function (self) {
 					id: 'mode',
 					type: 'dropdown',
 					label: 'Meter Type',
-					default: 'GS',
+					default: cmd.metering.channelStatus,
 					choices: self.query_meters,
 				},
 			],
@@ -2716,7 +2702,7 @@ module.exports = function (self) {
 					id: 'mode',
 					type: 'dropdown',
 					label: 'Channels or Matrix',
-					default: 'GP',
+					default: cmd.channel.bulkParams,
 					choices: self.system_bulkconfig,
 				},
 			],
@@ -2732,7 +2718,7 @@ module.exports = function (self) {
 					id: 'mode',
 					type: 'dropdown',
 					label: 'Channel or Scenes',
-					default: 'CNS',
+					default: cmd.channel.nameList,
 					choices: self.query_namelistmode,
 				},
 				{

@@ -1,4 +1,4 @@
-const { regexpCmd, regexpSafeString, paramSep } = require('./consts.js')
+const { regexpCmd, regexpSafeString, paramSep, cmd } = require('./consts.js')
 module.exports = {
 	regexCmd(cmd) {
 		let command
@@ -88,7 +88,7 @@ module.exports = {
 			return true
 		}
 		this.config.subscription = val
-		this.addCmdtoQueue(`SU${paramSep}${val}`)
+		this.addCmdtoQueue(cmd.system.subscribe + paramSep + val)
 		return val
 	},
 	checkIsTalking() {

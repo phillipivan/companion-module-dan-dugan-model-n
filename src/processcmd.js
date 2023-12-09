@@ -2,6 +2,8 @@ const {
 	duganModels,
 	paramSep,
 	cmdSep,
+	cmd,
+	SOM,
 	errSyntax1,
 	errSyntax2,
 	errRange,
@@ -26,12 +28,12 @@ module.exports = {
 		let buffer = new ArrayBuffer(chunk.length)
 		let vals = new Uint8Array(buffer)
 		let strRep = chunk.toString()
-		while (strRep[0] != '*' && strRep.length > 0) {
+		while (strRep[0] != SOM && strRep.length > 0) {
 			strRep = strRep.slice(1)
 			index += 1
 		}
-		let cmd = await this.regexCmd(strRep)
-		if ((strRep.length > 0) & !cmd) {
+		let cmdRx = await this.regexCmd(strRep)
+		if ((strRep.length > 0) & !cmdRx) {
 			return undefined
 		} else if (strRep.length == 0) {
 			return undefined
@@ -39,8 +41,8 @@ module.exports = {
 		for (let i = index; i < chunk.length; i++) {
 			vals[i - index] = chunk[i]
 		}
-		switch (cmd) {
-			case '*GP,':
+		switch (cmdRx) {
+			case SOM + cmd.channel.bulkParams:
 				if (vals.length < 438) {
 					// observed 454 but that may be with 'Dugan N >'
 					this.log('warn', `*GP response detected. Expected length > 438 bytes. Buffer length: ${vals.length}`)
@@ -100,7 +102,7 @@ module.exports = {
 					'channelGroupAssign'
 				)
 				break
-			case '*GM,':
+			case SOM + cmd.matrix.bulkParams:
 				//get matrix params
 				//binary response
 				if (vals.length < 884) {
@@ -119,7 +121,7 @@ module.exports = {
 				break
 			// unknown data in indexes 868 - 891, 892 - 901
 			// perhaps 886 - 891 are matrix output patch
-			case '*GS,':
+			case SOM + cmd.metering.channelStatus:
 				//channel status
 				//binary response
 				if (vals.length < 235) {
@@ -183,8 +185,8 @@ module.exports = {
 		}
 	},
 
-	async processCmds(cmd) {
-		let string = cmd.toString()
+	async processCmds(cmdRx) {
+		let string = cmdRx.toString()
 		let lines = string.split('\r\n')
 		await lines.forEach(async (line) => {
 			let cmds = line.split(cmdSep)
@@ -197,10 +199,10 @@ module.exports = {
 		return true
 	},
 
-	async processParams(cmd) {
-		let str = cmd.toString()
+	async processParams(cmdRx) {
+		let str = cmdRx.toString()
 		let varObject = {}
-		while (str[0] != '*' && str.length > 0) {
+		while (str[0] != SOM && str.length > 0) {
 			str = str.slice(1)
 		}
 		let params = str.split(paramSep)
@@ -209,7 +211,7 @@ module.exports = {
 			return undefined
 		}
 		switch (params[0]) {
-			case '*CM':
+			case SOM + cmd.channel.mode:
 				//channel mode
 				//this.log('debug', `CM response found: ${str}`)
 				if (params.length == 3) {
@@ -219,7 +221,7 @@ module.exports = {
 					this.log('warn', `Unexpected CM response: ${str}`)
 				}
 				break
-			case '*CP':
+			case SOM + cmd.channel.preset:
 				//channel preset
 				//this.log('debug', `CP response found: ${str}`)
 				if (params.length == 3) {
@@ -229,7 +231,7 @@ module.exports = {
 					this.log('warn', `Unexpected CP response: ${str}`)
 				}
 				break
-			case '*BP':
+			case SOM + cmd.channel.bypass:
 				//channel bypass
 				//this.log('debug', `BP response found: ${str}`)
 				if (params.length == 3) {
@@ -239,7 +241,7 @@ module.exports = {
 					this.log('warn', `Unexpected BP response: ${str}`)
 				}
 				break
-			case '*CO':
+			case SOM + cmd.channel.override:
 				//channel override
 				//this.log('debug', `CO response found: ${str}`)
 				if (params.length == 3) {
@@ -249,7 +251,7 @@ module.exports = {
 					this.log('warn', `Unexpected CO response: ${str}`)
 				}
 				break
-			case '*CW':
+			case SOM + cmd.channel.weight:
 				//channel weight
 				//this.log('debug', `CW response found: ${str}`)
 				if (params.length == 3) {
@@ -261,7 +263,7 @@ module.exports = {
 					this.log('warn', `Unexpected CW response: ${str}`)
 				}
 				break
-			case '*MR':
+			case SOM + cmd.channel.music:
 				//music mode
 				//this.log('debug', `MR response found: ${str}`)
 				if (params.length == 3) {
@@ -271,7 +273,7 @@ module.exports = {
 					this.log('warn', `Unexpected MR response: ${str}`)
 				}
 				break
-			case '*NE':
+			case SOM + cmd.channel.nom:
 				//NOM mode
 				//this.log('debug', `NE response found: ${str}`)
 				if (params.length == 3) {
@@ -281,7 +283,7 @@ module.exports = {
 					this.log('warn', `Unexpected NE response: ${str}`)
 				}
 				break
-			case '*GA':
+			case SOM + cmd.channel.group:
 				//group assign
 				//this.log('debug', `GA response found: ${str}`)
 				if (params.length == 3) {
@@ -292,7 +294,7 @@ module.exports = {
 					this.log('warn', `Unexpected GA response: ${str}`)
 				}
 				break
-			case '*CN':
+			case SOM + cmd.channel.name:
 				//channel name
 				//this.log('debug', `CN response found: ${str}`)
 				if (params.length == 3) {
@@ -303,7 +305,7 @@ module.exports = {
 					this.log('warn', `Unexpected CN response: ${str}`)
 				}
 				break
-			case '*SM':
+			case SOM + cmd.group.mute:
 				//group mute
 				//this.log('debug', `SM response found: ${str}`)
 				if (params.length == 2) {
@@ -315,7 +317,7 @@ module.exports = {
 					this.log('warn', `Unexpected SM response: ${str}`)
 				}
 				break
-			case '*SP':
+			case SOM + cmd.group.preset:
 				//group preset
 				//this.log('debug', `SP response found: ${str}`)
 				if (params.length == 2) {
@@ -327,7 +329,7 @@ module.exports = {
 					this.log('warn', `Unexpected SP response: ${str}`)
 				}
 				break
-			case '*SO':
+			case SOM + cmd.group.override:
 				//group override
 				//this.log('debug', `SO response found: ${str}`)
 				if (params.length == 2) {
@@ -339,7 +341,7 @@ module.exports = {
 					this.log('warn', `Unexpected SO response: ${str}`)
 				}
 				break
-			case '*LH':
+			case SOM + cmd.group.lastHold:
 				//last hold
 				//this.log('debug', `LH response found: ${str}`)
 				if (params.length == 2) {
@@ -350,8 +352,8 @@ module.exports = {
 					this.log('warn', `Unexpected LH response: ${str}`)
 				}
 				break
-			case '*AD': //same as ME
-			case '*ME':
+			case SOM + cmd.group.automixDepth: //same as ME
+			case SOM + cmd.group.automixDepthAlt:
 				//automix depth
 				//this.log('debug', `AD or ME response found: ${str}`)
 				if (params.length == 3) {
@@ -362,7 +364,7 @@ module.exports = {
 					this.log('warn', `Unexpected AD/ME response: ${str}`)
 				}
 				break
-			case '*NL':
+			case SOM + cmd.group.nomGainLimit:
 				//nom gain limit
 				//this.log('debug', `NL response found: ${str}`)
 				if (params.length == 3) {
@@ -373,7 +375,7 @@ module.exports = {
 					this.log('warn', `Unexpected NL response: ${str}`)
 				}
 				break
-			case '*MT':
+			case SOM + cmd.group.musicThreshold:
 				//music system threshold
 				//this.log('debug', `MT response found: ${str}`)
 				if (params.length == 3) {
@@ -384,7 +386,7 @@ module.exports = {
 					this.log('warn', `Unexpected MT response: ${str}`)
 				}
 				break
-			case '*MC':
+			case SOM + cmd.group.musicInput:
 				//music system threshold input
 				//this.log('debug', `MC response found: ${str}`)
 				if (params.length == 3) {
@@ -394,7 +396,7 @@ module.exports = {
 					this.log('warn', `Unexpected MXM response: ${str}`)
 				}
 				break
-			case '*MXM':
+			case SOM + cmd.matrix.mute:
 				//matrix bus mute
 				//this.log('debug', `MXM response found: ${str}`)
 				if (params.length == 3) {
@@ -404,7 +406,7 @@ module.exports = {
 					this.log('warn', `Unexpected MXM response: ${str}`)
 				}
 				break
-			case '*MXP':
+			case SOM + cmd.matrix.polarity:
 				//matrix bus polarity
 				//this.log('debug', `MXP response found: ${str}`)
 				if (params.length == 3) {
@@ -414,7 +416,7 @@ module.exports = {
 					this.log('warn', `Unexpected MXP response: ${str}`)
 				}
 				break
-			case '*MXV':
+			case SOM + cmd.matrix.gain:
 				//matrix bus gain
 				//this.log('debug', `MXV response found: ${str}`)
 				if (params.length == 3) {
@@ -425,7 +427,7 @@ module.exports = {
 					this.log('warn', `Unexpected MXV response: ${str}`)
 				}
 				break
-			case '*MXO':
+			case SOM + cmd.matrix.output:
 				//matrix bus ouput
 				//this.log('info', `Matrix ${params[1]} output patch changed to ${params[2]}`)
 				if (params.length == 3) {
@@ -435,7 +437,7 @@ module.exports = {
 					this.log('warn', `Unexpected MXM response: ${str}`)
 				}
 				break
-			case '*OM':
+			case SOM + cmd.matrix.crosspoint:
 				//matrix crosspoint
 				//this.log('debug', `OM response found: ${str}`)
 				if (params.length == 4) {
@@ -446,7 +448,7 @@ module.exports = {
 					this.log('warn', `Unexpected OM response: ${str}`)
 				}
 				break
-			case '*SNC':
+			case SOM + cmd.scene.count:
 				//scene count
 				//this.log('debug', `SNC response found: ${str}`)
 				if (params.length == 2) {
@@ -457,12 +459,12 @@ module.exports = {
 					this.setVariableValues({
 						sceneCount: Number(params[1]),
 					})
-					this.addCmdtoQueue(`SNL,1,${Number(params[1])}`)
+					this.addCmdtoQueue(`${cmd.scene.nameList},1,${Number(params[1])}`)
 				} else {
 					this.log('warn', 'Unexpected SNC response: ' + str)
 				}
 				break
-			case '*SNA':
+			case SOM + cmd.scene.active:
 				//active scene
 				//this.log('debug', `SNA response found: ${str}`)
 				if (params.length == 4) {
@@ -478,14 +480,14 @@ module.exports = {
 					this.log('warn', `Unexpected SNA response: ${str}`)
 				}
 				break
-			case '*SNR':
+			case SOM + cmd.scene.recall:
 				//recall scene
 				//this.log('debug', `SNR response found: ${str}`)
 				if (params.length == 2) {
 					let err = params[1].search('Error: scene')
 					if (err == -1) {
 						this.log('info', `Scene Recalled: ${params[1]}`)
-						this.addCmdtoQueue('SNA')
+						this.addCmdtoQueue(cmd.scene.active)
 					} else {
 						this.log('warn', str)
 					}
@@ -493,16 +495,16 @@ module.exports = {
 					this.log('warn', `Unexpected SNR response: ${str}`)
 				}
 				break
-			case '*SNS':
-			case '*SNN':
+			case SOM + cmd.scene.save:
+			case SOM + cmd.scene.saveNew:
 				//save scene & save new scene
 				//this.log('debug', `SNS or SNN response found: ${str}`)
 				if (params.length == 2) {
 					let err = params[1].search('Error: scene')
 					if (err == -1) {
 						this.log('info', `New scene saved: ${params[1]}`)
-						this.addCmdtoQueue('SNC')
-						this.addCmdtoQueue('SNA')
+						this.addCmdtoQueue(cmd.scene.count)
+						this.addCmdtoQueue(cmd.scene.active)
 					} else {
 						this.log('warn', str)
 					}
@@ -510,26 +512,26 @@ module.exports = {
 					this.log('warn', `Unexpected SNN/SNS response: ${str}`)
 				}
 				break
-			case '*SNE':
+			case SOM + cmd.scene.rename:
 				//rename scene
 				//this.log('debug', `SNE response found: ${str}`)
 				if (params.length == 3) {
 					this.log('info', `Scene: ${params[1]}. Renamed to: ${params[2]}`)
-					this.addCmdtoQueue('SNC')
-					this.addCmdtoQueue('SNA')
+					this.addCmdtoQueue(cmd.scene.count)
+					this.addCmdtoQueue(cmd.scene.active)
 				} else {
 					this.log('warn', `Error response:  ${str}`)
 				}
 				break
-			case '*SND':
+			case SOM + cmd.scene.delete:
 				//delete scene
 				//this.log('debug', `SND response found: ${str}`)
 				if (params.length == 2) {
 					let err = params[1].search('Error: scene')
 					if (err == -1) {
 						this.log('info', `Scene Deleted: ${params[1]}`)
-						this.addCmdtoQueue('SNC')
-						this.addCmdtoQueue('SNA')
+						this.addCmdtoQueue(cmd.scene.count)
+						this.addCmdtoQueue(cmd.scene.active)
 					} else {
 						this.log('warn', params[1])
 					}
@@ -537,16 +539,16 @@ module.exports = {
 					this.log('warn', `Unexpected SND response: ${str}`)
 				}
 				break
-			case '*FP':
+			case SOM + cmd.scene.defaults:
 				//channel defaults
 				this.log('info', `Channels reset to defaults. ${str}`)
-				this.addCmdtoQueue('SNA')
+				this.addCmdtoQueue(cmd.scene.active)
 				break
-			case '*RM':
+			case SOM + cmd.matrix.defaults:
 				//matrix defauls
 				this.log('info', `Matrix reset to defaults. ${str}`)
 				break
-			case '*SU':
+			case SOM + cmd.system.subscribe:
 				//subscribe unsolicited
 				//this.log('debug', `SU response found: ${str}`)
 				if (isNaN(params[1])) {
@@ -556,7 +558,7 @@ module.exports = {
 				this.config.subscription = params[1]
 				this.log('info', `Subscribe unsolicited level set. Level: ${params[1]}`)
 				break
-			case '*LG':
+			case SOM + cmd.system.linkGroup:
 				//link group
 				//this.log('debug', `LG response found: ${str}`)
 				if (params.length == 2) {
@@ -567,7 +569,7 @@ module.exports = {
 					this.log('warn', `Unexpected LG response: ${str}`)
 				}
 				break
-			case '*CS':
+			case SOM + cmd.system.clock:
 				//clock sourse
 				//this.log('debug', `CS response found: ${str}`)
 				if (params.length == 2) {
@@ -592,7 +594,7 @@ module.exports = {
 					this.log('warn', `Unexpected CS response: ${str}`)
 				}
 				break
-			case '*AM':
+			case SOM + cmd.system.adatMirror:
 				//adat mirror
 				//this.log('debug', `AM response found:  ${str}`)
 				if (params.length == 2) {
@@ -603,7 +605,7 @@ module.exports = {
 					this.log('warn', `Unexpected AM response: ${str}`)
 				}
 				break
-			case '*CFN':
+			case SOM + cmd.system.automixChannels:
 				//automix channels
 				//this.log('debug', 'CFN response found: ' + str)
 				if (params.length == 2) {
@@ -628,7 +630,7 @@ module.exports = {
 					this.log('warn', `Unexpected CFN response: ${str}`)
 				}
 				break
-			case '*CFS':
+			case SOM + cmd.system.channelOffset:
 				//input channel offset
 				//this.log('debug', `CFS response found: ${str}`)
 				if (params.length == 2) {
@@ -639,7 +641,7 @@ module.exports = {
 					this.log('warn', `Unexpected CFS response: ${str}`)
 				}
 				break
-			case '*BM':
+			case SOM + cmd.system.blinkMode:
 				//blink mode
 				//this.log('debug', `BM response found: ${str}`)
 				if (params.length == 2) {
@@ -651,7 +653,7 @@ module.exports = {
 					this.log('warn', `Unexpected BM response: ${str}`)
 				}
 				break
-			case '*DH':
+			case SOM + cmd.system.dhcp:
 				//dhcp
 				//this.log('debug', `DH response found: ${str}`)
 				if (params.length == 2) {
@@ -663,7 +665,7 @@ module.exports = {
 					this.log('warn', `Unexpected DH response: ${str}`)
 				}
 				break
-			case '*SC':
+			case SOM + cmd.system.config:
 				//system config
 				//this.log('debug', `SC response found: ${str}`)
 				if (params.length == 13) {
@@ -724,7 +726,7 @@ module.exports = {
 					this.log('warn', `Unexpected VE response: ${str}`)
 				}
 				break
-			case '*CC':
+			case SOM + cmd.system.connections:
 				//client connections
 				//this.log('debug', `CC response found: ${str}`)
 				if (params.length == 3) {
@@ -741,7 +743,7 @@ module.exports = {
 					this.log('warn', `Unexpected CC response: ${str}`)
 				}
 				break
-			case '*HW':
+			case SOM + cmd.system.resourceUseage:
 				//resource useage
 				//this.log('debug', `HW response found: ${str}`)
 				if (params.length == 9) {
@@ -767,14 +769,14 @@ module.exports = {
 					this.log('warn', `Unexpected HW response: ${str}`)
 				}
 				break
-			case '*HR':
+			case SOM + cmd.system.switchHeadroom:
 				//switch headroom
 				//this.log('debug', `HR response found: ${str}`)
 				this.setVariableValues({
 					switchHeadroom: Number(params[1]),
 				})
 				break
-			case '*SF':
+			case SOM + cmd.system.sampleRate:
 				//sample rate
 				if (params.length == 2) {
 					if (params[1] == '0' || params[1] == '1') {
@@ -790,7 +792,7 @@ module.exports = {
 					this.log('warn', `Unexpected SF response: ${str}`)
 				}
 				break
-			case '*MM':
+			case SOM + cmd.system.master:
 				//master mode
 				//this.log('debug', `MM response found: ${str}`)
 				if (params.length == 2) {
@@ -802,7 +804,7 @@ module.exports = {
 					this.log('warn', `Unexpected MM response: ${str}`)
 				}
 				break
-			case '*NA':
+			case SOM + cmd.system.name:
 				//system name
 				//this.log('debug', `NA response found: ${str}`)
 				if (params.length == 2) {
@@ -813,7 +815,7 @@ module.exports = {
 					this.log('warn', `Unexpected NA response: ${str}`)
 				}
 				break
-			case '*IP':
+			case SOM + cmd.system.ip:
 				//ip
 				//this.log('debug', `IP response found: ${str}`)
 				if (params.length == 5) {
@@ -824,7 +826,7 @@ module.exports = {
 					this.log('warn', `Unexpected IP response: ${str}`)
 				}
 				break
-			case '*NM':
+			case SOM + cmd.system.netmask:
 				//netmask
 				//this.log('debug', `NM response found: ${str}`)
 				if (params.length == 5) {
@@ -835,7 +837,7 @@ module.exports = {
 					this.log('warn', `Unexpected NM response: ${str}`)
 				}
 				break
-			case '*GW':
+			case SOM + cmd.system.gateway:
 				//gateway
 				//this.log('debug', `GW response found: ${str}`)
 				if (params.length == 5) {
@@ -846,7 +848,7 @@ module.exports = {
 					this.log('warn', `Unexpected GW response: ${str}`)
 				}
 				break
-			case '*CNS':
+			case SOM + cmd.channel.nameList:
 				//channel name list
 				//this.log('debug', `CNS response found: ${str}`)
 				if (params.length >= 4) {
@@ -865,7 +867,7 @@ module.exports = {
 					this.log('warn', `Unexpected CNS length: ${str}`)
 				}
 				break
-			case '*SNL':
+			case SOM + cmd.scene.nameList:
 				//scene name list
 				//this.log('debug', `SNL response found: ${str}`)
 				if (params.length > 4) {
@@ -882,7 +884,7 @@ module.exports = {
 					this.log('warn', `Unexpected SNL response: ${str}`)
 				}
 				break
-			case '*GSA':
+			case SOM + cmd.metering.automixGain:
 				//automix gains for all
 				//this.log('debug', `GSA response found: ${str}`)
 				if (params.length != MaxChannelCount + 1) {
@@ -899,7 +901,7 @@ module.exports = {
 					this.checkIsTalking()
 				}
 				break
-			case '*GSC':
+			case SOM + cmd.metering.signalClip:
 				//signal clip DUGAN N returns responses as *GSS!!!
 				//this.log('debug', `GSC response found: ${str}`)
 				if (params.length != 9) {
@@ -921,8 +923,8 @@ module.exports = {
 					this.checkFeedbacks('channelClip')
 				}
 				break
-			case '*GSS':
-			case '*GSP':
+			case SOM + cmd.metering.signalPresense:
+			case SOM + cmd.metering.signalPresenseAlt:
 				//signal presence GSS Model E2A, E3A, GSP for Model M & N
 				//this.log('debug', `GSS or GSP response found: ${str}`)
 				if (params.length != 9) {
@@ -943,7 +945,7 @@ module.exports = {
 					this.checkFeedbacks('channelPresence')
 				}
 				break
-			case '*GSI':
+			case SOM + cmd.metering.inputPeaks:
 				//input peaks
 				//this.log('debug', `GSI response found: ${str}`)
 				if (params.length != MaxChannelCount + 1) {
@@ -959,7 +961,7 @@ module.exports = {
 					this.checkFeedbacks('channelInputPeak')
 				}
 				break
-			case '*GSO':
+			case SOM + cmd.metering.outputPeaks:
 				//output peaks
 				//this.log('debug', `GSO response found: ${str}`)
 				if (params.length != MaxChannelCount + 1) {
@@ -975,7 +977,7 @@ module.exports = {
 					this.checkFeedbacks('channelOutputPeak')
 				}
 				break
-			case '*GSM':
+			case SOM + cmd.metering.musicRef:
 				//music reference peaks
 				//this.log('debug', `GSM response found: ${str}`)
 				if (params.length != GroupCount + 1) {
@@ -991,7 +993,7 @@ module.exports = {
 					this.checkFeedbacks('groupMusicPeak')
 				}
 				break
-			case '*GSN':
+			case SOM + cmd.metering.nomGain:
 				//nom gain limits
 				//this.log('debug', `GSN response found: ${str}`)
 				if (params.length != GroupCount + 1) {
@@ -1007,7 +1009,7 @@ module.exports = {
 					this.checkFeedbacks('groupNOMgain')
 				}
 				break
-			case '*GSX':
+			case SOM + cmd.metering.matrixOutput:
 				//matrix output meters
 				//this.log('debug', `GSX response found: ${str}`)
 				if (params.length != MatrixCount + 1) {
@@ -1023,10 +1025,10 @@ module.exports = {
 					this.checkFeedbacks('matrixLevel')
 				}
 				break
-			case '*PN':
+			case SOM + cmd.system.ping:
 				this.log('info', `Ping received: ${params[1]}`)
 				break
-			case '*PD':
+			case SOM + cmd.system.pd:
 				//The meaning of this is not documented.
 				this.log('info', `PD received: ${params[1]}`)
 				break
@@ -1036,10 +1038,10 @@ module.exports = {
 				break
 			case welcomeMessageM:
 			case welcomeMessageN:
-				this.log('info', cmd)
+				this.log('info', cmdRx)
 				break
 			default:
-				this.log('warn', `Unexpected response from unit: ${cmd}`)
+				this.log('warn', `Unexpected response from unit: ${cmdRx}`)
 		}
 	},
 }
